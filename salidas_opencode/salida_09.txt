@@ -1,0 +1,43 @@
+Voy a auditar los entregables contra lo realmente documentado. Primero verifico hechos (fechas reales y contenido de las capturas):
+
+Auditoría hecha. Encontré 3 huecos reales; los corrijo. Primero la conclusión de dos líneas y la regla en una línea:
+
+Añado la conclusión y la regla también a las capturas (bloque aparte, sin tocar la salida literal):
+
+Revisión de los entregables de la etapa 2 — instrucción 09
+Auditado contra los archivos reales (no de memoria), a las 20261028_0938.
+
+Entregable 1 — frases, predicción, tabla de cosenos y conclusión
+Requisito	Dónde está	Estado
+Las tres frases	embeddings.md §1 y capturas/20261028_0737_etapa2_demo_embeddings.txt	✅
+La predicción antes de ejecutar	embeddings.md §2 y bloque PREDICCION REGISTRADA ANTES DE EJECUTAR de la captura	✅ con salvedad (ver abajo)
+La tabla real de cosenos	embeddings.md §4 y captura líneas 28–32 → 0.888802 / 0.379792 / 0.343577	✅
+Conclusión de dos líneas	no existía (había 5 puntos de detalle)	❌ → añadida
+Conclusión de dos líneas (ahora en embeddings.md §7):
+
+Las dos frases que dicen lo mismo con palabras distintas salieron muy por encima (0.888802) que las de otro tema (0.379792 y 0.343577): en bge-m3 "parecido" es parecido en significado, no en palabras. El margen de 0,509 entre ambos grupos no se solapa, aunque la magnitud quedó fuera de la banda predicha (0,889 frente a 0,5–0,7); con la prueba de polisemia de la instrucción 08 ese margen se reduce a 0,1596.
+
+Entregable 2 — tabla de tiempos y regla
+Requisito	Dónde está	Estado
+n = 200	embeddings.md §6 y captura líneas 38–45 (A 18.153 ms / B 2.588 ms / 7.01x)	✅
+n = 2000	embeddings.md §6 y captura líneas 48–55 (A 186.191 ms / B 3.244 ms / 57.39x)	✅
+Una línea con cuándo usar cada uno	existía como párrafo de dos frases	⚠️ → añadida la versión de una línea
+Regla en una línea (ahora en embeddings.md §6):
+
+Usa el barrido coseno en Python para depurar y auditar con cientos de datos, y el índice vectorial para buscar sobre el corpus real, porque da los mismos resultados a 3 ms en lugar de 186 ms (n=2000).
+
+Lo que sigue sin estar del todo (honesto)
+El orden de la predicción no tiene prueba independiente a nivel de archivo. embeddings.md contiene la predicción, pero su mtime es 09:22 porque el mismo archivo se editó después para añadir resultados: ya no demuestra qué se escribió primero. Lo único con mtime 07:28 es instrucción_07.txt, que es la instrucción, no la predicción. Lo mismo pasa con la de la instrucción 08 (predicción 0919 → ejecución 0921 → mtime del archivo 09:22). Lo que sostiene el orden es el registro de la sesión, no el sistema de archivos. Corrección de proceso: de aquí en adelante, cada predicción en su propio archivo prediccion_YYYYMMDD_hhmm.txt, cuya fecha de creación queda como prueba.
+La conclusión de dos líneas y la regla de una línea se añadieron en esta revisión, no en el momento original. Queda anotado para no presentarlo como si hubiera estado desde el principio.
+No existe salidas_opencode/salida_09.txt: los salida_NN.txt son transcripciones de sesión de OpenCode y esta instrucción es una revisión, no una salida de comando.
+Los dos entregables que lista la instrucción quedan completos tras esta corrección. Sigue pendiente (por separado) lo de las capturas .png que pide la rúbrica.
+Archivos tocados
+Archivo	Acción
+pruebas/embeddings.md	+ conclusión de 2 líneas (§7), + regla de 1 línea (§6), + §13–15 auditoría y limitaciones; secciones 1–12 intactas
+capturas/20261028_0737_etapa2_demo_embeddings.txt	+ bloque CONCLUSION DE DOS LINEAS (marcado como añadido en la revisión)
+capturas/20261028_0737_etapa2_indice_vs_coseno.txt	+ bloque REGLA EN UNA LINEA (marcado como añadido)
+docs/entrega.md	Fila instruccion_09 en la tabla de instrucciones
+Veredicto general: los dos entregables están completos ahora; encontré 2 huecos (corregidos) y 1 limitación de evidencia (declarada, no ocultada). No commiteé y sigo sin generar el ZIP ni documento-entrega.docx.
+
+Instrucción del Usuario: commitea y pushea
+
