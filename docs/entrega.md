@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: organizar la entrega, sus pendientes y la consolidación final de código y evidencias.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_0938
+fecha_hora_modificacion: 20261028_1033
 -->
 
 # Plan de entrega del taller 2 RAG
@@ -40,6 +40,29 @@ sección interior del documento. No generar aún el documento final.
 
 Confirmación registrada en `instrucciones/instruccion_02f.txt`. Si posteriormente
 se incorpora material de compañeros, añadir la atribución y actualizar la declaración.
+
+## Comentarios y validación del usuario
+
+Cada revisión del usuario se registra aquí con su fecha, el texto tal como se
+recibió y el efecto en el proyecto. Los comentarios no reemplazan la evidencia:
+solo la confirman o la corrigen.
+
+### 20261028_1033 — Validación de la etapa 3
+
+Texto recibido del usuario, tras revisar el commit `5dffe5f`:
+
+> Comentarios del Usuario: Quedan finalmente 800/120 como combinación final a
+> dejar, junto con el umbral ya definido.
+
+- **Alcance**: confirma la elección de la etapa 3 (`instrucciones/instruccion_10.txt`).
+- **Efecto**: **ninguno sobre el código**. Valida lo que ya estaba aplicado:
+  `CHUNK_SIZE=800`, `CHUNK_OVERLAP=120` y `UMBRAL=0.43` en `.env` y
+  `.env.example`, con el índice Redis de 294 fragmentos reingerido con esa
+  configuración.
+- **Evidencia**: `entrega/grupo-N-taller2-rag/pruebas/chunks.md` y las tres
+  capturas `20261028_1014_etapa3_ingesta_*.txt`.
+- Se deja escrito por si una revisión posterior contradice esta combinación:
+  habría que reingerir con los valores nuevos y documentarlo en `docs/docker.md`.
 
 ## Estructura preparada
 

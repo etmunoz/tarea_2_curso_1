@@ -1,0 +1,324 @@
+Entendido: parte por parte, con salida en pantalla. Primero leo la plantilla y el script:
+
+Parte 1 — Estado base (800/120, ya ingerido). Consulta de referencia con la misma pregunta:
+
+Select-String -Path .env -Pattern '^CHUNK_SIZE=|^CHUNK_OVERLAP=|^TOP_K=|^UMBRAL=|^PREFIJO=' | ForEach-Object { $_.Line }
+PREFIJO=etmunoz_ollama
+CHUNK_SIZE=800
+CHUNK_OVERLAP=120
+TOP_K=3
+UMBRAL=0.43
+$env:PYTHONIOENCODING='utf-8'; uv run python main.py rag "¿Qué establece el principio de proporcionalidad?" --saltos
+[salto] buscar
+  mejor_parecido: 0.5054
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.5054
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.4125
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.3940
+[salto] responder
+El principio de proporcionalidad establece que los datos personales que se traten deben limitarse estrictamente a aquéllos que resulten necesarios, adecuados y pertinentes en relación con los fines del tratamiento [LEY-19628 p.5].
+
+
+Parte 2 — Configuración A: CHUNK_SIZE=400 / CHUNK_OVERLAP=50 (con --reset):
+
+Config A medida: 573 fragmentos, promedio 320.4, solape real 45/50 (visible: "Modificación: 13-DIC-2024 Ley 21719Url Corta:"). Ahora la misma pregunta:
+
+$env:PYTHONIOENCODING='utf-8'; uv run python main.py rag "¿Qué establece el principio de proporcionalidad?" --saltos
+[salto] buscar
+  mejor_parecido: 0.6055
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.6055
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.4351
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.50 parecido=0.4112
+[salto] responder
+El principio de proporcionalidad establece que el responsable debe adoptar las medidas adecuadas y oportunas para facilitar al titular el acceso a toda la información que señala esta ley, así como cualquier otra comunicación relativa al tratamiento que realiza [LEY-19628 p.5].
+Config A: parecido sube (0.5054 → 0.6055) pero la respuesta salió mal. Verifico el fragmento recuperado con --texto:
+
+$env:PYTHONIOENCODING='utf-8'; uv run python main.py rag "¿Qué establece el principio de proporcionalidad?" --saltos --texto
+[salto] buscar
+  mejor_parecido: 0.6055
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.6055
+    inicio: 'otorgue nuevamente su\nconsentimiento, y cuando lo disponga la ley.\n    c) Princi'
+    largo: 103 caracteres
+    texto:
+      otorgue nuevamente su
+      consentimiento, y cuando lo disponga la ley.
+          c) Principio de proporcionalidad
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.4351
+    inicio: 'inequívoca y gratuita.\n    El responsable debe adoptar las medidas adecuadas y\no'
+    largo: 278 caracteres
+    texto:
+      inequívoca y gratuita.
+          El responsable debe adoptar las medidas adecuadas y
+      oportunas para facilitar al titular el acceso a toda la
+      información que señala esta ley, así como cualquier otra
+      comunicación relativa al tratamiento que realiza.
+          h) Principio de confidencialidad
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.50 parecido=0.4112
+    inicio: 'a esta disposición\nvulneran gravemente el principio de probidad administrativa,\n'
+    largo: 149 caracteres
+    texto:
+      a esta disposición
+      vulneran gravemente el principio de probidad administrativa,
+      sin perjuicio de las demás sanciones y responsabilidades
+      que procedan
+[salto] responder
+El principio de proporcionalidad establece que el responsable debe adoptar las medidas adecuadas y oportunas para facilitar al titular el acceso a toda la información que señala esta ley, así como cualquier otra comunicación relativa al tratamiento que realiza [LEY-19628 p.5].
+
+
+Evidencia clave de A: el fragmento TOP_1 (103 car.) contiene solo el encabezado c) Principio de proporcionalidad sin su contenido; el LLM se apoyó en el TOP_2 y respondió mal.
+
+Parte 3 — Configuración B: CHUNK_SIZE=1200 / CHUNK_OVERLAP=200:
+
+$env:PYTHONIOENCODING='utf-8'; uv run python scripts/ingest.py "docs/LEY-19628_28-AGO-1999_refundida_20261201.pdf" --reset
+C:\Users\etmun\proyecto\tarea_2_curso_1\scripts\ingest.py:30: DeprecationWarning: `langchain-community` is being sunset and is no longer actively maintained. See https://github.com/langchain-ai/langchain-community/issues/674 for details and migration guidance toward standalone integration packages.
+  from langchain_community.document_loaders import PyPDFLoader
+Páginas leídas: 57
+--reset: índice 'etmunoz_ollama' borrado antes de guardar.
+Guardado en Redis con PREFIJO 'etmunoz_ollama': 193 fragmentos nuevos (0 ya existían).
+Tamaño de fragmento configurado: CHUNK_SIZE del .env; solape: CHUNK_OVERLAP del .env.
+Separadores: ['\n\n', '. ', ' ', '']
+Fragmentos generados: 193
+Tamaño promedio de fragmento: 971.2 caracteres (mínimo 322, máximo 1399).
+Fragmentos fusionados por debajo de 300 caracteres: 17.
+
+Fragmento 1 y 2 lado a lado (se resalta el texto en común):
+  Fragmento 1 (página 1, 1120 car.)
+    Ley 19628
+Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+ página 1 de 57
+Ley 19628
+SOBRE PROTECCION DE LOS DATOS PERSONALES
+MINISTERIO SECRETARÍA GENERAL DE LA PRESIDENCIA
+Fecha Publicación: 28-AGO-1999 | Fecha Promulgación: 18-AGO-1999Tipo Versión: Con Vigencia Diferida por Fecha De : 01-DIC-2026Ultima Modificación: 13-DIC-2024 Ley 21719Url Corta: https://bcn.cl/3eVHFS
+ 
+SOBRE PROTECCION DE LOS DATOS PERSONALES                        Ley 21719
+                                                                Art. primero N° 1)
+     Teniendo presente que el H. Congreso Nacional ha dado      D.O. 13.12.2024
+su aprobación al siguiente
+     P r o y e c t o  d e  l e y:
+     PROTECCION DE DATOS DE CARACTER PERSONAL 
+ 
+     Título Preliminar
+     Disposiciones generales
+ 
+     Artículo 1°.- Objeto y ámbito de aplicación. La
+presente ley tiene por objeto regular la forma y condiciones
+en la cual se efectúa el tratamiento y protección de los
+datos personales de las personas naturales, en conformidad
+al artículo 19, N° 4, de la Constitución Política de la
+República
+  Fragmento 2 (página 1, 647 car.)
+    .                                                      Ley 21719
+    Todo tratamiento de datos personales que realice una        Art. primero N° 2)
+persona natural o jurídica, incluidos los órganos               D.O. 13.12.2024
+públicos, debe respetar los derechos y libertades de las
+personas y quedará sujeto a las disposiciones de esta ley.
+    El régimen de tratamiento y protección de datos
+establecido en esta ley no se aplicará al tratamiento de
+datos que se realice en el ejercicio de las libertades de
+emitir opinión y de informar reguladas por las leyes a que
+se refiere el artículo 19, N° 12, de la Constitución
+Política de la República
+  Solape real entre 1 y 2: 0 caracteres (CHUNK_OVERLAP del .env = 200).
+Config B: 193 fragmentos, promedio 971.2, solape real entre los fragmentos 1 y 2 = 0 caracteres (de 200 configurados). Ahora la pregunta:
+
+Config B: parecido 0.5118, y el TOP_1 también termina en el encabezado c) sin su contenido → respuesta incorrecta. (El modelo corre con temperature=0, por eso A repitió la misma respuesta en las dos corridas.)
+
+Parte 4 — Decisión y restauración. Los datos:
+
+Config	CHUNK_SIZE	OVERLAP	Páginas	Fragmentos	Promedio	Solape 1–2	Parecido	Respuesta
+Base	800	120	57	294	627.6	—	0.5054	✅ correcta
+A	400	50	57	573	320.4	45/50 sí	0.6055	❌ incorrecta
+B	1200	200	57	193	971.2	0/200 no	0.5118	❌ incorrecta
+Elijo 800/120 (única configuración que responde correctamente) y la dejo en el .env:
+
+Base restaurada: 294 fragmentos, promedio 627.6, solape real 83/120 (visible). Confirmo la pregunta:
+
+$env:PYTHONIOENCODING='utf-8'; uv run python main.py rag "¿Qué establece el principio de proporcionalidad?" --saltos
+[salto] buscar
+  mejor_parecido: 0.5054
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.5054
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.4125
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.3940
+[salto] responder
+El principio de proporcionalidad establece que los datos personales que se traten deben limitarse estrictamente a aquéllos que resulten necesarios, adecuados y pertinentes en relación con los fines del tratamiento [LEY-19628 p.5].
+
+
+Base confirmada: 0.5054 y respuesta correcta, reproducible. Ahora documento. Marco el tiempo:
+
+Genero las capturas de las tres ingestas (salida literal):
+
+Ahora relleno pruebas/chunks.md:
+
+
+
+
+Inicio Compactación
+
+
+Objective
+Terminar el proyecto RAG del taller (LangGraph + Redis) siguiendo instrucciones/instruccion_00…06, instrucción_07, Instruccion_08 e instruccion_09, generando evidencias reales por etapa para la entrega en entrega/grupo-N-taller2-rag/.
+Requirements
+Ejecutar cada instrucción nueva que indique el usuario y mostrar los resultados en pantalla para copiar/pegar.
+Actualizar documentos agregando antecedentes y no borrando tablas/históricos.
+No generar el ZIP ni documento-entrega.docx hasta el final; no inventar resultados de etapas pendientes.
+No realizar etapas futuras de la rúbrica salvo indicación explícita.
+Separadores del splitter fijos ["\n\n", ". ", " ", ""].
+Commitear y pushear cuando lo pida; nada de .env, secretos ni índices locales en git.
+Decisions
+UMBRAL = 0.43 (antes 0.58 confirmado por el usuario): barrido exhaustivo con scripts/umbral.py (101 valores, 11 regímenes, máximo 8/10 en dos intervalos); ganó (0.3636, 0.5054] por mayor margen y 0 falsos negativos. Aplicado en .env, .env.example y default de src/rag/config.py.
+Regla 5 añadida al SYSTEM_PROMPT (sujeto/país) → elimina la alucinación de Q8; texto antes/después en pruebas/prompts.md §C.
+test_redis_cosine_threshold pasó a fijar UMBRAL=0.58 explícito para no depender del default.
+Nueva prueba de polisemia con script propio scripts/sentido.py (4 frases en un mismo lote).
+Proceso corregido: de aquí en adelante cada predicción va en su propio archivo prediccion_YYYYMMDD_hhmm.txt (la de las instrucciones 07/08 no tiene prueba a nivel de archivo).
+Work State
+Completed
+Instrucciones 00–06, instrucción_07, Instruccion_08, instruccion_09 ejecutadas.
+Etapa 4: 9 corridas de batería; config final 8/10 rutas, 0 falsos negativos, 0 alucinaciones.
+Etapa 2 (instrucción 08): predicción 0919 → ejecución 0921; control A1–A2 = 0.876027, objetivo B1–B2 = 0.716434, margen +0.159592 → orden esperado cumplido (predicción de banda 0,40–0,70 quedó por debajo de lo medido).
+Instrucción 09 (auditoría etapa 2): 2 huecos corregidos (conclusión de dos líneas en embeddings.md §7 y regla de una línea en §6, ambos reflejados en las capturas); limitación declarada en §15; §13–15 añadidas.
+59 pruebas OK; Redis healthy con 294 docs; sin reingesta ni operación Docker al cambiar UMBRAL.
+Commiteado y pusheado (3 commits, árbol limpio, main sincronizada):
+26003a8 etapas 00–07 (103 archivos)
+62ee7ec instrucciones 08 y 09 (12 archivos, incluye scripts/sentido.py)
+98b6156 salidas_opencode/salida_09.txt 0 → 4162 bytes
+Escaneos de secretos antes de cada commit: 0 coincidencias; .env nunca agregado.
+Active
+(none) — usuario indicó "detengo aquí las mejoras, para poder continuar"; después solo pidió commitear/pushear.
+Blocked
+(none)
+Next Move
+Esperar la siguiente instrucción del usuario.
+Etapas pendientes de la rúbrica (no ejecutar sin indicación): 1 y 2 (capturas .png), 3 (comparar dos configuraciones de chunk/solape), 5 (segunda regla, tres preguntas concretas, prueba de la trampa), 6 (nodo extra), bonus FAISS (+10), documento final y ZIP.
+Relevant Files
+entrega/grupo-N-taller2-rag/pruebas/embeddings.md: etapa 2 completa, secciones 1–15 (frases, predicciones, cosenos, tiempos, polisemia, auditoría).
+entrega/grupo-N-taller2-rag/pruebas/bateria.md: evidencia central de etapa 4; barrido de UMBRAL, 9 corridas, conclusiones 19–24.
+entrega/grupo-N-taller2-rag/pruebas/prompts.md: §C con SYSTEM_PROMPT antes/después (regla 5).
+entrega/grupo-N-taller2-rag/pruebas/capturas/: 9 JSON de batería, 3 .txt de etapa 2 y README.md.
+scripts/sentido.py, scripts/umbral.py, scripts/bateria.py: scripts permanentes nuevos/relevantes.
+docs/entrega.md: tabla de instrucciones 00–09, estado vigente y checklist.
+docs/preguntas.md, docs/docker.md, README.md: configuración vigente documentada.
+instrucciones/: fuentes de cada instrucción.
+Important Context
+Configuración vigente: UMBRAL=0.43, TOP_K=3, CHUNK_SIZE=800, CHUNK_OVERLAP=120, 294 fragmentos, SYSTEM_PROMPT con 5 reglas, VECTOR_STORE=redis, EMBEDDING_MODEL=bge-m3 (1024 dim, Ollama), MODELO=qwen3:8b, REDIS_URL=redis://localhost:16379.
+Parecidos del índice: 1=0.7285, 2=0.5054, 3=0.6848, 4=0.6533, 5=0.5361, 6=0.6286, 7=0.3636, 8=0.6104, 9=0.7411, 10=0.6986.
+Fallos pendientes de prompt: Q9 alternó "corridos"/"hábiles"; formato de citas inestable ([1], [1 p.4], [19628 p.5]).
+Reproducción: $env:PYTHONIOENCODING='utf-8'; uv run python ...; python no está en PATH; PowerShell rompe comillas y $ en python -c → usar scripts; uv run ... | Select-Object reporta falsamente "Exited with code 1".
+Repo: origin https://github.com/etmunoz/tarea_2_curso_1.git, rama main, 4 commits, sincronizado.
+No usar docker compose down -v ni borrar tarea_2_curso_1_redis_data.
+salidas_opencode/salida_NN.txt son transcripciones de sesión de OpenCode (no salidas de comando).
+
+
+Fin Compactación
+
+
+Ahora el índice de capturas: [Assistant tool call]: read({"path":"C:\Users\etmun\proyecto\tarea_2_curso_1\entrega\grupo-N-taller2-rag\pruebas\capturas\README.md"}) 
+[Tool result]: Read file C:\Users\etmun\proyecto\tarea_2_curso_1\entrega\grupo-N-taller2-rag\pruebas\capturas\README.md, lines 1-30 1: 7: 8: 
+# Evidencias 9: 10. Las evidencias son el resultado de ejecutar el proyecto. 
+11. No se generan con un prompt: se obtienen corriendo comandos reales y 
+12. copiando lo que devuelven. 
+13. En la etapa 4 se ejecutaron nueve corridas de la batería y aquí está cada 
+14. una con su configuración: B0, B0B, B1, B2, B3, B4, B5, B6 y la 
+15. corrida final con UMBRAL=0.43 y la regla 5 activa. 
+16. El barrido completo del umbral (101 valores × 11 regímenes) quedó documentado 
+17. en ../bateria.md. 
+18. En la etapa 2 (instrucción 08) se ejecutaron tres corridas de polisemia y 
+19. queda cada resultado con su predicción. 
+20: 21. Cada fila registra un archivo; los .png pueden contener un recorte. 
+22. | Archivo | Etapa | Qué se ve | Fecha | 
+23. | --- | --- | --- | --- | 
+24. | 20261027_2130_etapa4_bateria_B0.txt | 4 | Batería base: UMBRAL=0.65, TOP_K=3. Q8 arriba del umbral y fuera del TOP_K → 0/10 | 20261027_2130 | 
+25. | 20261027_2141_etapa4_bateria_B0B.txt | 4 | Batería con UMBRAL=0.65, TOP_K=4. Q8 arriba del umbral pero fuera del TOP_K → 0/10 | 20261027_2141 | 
+26. | 20261027_2225_etapa4_bateria_B1.txt | 4 | Batería con UMBRAL=0.58, TOP_K=3. Q8 sigue fuera del TOP_K → 0/10 | 20261027_2225 | 
+27. | 20261027_2323_etapa4_bateria_B2.txt | 4 | Batería con UMBRAL=0.50, TOP_K=3. Q8 entra por primera vez y pasa a 10/10 | 20261027_2323 | 
+28. | 20261027_2341_etapa4_bateria_B3.txt | 4 | Batería con UMBRAL=0.46, TOP_K=3. Se reduce el umbral para ver falsos positivos → sigue 10/10, sin falsos negativos | 20261027_2341 | 
+29. | 20261027_2355_etapa4_bateria_B4.txt | 4 | Batería con UMBRAL=0.40, TOP_K=3. Aparecen los primeros falsos positivos (Q2, Q9 y Q10 → 1/10) | 20261027_2355 |
+
+Sigue completar el índice de capturas, correr las pruebas y cerrar con el commit + push. Marco el encabezado y agrego las tres filas:
+
+Las filas quedaron en el formato correcto. Actualizo el resto del índice:
+
+Reviso chunks.md completo para verificar cómo quedó:
+
+Verifico la afirmación de los 829 caracteres con --texto en la configuración base (para que el documento no afirme nada sin evidencia):
+
+$env:PYTHONIOENCODING='utf-8'; uv run python main.py rag "¿Qué establece el principio de proporcionalidad?" --saltos --texto 2>&1 | Select-Object -First 40
+
+[salto] buscar
+  mejor_parecido: 0.5054
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.5054
+    inicio: 'mismo; que el titular otorgue nuevamente su\nconsentimiento, y cuando lo disponga'
+    largo: 829 caracteres
+    texto:
+      mismo; que el titular otorgue nuevamente su
+      consentimiento, y cuando lo disponga la ley.
+          c) Principio de proporcionalidad. Los datos personales
+      que se traten deben limitarse estrictamente a aquéllos que
+      resulten necesarios, adecuados y pertinentes en relación
+      con los fines del tratamiento.
+          Los datos personales pueden ser conservados sólo por el
+      período de tiempo que sea necesario para cumplir con los
+      fines del tratamiento, luego de lo cual deben ser suprimidos
+      o anonimizados, sin perjuicio de las excepciones que
+      establezca la ley. Un período de tiempo mayor requiere
+      autorización legal o consentimiento del titular.
+          d) Principio de calidad. Los datos personales deben ser
+      exactos, completos, actuales y pertinentes en relación con
+      su proveniencia y los fines del tratamiento.
+          e) Principio de responsabilidad
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.4125
+    inicio: '. El tratamiento de los datos\npersonales se rige por los siguientes principios: '
+    largo: 584 caracteres
+    texto:
+      . El tratamiento de los datos
+      personales se rige por los siguientes principios:               Ley 21719
+                                                                      Art. primero N° 6
+          a) Principios de licitud y lealtad. Los datos personales    D.O. 13.12.2024
+      sólo pueden tratarse de manera lícita y leal.
+          El responsable deberá ser capaz de acreditar la licitud
+      del tratamiento de datos personales que realiza.
+          b) Principio de finalidad. Los datos personales deben
+      ser recolectados con fines específicos, explícitos y
+      lícitos. El tratamiento de los datos personales debe
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.3940
+    inicio: '. El\nresponsable debe entregar al titular toda la información\nque sea necesaria '
+    largo: 763 caracteres
+    texto:
+
+Exited with code 1
+
+Confirmado: 829 caracteres con el literal c) completo. Ahora corro las pruebas y reviso el estado de git:
+
+59 pruebas OK. Estado de git y agregado de archivos:
+
+.env sigue fuera del repo. Escaneo de secretos antes de commitear:
+
+0 coincidencias reales (son documentación, pruebas y el léxico de la ley). Agrego y commiteo:
+
+Listo. Instrucción 10 completa, commiteada y pusheada (98b6156..5dffe5f).
+
+Resumen para copiar/pegar
+Etapa 3 — Comparar chunk/solape y elegir configuración
+
+Configuración	CHUNK_SIZE	CHUNK_OVERLAP	Páginas	Fragmentos	Tamaño promedio	Fragmentos 1 y 2 muestran solape
+A	400	50	57	573	320.4	sí — 45 car. reales de 50
+B	1200	200	57	193	971.2	no — 0 car. reales de 200
+Base (elegida)	800	120	57	294	627.6	sí — 83 car. reales de 120
+Configuración	Parecido	Respuesta a "¿Qué establece el principio de proporcionalidad?"
+A	0.6055 (el más alto)	❌ incorrecta — el TOP_1 de 103 car. traía solo el encabezado c)
+B	0.5118	❌ incorrecta — respondió el literal b) (finalidad)
+Base	0.5054	✅ correcta, idéntica en dos corridas
+Elegimos: 800 / 120. Es la única que responde correctamente. El hallazgo útil: parecido más alto ≠ mejor respuesta — la 400/50 gana en parecido y pierde en contenido, porque con CHUNK_SIZE//4 = 100 el fragmento de 103 caracteres ya no se fusiona con su texto.
+
+Queda CHUNK_SIZE=800, CHUNK_OVERLAP=120 en .env y el índice Redis reingerido con esa configuración (294 fragmentos).
+
+Archivos tocados
+entrega/grupo-N-taller2-rag/pruebas/chunks.md — tablas, comparativa y justificación
+entrega/grupo-N-taller2-rag/pruebas/capturas/20261028_1014_etapa3_ingesta_{A_400_50,B_1200_200,base_800_120}.txt — salida literal de cada ingesta y consulta
+entrega/grupo-N-taller2-rag/pruebas/capturas/README.md, docs/docker.md (las tres reingestas), docs/entrega.md
+59 pruebas OK; .env sigue fuera de git
+Estado de la rúbrica
+✅ Etapas 2, 3 y 4 con evidencia real
+⬜ Etapa 1 (capturas del agente), etapa 5 (segunda regla + trampa), etapa 6 (nodo extra), bonus FAISS, documento final y ZIP
+Espero tu revisión y las instrucciones para agregar tus comentarios.
+
+Comentarios del Usuario: Quedan finalmente 800/120 como combinación final a dejar, junto con el umbral ya definido.

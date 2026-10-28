@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: comparar configuraciones de fragmentación y sus resultados en la etapa 3.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_1014
+fecha_hora_modificacion: 20261028_1033
 -->
 
 # Configuraciones de chunks — etapa 3
@@ -83,3 +83,25 @@ contenido. Ese es el dato que justifica la elección.
 Queda `CHUNK_SIZE=800` y `CHUNK_OVERLAP=120` en `.env` **para el resto del
 taller**, y el índice Redis de 294 fragmentos fue **reingerido con esa
 configuración** al cerrar la etapa.
+
+### Validación del usuario (20261028_1033)
+
+Tras revisar el commit `5dffe5f`, el usuario confirmó:
+
+> Comentarios del Usuario: Quedan finalmente 800/120 como combinación final a
+> dejar, junto con el umbral ya definido.
+
+Confirma la elección de esta etapa **junto con el umbral ya definido**:
+`UMBRAL=0.43` (barrido de 101 valores en `bateria.md`). La combinación vigente
+para el resto del taller queda así:
+
+| Parámetro | Valor | Origen |
+| --- | ---: | --- |
+| `CHUNK_SIZE` | **800** | Elegido en esta etapa y validado por el usuario |
+| `CHUNK_OVERLAP` | **120** | Elegido en esta etapa y validado por el usuario |
+| `UMBRAL` | **0.43** | Barrido exhaustivo de la etapa 4, ya definido |
+| `TOP_K` | 3 | Sin cambios |
+
+Registro completo del comentario en `docs/entrega.md`
+(sección "Comentarios y validación del usuario"). No hubo cambios de código:
+los tres valores ya estaban en `.env` y el índice ya estaba reingerido.
