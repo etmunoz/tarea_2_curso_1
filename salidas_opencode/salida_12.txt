@@ -461,7 +461,24 @@ Lo registraré como comentario literal en la evidencia de la etapa 5 y en la bit
 Registré tu comentario completo en docs/entrega.md y añadí la observación sobre la respuesta fuera de contexto en pruebas/antes-despues.md. No cambié el prompt ni repetí las pruebas.
 
 
-Instrucción del Usuario: revisa que haya quedado todo documentado como se pide, completo, me confirmas y commitea y pushea.
+Instrucción del Usuario: revisa que haya quedado todo documentado como se pide para la entrega 5, completo, me confirmas y commitea y pushea.
+
+Voy a comprobar la checklist de etapa 5, las evidencias y el alcance exacto de los cambios antes de crear el commit. Revisaré también que la regla 1 y la configuración hayan quedado restauradas y que no se incluya .env ni otros archivos ajenos.
+
+La revisión confirma que la evidencia de etapa 5 contiene las tres respuestas antes/después, tus comentarios, la trampa repetida con regla 10 y la prueba temporal con restauración. También corregí referencias obsoletas sobre USER_PROMPT y dejé explícitos los resultados negativos y la diferencia entre las reglas solicitadas y las dos que pide la plantilla. Ahora prepararé el commit; .env permanece ignorado y fuera del cambio.
+
+Detecté que cinco salidas .txt quedaron en UTF‑16LE por la captura de PowerShell, por eso Git las clasificaba como binarias. Las convertiré a UTF‑8 conservando el texto y verificaré que queden legibles antes de commitear.
+
+La etapa 5 quedó documentada y el commit fue enviado a origin/main. La revisión confirma que están guardados el antes/después de las tres preguntas, tus comentarios, la prueba de los 120 días antes y después de añadir la regla 10, el control con la regla 1 retirada y el resultado tras restaurarla. También quedaron copiados los prompts vigentes en la documentación.
+
+Resultados importantes, sin presentarlos como éxitos que no ocurrieron:
+
+La regla 10 cambió la redacción, pero el agente siguió sin corregir los 120 días.
+Sin la regla 1 y con UMBRAL=0, no inventó temperaturas porque la regla 3 seguía activa. Al restaurar el prompt y UMBRAL=0.43, la misma consulta fue a no_se.
+Las 59 pruebas unitarias pasaron. .env no se incluyó; conserva UMBRAL=0.43 y TOP_K=4.
+Commit: 5a0e19d — Completa evidencias de etapas 4 y 5. main quedó limpia y sincronizada con origin/main.
+
+Nota de rúbrica: la instrucción base pide cambiar dos reglas, mientras que por indicación tuya se añadieron las reglas 6–9 y luego la 10. La documentación deja explícita esa diferencia. Esto cierra estas pruebas y su documentación, no las etapas pendientes ni la generación final del ZIP o del documento.
 
 
 
