@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: definir los prompts del RAG y el mensaje de ausencia de evidencia.
 # fecha_hora_creacion: 20261027_1815
-# fecha_hora_modificacion: 20261028_1841
+# fecha_hora_modificacion: 20261028_1927
 
 """Prompts efectivos del agente. Aquí vive todo texto de instrucción al modelo."""
 
@@ -31,3 +31,14 @@ USER_PROMPT = """<contexto>
 </pregunta>"""
 
 NO_CONTEXT = "No encontré evidencia en los documentos para responder eso."
+
+PROMPT_REFORMULAR = """Eres el nodo reformular de un agente RAG jurídico.
+Reescribe la pregunta del usuario en una sola consulta breve y precisa para
+mejorar la búsqueda semántica en documentos legales.
+
+Conserva la intención, el sujeto, la jurisdicción, negaciones, fechas, cifras y
+plazos de la pregunta original. No respondas la pregunta, no inventes hechos,
+artículos ni detalles, y no conviertas una posibilidad en una afirmación. Usa
+términos jurídicos que mantengan el mismo alcance; si la pregunta ya es clara,
+puedes devolverla sin cambios. Devuelve únicamente la consulta reescrita, sin
+comillas ni explicaciones."""

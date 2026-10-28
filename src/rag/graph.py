@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
-# Objetivo: construir el grafo de búsqueda, evidencia, respuesta y no-se con memoria por hilo.
+# Objetivo: construir el grafo RAG con reformulación, búsqueda, respuesta y no-se con memoria por hilo.
 # fecha_hora_creacion: 20261027_1815
-# fecha_hora_modificacion: 20261027_2015
+# fecha_hora_modificacion: 20261028_1927
 
 from typing import Annotated, TypedDict
 
@@ -17,15 +17,28 @@ from .prompts import NO_CONTEXT
 
 class RagState(TypedDict, total=False):
     pregunta: str
+    pregunta_original: str
+    pregunta_reformulada: str
     fragmentos: list[dict]
     mejor_parecido: float
     respuesta: str
     messages: Annotated[list, add_messages]
 
 
+def reformular(state: RagState) -> dict:
+    """Prepara una consulta para recuperación y conserva la pregunta original."""
+    original = state["pregunta"]
+    reescrita = tools.reformular(original) or original
+    return {
+        "pregunta_original": original,
+        "pregunta_reformulada": reescrita,
+    }
+
+
 def buscar(state: RagState) -> dict:
     """Embebe la pregunta, consulta get_vector_store(PREFIJO) y trae TOP_K fragmentos."""
-    fragmentos = tools.buscar(state["pregunta"])
+    consulta = state.get("pregunta_reformulada") or state["pregunta"]
+    fragmentos = tools.buscar(consulta)
     mejor = max((f["parecido"] for f in fragmentos), default=0.0)
     return {
         "fragmentos": fragmentos,
@@ -53,10 +66,12 @@ def evidencia(state: RagState) -> str:
 
 def build_graph():
     graph = StateGraph(RagState)
+    graph.add_node("reformular", reformular)
     graph.add_node("buscar", buscar)
     graph.add_node("responder", responder)
     graph.add_node("no_se", no_se)
-    graph.add_edge(START, "buscar")
+    graph.add_edge(START, "reformular")
+    graph.add_edge("reformular", "buscar")
     graph.add_conditional_edges("buscar", evidencia, {
         "responder": "responder", "no_se": "no_se",
     })

@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: recuperar fragmentos con su parecido y generar respuestas citadas con el proveedor configurado.
 # fecha_hora_creacion: 20261027_1815
-# fecha_hora_modificacion: 20261027_2015
+# fecha_hora_modificacion: 20261028_1927
 
 from pathlib import Path
 
@@ -9,7 +9,7 @@ from langchain_core.documents import Document
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from .llm import get_chat_model
-from .prompts import SYSTEM_PROMPT, USER_PROMPT
+from .prompts import PROMPT_REFORMULAR, SYSTEM_PROMPT, USER_PROMPT
 from .storage import search_with_similarity
 
 
@@ -27,6 +27,23 @@ def buscar(pregunta: str) -> list[dict]:
             "parecido": similarity,
         })
     return fragmentos
+
+
+def reformular(pregunta: str) -> str:
+    """Reescribe la consulta sin contestarla; usa la pregunta original como fallback."""
+    response = get_chat_model().invoke([
+        SystemMessage(content=PROMPT_REFORMULAR),
+        HumanMessage(content=pregunta),
+    ])
+    if isinstance(response.content, str):
+        texto = response.content
+    else:
+        texto = "\n".join(
+            bloque["text"] for bloque in response.content
+            if isinstance(bloque, dict) and bloque.get("type") == "text"
+        )
+    reformulada = " ".join(texto.strip().strip("\"'«»“”").split())
+    return reformulada or pregunta
 
 
 def responder(pregunta: str, fragmentos: list[dict]) -> str:

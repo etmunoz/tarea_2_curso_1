@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: verificar selección de proveedor, ausencia de claves para Ollama y separación de cachés.
 # fecha_hora_creacion: 20261027_1938
-# fecha_hora_modificacion: 20261027_2015
+# fecha_hora_modificacion: 20261028_1927
 
 import io
 import json
@@ -99,6 +99,20 @@ class ModelTests(unittest.TestCase):
         # El USER_PROMPT lleva la pregunta entre las etiquetas pedidas.
         self.assertIn("<pregunta>\nPregunta\n</pregunta>", messages[1].content)
         self.assertIn("<contexto>", messages[1].content)
+
+    def test_reformular_uses_its_node_prompt_and_returns_only_query(self):
+        model = Mock()
+        model.invoke.return_value = AIMessage(content='  "¿Qué derechos reconoce la ley al titular?"  ')
+        with patch.object(tools, "get_chat_model", return_value=model) as factory:
+            result = tools.reformular("¿Cuáles son los derechos que tiene el titular?")
+        self.assertEqual(result, "¿Qué derechos reconoce la ley al titular?")
+        factory.assert_called_once()
+        messages = model.invoke.call_args.args[0]
+        self.assertIn("no respondas la pregunta", messages[0].content.lower())
+        self.assertEqual(
+            messages[1].content,
+            "¿Cuáles son los derechos que tiene el titular?",
+        )
 
     def test_buscar_returns_fragments_with_similarity(self):
         document = Document(page_content="Contenido", metadata={"source": "docs/ley.pdf", "page": 7})

@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: documentar el antes/después y los comentarios del usuario para las tres preguntas de la etapa 5.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_1854
+fecha_hora_modificacion: 20261028_1933
 -->
 
 # Antes y después de los prompts — etapa 5
@@ -202,7 +202,7 @@ El prompt se restauró byte por byte y `.env` conservó sus valores.
 Evidencias: `capturas/etapa5_sin_regla1_umbral0_20261028.txt` y
 `capturas/etapa5_regla1_restaurada_umbral043_20261028.txt`.
 
-## `src/rag/prompts.py` completo y vigente después de las pruebas
+## `src/rag/prompts.py` completo al cierre de etapa 5 (20261028_1841)
 
 ```python
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
@@ -239,6 +239,10 @@ USER_PROMPT = """<contexto>
 
 NO_CONTEXT = "No encontré evidencia en los documentos para responder eso."
 ```
+
+Este es el archivo completo tal como estaba al cierre de la etapa 5. La etapa 6
+añadió `PROMPT_REFORMULAR`; ese prompt efectivo y su implementación están
+registrados en `prompts.md`, sección E, y en `nodo-extra.md`.
 
 La prueba de control no justifica afirmar que el modelo alucinó. La etapa queda
 documentada con el resultado real: regla 10 aún insuficiente en esta prueba y

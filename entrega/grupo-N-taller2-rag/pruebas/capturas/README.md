@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: indicar cómo reunir capturas y salidas verificables para la entrega.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_1853
+fecha_hora_modificacion: 20261028_1933
 -->
 
 # Capturas y salidas
@@ -42,6 +42,17 @@ verificación textual del PDF en `../bateria.md`.
 | `etapa5_prompt_backup_pre_regla1_20261028.txt` | Copia exacta del prompt antes de quitar temporalmente la regla 1 |
 | `etapa5_sin_regla1_umbral0_20261028.txt` | Pregunta de temperatura con regla 1 retirada y UMBRAL=0; no alucina |
 | `etapa5_regla1_restaurada_umbral043_20261028.txt` | Misma consulta tras restaurar prompt y UMBRAL=0.43; ruta no_se |
+
+## Etapa 6 — instrucción 13 (20261028)
+
+| Archivo | Contenido |
+| --- | --- |
+| `etapa6_diagrama_antes_20261028.mmd` | Mermaid del grafo previo: buscar → responder/no_se |
+| `etapa6_diagrama_despues_20261028.mmd` | Mermaid con reformular antes de buscar |
+| `etapa6_antes_pregunta3_20261028.txt` | Q3, ruta y respuesta sin nodo nuevo |
+| `etapa6_despues_pregunta3_20261028.txt` | Q3, original/reformulada, ruta y respuesta con nodo |
+| `etapa6_antes_pregunta5_20261028.txt` | Q5, ruta y respuesta sin nodo nuevo |
+| `etapa6_despues_pregunta5_20261028.txt` | Q5, original/reformulada, ruta y respuesta con nodo |
 
 ## Contenido actual (inventario inicial 20261028_0809, actualizado 20261028_1016)
 

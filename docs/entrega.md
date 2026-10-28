@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: organizar la entrega, sus pendientes y la consolidación final de código y evidencias.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_1854
+fecha_hora_modificacion: 20261028_1936
 -->
 
 # Plan de entrega del taller 2 RAG
@@ -28,7 +28,10 @@ agente corrigiera explícitamente «120 días»; con regla 1 retirada y UMBRAL=0
 tampoco alucinó, pues la regla 3 siguió activa. Se conserva el resultado aunque
 no sea el efecto esperado. El usuario pidió reglas 6–9 y luego la regla 10,
 aunque la instrucción base pedía dos cambios; esta diferencia se documenta sin
-ocultarla. La evidencia de etapa 5 está completa; etapa 6 sigue pendiente.
+ocultarla. La evidencia de etapa 5 está completa. La etapa 6 ya se ejecutó con
+`reformular`; las mediciones muestran menos ruido en Q3, aunque sigue incompleta,
+y una respuesta sin cambios en Q5. El usuario evalúa ambos casos como mejora;
+las dos lecturas se distinguen en `pruebas/nodo-extra.md`.
 
 La instrucción exacta está en `instrucciones/instruccion_11.txt`; conservar
 también la transcripción de `salidas_opencode/salida_11.txt` para el documento
@@ -101,6 +104,15 @@ Texto recibido, conservado literalmente:
 > En el caso de la frase fuera, cambia la forma de la respuesta, más coherente en el caso de la situación normal. Si bien cambia la respuesta, no hay cambios significativos en la misma.
 
 - **Efecto:** comentario incorporado a `pruebas/antes-despues.md`; no se cambió el prompt ni se repitieron las pruebas.
+
+### 20261028_1936 — Evaluación del usuario sobre etapa 6
+
+Texto recibido:
+
+> Comentarios del Usuario: Claramente mejora la respuesta al ser reformulada, al menos para los dos casos probados se evidencia una mejora.
+
+- **Efecto:** incorporado literalmente a `pruebas/nodo-extra.md` como evaluación
+  del usuario, separado de los parecidos, rutas y respuestas medidos.
 
 ## Estructura preparada
 
@@ -192,12 +204,13 @@ no atribuir retrospectivamente un contenido nuevo a una ejecución anterior.
 | `instruccion_09` | Revisión de los entregables de la etapa 2: frases + predicción + tabla de cosenos + conclusión de 2 líneas; tabla de tiempos n=200/2000 + regla en 1 línea | **Ejecutada 20261028_0938**. Ambos entregables verificados contra los archivos. **2 huecos corregidos**: faltaba la conclusión de dos líneas y la regla en una sola línea (añadidas en `embeddings.md` §6/§7 y en las dos capturas). **Limitación declarada** en §15: el orden de la predicción no tiene prueba a nivel de archivo, porque el mismo `embeddings.md` se editó después; proceso corregido para las próximas predicciones |
 | `instruccion_10` | Etapa 3: ingerir con 400/50 y con 1200/200, ver fragmentos 1 y 2, preguntar al agente y elegir configuración | **Ejecutada 20261028_1014**. Medido con `--reset` en cada paso: **A 400/50 → 573 frag., 320.4 car., solape 45/50, parecido 0.6055 pero respuesta incorrecta** (TOP_1 de 103 car. solo con el encabezado `c)`); **B 1200/200 → 193 frag., 971.2 car., solape 0/200, parecido 0.5118 respuesta incorrecta**; **base 800/120 → 294 frag., 627.6 car., solape 83/120, parecido 0.5054 respuesta correcta (2 corridas idénticas)**. **Elegida 800/120**, dejada en `.env` y reingerida. Tablas y justificación en `pruebas/chunks.md`; capturas `20261028_1014_etapa3_ingesta_*.txt` |
 
-### Instrucciones 11 y 12 — actualización
+### Instrucciones 11–13 — actualización
 
 | Instrucción | Estado y resultados |
 | --- | --- |
 | `instruccion_11` | Etapa 4 ejecutada con comparaciones TOP_K=1/3/4/5; **TOP_K=4 elegido** con UMBRAL=0.43 y chunks 800/120. Tabla, falsos positivos, prueba léxica y citas en `pruebas/bateria.md`; JSON y capturas en `pruebas/capturas/`. |
-| `instruccion_12` | Etapa 5: antes/después preguntas 1–3, trampa 120 días y prueba temporal quitando/restaurando regla 1 ejecutadas. La regla 10 no corrigió explícitamente la premisa; sin regla 1 y UMBRAL=0 tampoco hubo alucinación, pues regla 3 permaneció activa. Evidencia y prompt vigente en `pruebas/antes-despues.md` y `pruebas/prompts.md`. Pendiente revisión del usuario sobre suficiencia de la regla 10 y requisito base de dos reglas frente a las cinco reglas adicionales acordadas. |
+| `instruccion_12` | Etapa 5: antes/después preguntas 1–3, trampa 120 días y prueba temporal quitando/restaurando regla 1 ejecutadas. La regla 10 no corrigió explícitamente la premisa; sin regla 1 y UMBRAL=0 tampoco hubo alucinación, pues regla 3 permaneció activa. Evidencia y prompt vigente en `pruebas/antes-despues.md` y `pruebas/prompts.md`. La diferencia entre las reglas pedidas por el usuario y el requisito original de dos cambios se declara explícitamente. |
+| `instruccion_13` | Etapa 6: nodo `reformular` antes de `buscar`, prompt propio, diagramas Mermaid antes/después y preguntas 3 y 5 con `--saltos`. El nodo aparece en las rutas; Q3 deja de añadir el punto p.19 pero sigue incompleta, Q5 no cambia sustantivamente. No se afirma mejora donde no la hubo. Evidencia en `pruebas/nodo-extra.md`, `pruebas/prompts.md`, `pruebas/capturas/` y `salidas_opencode/salida_13.txt`. 60 pruebas unitarias OK. |
 
 ### Estado actual frente a los valores históricos de la tabla
 
@@ -251,8 +264,10 @@ Los separadores del splitter siguen **fijos** en `["\n\n", ". ", " ", ""]`
       que regla 10 no corrigió la premisa y que no hubo alucinación sin regla 1.
       La diferencia entre las reglas adicionales acordadas y el requisito base
       de dos reglas queda explícita, no se presenta como cumplimiento exacto.
-- [ ] Implementar y evaluar el nodo extra con rutas antes/después y dos preguntas
-      donde mejora; explicar por qué, para qué y qué hace.
+- [x] Implementar y evaluar el nodo extra con rutas antes/después en dos preguntas;
+      explicar por qué, para qué y qué hace. Se eligió `reformular`; no hubo mejora
+      sustantiva global: resultado, diagramas, prompt y limitaciones en
+      `pruebas/nodo-extra.md`. La rúbrica permite documentar honestamente si no mejora.
 - [ ] Registrar todos los prompts exactos de OpenCode con sus correcciones y los
       efectivos del agente: SYSTEM_PROMPT, USER_PROMPT y prompt del nodo extra.
       **Parcial**: para la instrucción 12 se conservaron la fuente y la

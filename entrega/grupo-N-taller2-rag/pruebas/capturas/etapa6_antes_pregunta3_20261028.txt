@@ -1,0 +1,13 @@
+[salto] buscar
+  mejor_parecido: 0.6848
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6848
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.19 parecido=0.6836
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6485
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.6410
+[salto] responder
+La supresi├│n de los datos personales procede en los siguientes casos:  
+- Cuando el titular haya revocado su consentimiento para el tratamiento y ├®ste no tenga otro fundamento legal [LEY-19628 p.7].  
+- Cuando los datos hayan sido obtenidos o tratados il├¡citamente por el responsable [LEY-19628 p.7].  
+- Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resoluci├│n de la autoridad de protecci├│n de datos o de una obligaci├│n legal [LEY-19628 p.7].  
+- Cuando el titular haya ejercido su derecho de oposici├│n y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].  
+- Cuando el tratamiento de los datos personales del titular resulte indispensable para salvaguardar la vida, salud o integridad f├¡sica o ps├¡quica del titular o de otra persona, o cuando el titular se encuentre f├¡sica o jur├¡dicamente impedido de otorgar su consentimiento [LEY-19628 p.19].

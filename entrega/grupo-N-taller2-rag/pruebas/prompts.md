@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: conservar prompts completos de OpenCode y del agente con sus correcciones y pruebas.
 fecha_hora_creacion: 20261027_1907
-fecha_hora_modificacion: 20261028_1853
+fecha_hora_modificacion: 20261028_1934
 -->
 
 # Registro de todos los prompts
@@ -41,11 +41,11 @@ Para cada versión conservar el texto completo, qué cambió, su motivo y prueba
 | --- | --- | --- |
 | `SYSTEM_PROMPT` | `src/rag/prompts.py`; **versión vigente: reglas 1–10** (20261028_1841), usada por el nodo `responder` vía `src/rag/tools.py` | Texto íntegro, historial y evidencia en las secciones C y D; las versiones previas siguen ahí |
 | `USER_PROMPT` | `src/rag/prompts.py`; usado por `src/rag/tools.py` al construir el mensaje de usuario | Texto exacto reproducido en la sección D y en `antes-despues.md` |
-| Prompt del nodo extra | Pendiente de definir el nodo e implementar su prompt | Pendiente |
+| Prompt del nodo extra | `PROMPT_REFORMULAR` en `src/rag/prompts.py`; nodo `reformular` de etapa 6 | Texto, prompt de implementación y resultados en sección E y `nodo-extra.md` |
 
 `USER_PROMPT` sí está centralizado en `prompts.py` y se usa mediante
 `USER_PROMPT.format(contexto=..., pregunta=...)` en `tools.py`. El prompt del
-nodo extra permanece pendiente porque esa etapa no se ha ejecutado.
+nodo extra está implementado y probado en etapa 6.
 
 ## C. Cambios registrados
 
@@ -230,6 +230,44 @@ está pegado en `antes-despues.md`.
 esta conversación se añadieron las reglas numeradas 6–10 según indicaciones
 del usuario. No se oculta esa diferencia. La sección A (prompts exactos de
 OpenCode) y el documento final de entrega siguen pendientes.
+
+## E. Etapa 6 — nodo `reformular` (20261028)
+
+### Prompt de implementación para OpenCode
+
+Agrega al agente `rag` un nodo nuevo llamado `reformular`.
+
+- Por qué existe: en la etapa 4 una pregunta dentro del corpus redactada con sinónimos no recuperó el fragmento esperado.
+- Para qué sirve: mejorar la consulta que llega a la búsqueda semántica sin responder al usuario ni cambiar su intención.
+- Qué hace exactamente: recibe la pregunta original y genera una sola consulta breve en español; conserva sujeto, jurisdicción, negaciones, cifras y plazos; no responde, no añade hechos o detalles no presentes en la pregunta; si ya es clara puede devolverla sin cambios. La búsqueda usa la reescritura, pero la respuesta final recibe la pregunta original.
+- Dónde va en el grafo: `START → reformular → buscar → (responder | no_se) → END`.
+- Prompt propio en `src/rag/prompts.py`: `PROMPT_REFORMULAR`.
+- `--saltos` muestra el nodo, la pregunta original y la reformulada.
+- No altera la lógica de los demás nodos ni el criterio `UMBRAL`.
+
+Solicitud original y conversación de esta instrucción: `instrucciones/instruccion_13.txt`
+y `salidas_opencode/salida_13.txt`. Diagramas y rutas en `pruebas/nodo-extra.md`
+y `pruebas/capturas/`.
+
+### Prompt efectivo del nodo en `src/rag/prompts.py`
+
+```text
+Eres el nodo reformular de un agente RAG jurídico.
+Reescribe la pregunta del usuario en una sola consulta breve y precisa para
+mejorar la búsqueda semántica en documentos legales.
+
+Conserva la intención, el sujeto, la jurisdicción, negaciones, fechas, cifras y
+plazos de la pregunta original. No respondas la pregunta, no inventes hechos,
+artículos ni detalles, y no conviertas una posibilidad en una afirmación. Usa
+términos jurídicos que mantengan el mismo alcance; si la pregunta ya es clara,
+puedes devolverla sin cambios. Devuelve únicamente la consulta reescrita, sin
+comillas ni explicaciones.
+```
+
+Se probaron las preguntas 3 y 5 con UMBRAL=0.43, TOP_K=4 y chunks 800/120
+antes/después. En Q3 dejó de aparecer en la respuesta el punto de p.19, pero la
+lista siguió incompleta; Q5 mantuvo la misma respuesta parcial. Detalles,
+respuestas, explicación y conclusiones en `nodo-extra.md`.
 
 ## Inclusión en el documento final
 

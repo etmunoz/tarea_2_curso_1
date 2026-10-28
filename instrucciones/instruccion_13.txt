@@ -1,0 +1,30 @@
+Ahora nos toca la etapa 6
+
+
+Un nodo más, definido con reglas
+Tu meta: agregar reformular o verificar al grafo y demostrar con la ruta que cambió algo.
+
+Elige uno. reformular va antes de buscar: reescribe la pregunta del usuario en una versión más precisa para el embedding (sirve si en la etapa 4 fallaron preguntas con sinónimos). verificar va después de responder: revisa que cada afirmación tenga cita y, si falta, vuelve a responder (sirve si en la etapa 5 hubo citas flojas).
+
+Recuerda la regla del deck: el LLM no es adivino. El prompt a OpenCode tiene que decir del nodo nuevo por qué existe, para qué sirve y qué hace exactamente, con su propio prompt en prompts.py. Sin eso, el nodo no cambia nada o rompe el grafo.
+
+prompt a OpenCode · plantilla del nodo extra (completa los corchetes)
+Copiar
+Agrega al agente rag un nodo nuevo llamado [reformular | verificar].
+- Por qué existe: [en mi batería fallaron las preguntas con sinónimos | en mis pruebas hubo respuestas sin cita].
+- Para qué sirve: [que buscar reciba una pregunta más precisa | que ninguna afirmación salga sin [archivo p.N]].
+- Qué hace exactamente: [reescribe la pregunta en una frase corta con los términos del tema, sin responderla | revisa la respuesta; si una afirmación no tiene cita, vuelve a responder una vez con la instrucción de citar todo].
+- Dónde va en el grafo: [START → reformular → buscar | responder → verificar → END, con una vuelta máxima a responder].
+- Su prompt va en prompts.py con nombre [PROMPT_REFORMULAR | PROMPT_VERIFICAR].
+- --saltos debe mostrar el nodo nuevo en la ruta y, en reformular, imprimir la pregunta original y la reescrita.
+No cambies el comportamiento de los otros nodos.
+Corre python main.py rag --diagrama antes y después: guarda los dos Mermaid.
+Repite dos preguntas de tu batería donde esperas mejora. Muestra la ruta con --saltos y la respuesta antes y después.
+Si no mejoró, dilo y explica por qué: también vale.
+Entregables de la etapa 6
+
+El prompt que le diste a OpenCode para el nodo (con sus por qué, para qué y qué hace) y el prompt del nodo en prompts.py.
+Los dos diagramas (antes y después) y las rutas con --saltos de las dos preguntas, con las respuestas.
+
+
+Trabaja en lo indicado, con salidas por pantalla para ver lo que está sucediendo y copiando y pegando lo que corresponda.

@@ -1,0 +1,15 @@
+[salto] reformular
+  pregunta original: ┬┐En qu├® casos procede la supresi├│n de los datos personales?
+  pregunta reformulada: ┬┐En qu├® casos legalmente se permite la supresi├│n de datos personales?
+[salto] buscar
+  mejor_parecido: 0.6831
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6831
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.19 parecido=0.6655
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6648
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.20 parecido=0.6428
+[salto] responder
+La supresi├│n de los datos personales procede en los siguientes casos:  
+- Cuando el titular haya revocado su consentimiento para el tratamiento y ├®ste no tenga otro fundamento legal [LEY-19628 p.7].  
+- Cuando los datos hayan sido obtenidos o tratados il├¡citamente por el responsable [LEY-19628 p.7].  
+- Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resoluci├│n de la autoridad de protecci├│n de datos o de una obligaci├│n legal [LEY-19628 p.7].  
+- Cuando el titular haya ejercido su derecho de oposici├│n de conformidad al art├¡culo siguiente y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].

@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: ejecutar el agente RAG y sus opciones de trazado y diagrama desde la raíz.
 # fecha_hora_creacion: 20261027_1815
-# fecha_hora_modificacion: 20261027_2130
+# fecha_hora_modificacion: 20261028_1927
 
 """Ejecutar desde la raíz: python main.py rag 'pregunta'."""
 
@@ -43,6 +43,9 @@ def main(argv: list[str] | None = None) -> int:
             for node, update in event.items():
                 if args.saltos:
                     print(f"[salto] {node}")
+                if "pregunta_reformulada" in update and args.saltos:
+                    print(f"  pregunta original: {update['pregunta_original']}")
+                    print(f"  pregunta reformulada: {update['pregunta_reformulada']}")
                 if "mejor_parecido" in update and args.saltos:
                     print(f"  mejor_parecido: {update['mejor_parecido']:.4f}")
                 if "fragmentos" in update and (args.saltos or args.texto):

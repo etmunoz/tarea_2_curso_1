@@ -1,0 +1,8 @@
+[salto] buscar
+  mejor_parecido: 0.5361
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.5361
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.5040
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.5037
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.4990
+[salto] responder
+El derecho de acceso es el derecho del titular de datos a solicitar y obtener del responsable, confirmaci├│n acerca de si sus datos personales est├ín siendo tratados por ├®l [LEY-19628 p.4].

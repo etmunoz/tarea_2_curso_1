@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: verificar configuración, grafo, ingesta y almacenamiento del RAG sin red.
 # fecha_hora_creacion: 20261027_1816
-# fecha_hora_modificacion: 20261028_1602
+# fecha_hora_modificacion: 20261028_1927
 
 import io
 import os
@@ -61,33 +61,45 @@ class RagTests(unittest.TestCase):
                 get_embeddings()
 
     def test_diagram_does_not_use_providers(self):
-        with patch("src.rag.tools.buscar") as buscar, patch(
+        with patch("src.rag.tools.reformular") as reformular, patch(
+            "src.rag.tools.buscar"
+        ) as buscar, patch(
             "src.rag.tools.responder"
         ) as responder, redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main.main(["rag", "--diagrama"]), 0)
         self.assertIn("graph TD", output.getvalue())
+        reformular.assert_not_called()
         buscar.assert_not_called()
         responder.assert_not_called()
 
     def test_graph_with_context(self):
         fragmentos = [{"texto": "El gato duerme.", "fuente": "demo.txt", "pagina": 1, "parecido": 0.9}]
-        with patch("src.rag.tools.buscar", return_value=fragmentos), patch(
+        with patch("src.rag.tools.reformular", return_value="¿Qué hace el gato?"), patch(
+            "src.rag.tools.buscar", return_value=fragmentos
+        ) as buscar, patch(
             "src.rag.tools.responder", return_value="El gato duerme [demo.txt p.1]."
         ) as responder:
             result = build_graph().invoke(
-                {"pregunta": "¿Qué hace el gato?"},
+                {"pregunta": "¿Qué hace ese felino?"},
                 {"configurable": {"thread_id": "test-1"}},
             )
         self.assertEqual(result["respuesta"], "El gato duerme [demo.txt p.1].")
         self.assertEqual(result["mejor_parecido"], 0.9)
-        responder.assert_called_once_with("¿Qué hace el gato?", fragmentos)
+        buscar.assert_called_once_with("¿Qué hace el gato?")
+        responder.assert_called_once_with("¿Qué hace ese felino?", fragmentos)
 
     def test_graph_without_context_and_trace(self):
-        with patch("src.rag.tools.buscar", return_value=[]), patch(
+        with patch("src.rag.tools.reformular", return_value="consulta reformulada"), patch(
+            "src.rag.tools.buscar", return_value=[]
+        ) as buscar, patch(
             "src.rag.tools.responder"
         ) as responder, redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main.main(["rag", "pregunta", "--saltos"]), 0)
         responder.assert_not_called()
+        buscar.assert_called_once_with("consulta reformulada")
+        self.assertIn("[salto] reformular", output.getvalue())
+        self.assertIn("pregunta original: pregunta", output.getvalue())
+        self.assertIn("pregunta reformulada: consulta reformulada", output.getvalue())
         self.assertIn("[salto] buscar", output.getvalue())
         self.assertIn("[salto] no_se", output.getvalue())
         self.assertIn(NO_CONTEXT, output.getvalue())
@@ -97,7 +109,9 @@ class RagTests(unittest.TestCase):
             {"texto": "Texto.", "fuente": "ley.pdf", "pagina": 3, "parecido": 0.77},
             {"texto": "Otro.", "fuente": "ley.pdf", "pagina": 9, "parecido": 0.71},
         ]
-        with patch("src.rag.tools.buscar", return_value=fragmentos), patch(
+        with patch("src.rag.tools.reformular", return_value="pregunta"), patch(
+            "src.rag.tools.buscar", return_value=fragmentos
+        ), patch(
             "src.rag.tools.responder", return_value="Respuesta citada [ley.pdf p.3]."
         ), redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main.main(["rag", "pregunta", "--saltos"]), 0)
@@ -108,7 +122,9 @@ class RagTests(unittest.TestCase):
 
     def test_graph_routes_to_responder_when_best_meets_threshold(self):
         fragmentos = [{"texto": "Texto.", "fuente": "ley.pdf", "pagina": 3, "parecido": 0.9}]
-        with patch("src.rag.tools.buscar", return_value=fragmentos), patch(
+        with patch("src.rag.tools.reformular", return_value="pregunta"), patch(
+            "src.rag.tools.buscar", return_value=fragmentos
+        ), patch(
             "src.rag.tools.responder", return_value="Sí [ley.pdf p.3]."
         ) as responder, redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main.main(["rag", "pregunta", "--saltos"]), 0)
@@ -124,7 +140,9 @@ class RagTests(unittest.TestCase):
             {"texto": "Artículo 30. Agencia de Protección de Datos.",
              "fuente": "ley.pdf", "pagina": 32, "parecido": 0.589},
         ]
-        with patch("src.rag.tools.buscar", return_value=fragmentos), patch(
+        with patch("src.rag.tools.reformular", return_value="pregunta"), patch(
+            "src.rag.tools.buscar", return_value=fragmentos
+        ), patch(
             "src.rag.tools.responder", return_value="Respuesta."
         ), redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main.main(["rag", "pregunta", "--texto"]), 0)
@@ -141,7 +159,9 @@ class RagTests(unittest.TestCase):
             {"texto": "Texto largo que no debe verse con --saltos.",
              "fuente": "ley.pdf", "pagina": 2, "parecido": 0.9},
         ]
-        with patch("src.rag.tools.buscar", return_value=fragmentos), patch(
+        with patch("src.rag.tools.reformular", return_value="pregunta"), patch(
+            "src.rag.tools.buscar", return_value=fragmentos
+        ), patch(
             "src.rag.tools.responder", return_value="Respuesta."
         ), redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main.main(["rag", "pregunta", "--saltos"]), 0)
@@ -154,7 +174,9 @@ class RagTests(unittest.TestCase):
     def test_memory_keeps_messages_by_thread_id(self):
         fragmentos = [{"texto": "Texto.", "fuente": "ley.pdf", "pagina": 3, "parecido": 0.9}]
         graph = build_graph()
-        with patch("src.rag.tools.buscar", return_value=fragmentos), patch(
+        with patch("src.rag.tools.reformular", return_value="primera"), patch(
+            "src.rag.tools.buscar", return_value=fragmentos
+        ), patch(
             "src.rag.tools.responder", return_value="Primera respuesta."
         ):
             first = graph.invoke(
