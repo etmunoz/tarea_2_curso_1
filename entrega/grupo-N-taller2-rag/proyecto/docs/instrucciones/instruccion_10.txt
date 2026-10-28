@@ -1,0 +1,27 @@
+La etapa 3 dice:
+
+Ingesta: elige chunk y solape con datos
+Tu meta: ver cómo cambia el documento al cortarlo distinto, y elegir una configuración justificada.
+
+Corre la ingesta con CHUNK_SIZE=400 y CHUNK_OVERLAP=50 (cámbialos en el .env) con --reset. Anota páginas, fragmentos y tamaño promedio.
+Repite con 1200 / 200. Mira los fragmentos 1 y 2 que imprime el script: ¿se ve el solape?
+Haz la misma pregunta al agente con cada configuración. ¿Cambió el parecido? ¿Cambió la respuesta?
+Elige una y deja el .env con esos valores para el resto del taller.
+pruebas/chunks.md · plantilla
+Copiar
+| Configuración | CHUNK_SIZE | CHUNK_OVERLAP | Páginas | Fragmentos | Tamaño promedio | Fragmentos 1 y 2 muestran solape (sí/no) |
+|---------------|-----------|---------------|---------|------------|-----------------|-------------------------------------------|
+| A             | 400       | 50            |         |            |                 |                                           |
+| B             | 1200      | 200           |         |            |                 |                                           |
+
+Elegimos: ____   Porque: ____
+Para justificar: fragmentos muy chicos pierden contexto (la respuesta queda a medias); muy grandes meten ruido (el modelo lee cosas que no vienen al caso) y bajan el parecido. Tu PDF decide dónde está el equilibrio.
+
+Entregables de la etapa 3
+
+La tabla de las dos configuraciones completa, la elegida y el porqué.
+Captura de los fragmentos 1 y 2 donde se vea el solape.
+
+
+Necesito que vayamos parte por parte. Dejando en pantalla para copiar y pegar a la salida, que vayas documentando lo que hay que documentar, generando lo que hay que generar y que al final commitees y pushees todo, luego de mi revisión, ahí te doy instrucciónes para agregar comentarios míos a lo realizado.
+

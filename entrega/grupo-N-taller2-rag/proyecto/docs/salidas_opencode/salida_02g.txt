@@ -1,0 +1,10 @@
+Copiaré el PDF a docs/ y verificaré que la copia sea idéntica y tenga texto legible. Lo dejaré disponible como corpus del proyecto, sin iniciar todavía la ingesta ni enviar su contenido a Google.
+
+PDF incorporado en:
+
+docs/LEY-19628_28-AGO-1999_refundida_20261201.pdf
+
+Verificado: 57 páginas con texto extraíble y copia idéntica al original mediante SHA256. Incorporación documentada en el README y el plan de entrega.
+
+Todavía no se ejecutó la ingesta ni se envió contenido a Google.
+

@@ -1,0 +1,3 @@
+Ya tengo instalado Ollama. Instala todo lo que necesites y descarga los modelos si es que no los tengo ya descargados, revisa antes.
+
+Tengo computador con 32Gb de RAM.

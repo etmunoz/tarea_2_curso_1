@@ -1,0 +1,8 @@
+Listo. Se completaron las instrucciones:
+
+- `uv` ya estaba instalado y quedó configurado para el proyecto.
+- Entorno virtual `.venv` creado con **Python 3.13.14** y verificado.
+- Repositorio **privado** creado y sincronizado: [tarea_2_curso_1](https://github.com/etmunoz/tarea_2_curso_1).
+- Instrucciones de uso y sincronización incluidas en `README.md`.
+
+La rama `main` está actualizada con GitHub, sin cambios pendientes.

@@ -1,0 +1,202 @@
+Voy a leer instruccion_13.txt y revisar sus requisitos antes de tocar archivos o ejecutar comandos.
+
+La instrucción permite elegir un nodo. Elegiré reformular, porque la etapa 4 registró una pregunta con sinónimos que no recuperó el fragmento esperado. Primero guardaré los diagramas y respuestas de referencia; luego implementaré y mediré el nodo en dos preguntas elegidas de la batería.
+
+$env:PYTHONIOENCODING='utf-8'; $diagram = uv run python main.py rag --diagrama; $diagram; [IO.File]::WriteAllLines('entrega/grupo-N-taller2-rag/pruebas/capturas/etapa6_diagrama_antes_20261028.mmd', $diagram, [System.Text.UTF8Encoding]::new($false))
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	buscar(buscar)
+	responder(responder)
+	no_se(no_se)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> buscar;
+	buscar -.-> no_se;
+	buscar -.-> responder;
+	no_se --> __end__;
+	responder --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+
+El diagrama anterior quedó guardado y mostrado. Para medir el nodo antes/después usaré las preguntas 3 y 5: la 3 tuvo una causal extraña de p.19 y la 5 dio una definición incompleta del derecho de acceso. Ahora capturo sus rutas y respuestas de referencia sin reformulación.
+
+$env:PYTHONIOENCODING='utf-8'; $env:UMBRAL='0.43'; $env:TOP_K='4'; $out = uv run python main.py rag "¿En qué casos procede la supresión de los datos personales?" --saltos; $out; [IO.File]::WriteAllLines('entrega/grupo-N-taller2-rag/pruebas/capturas/etapa6_antes_pregunta3_20261028.txt', $out, [System.Text.UTF8Encoding]::new($false))
+
+[salto] buscar
+  mejor_parecido: 0.6848
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6848
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.19 parecido=0.6836
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6485
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.6410
+[salto] responder
+La supresión de los datos personales procede en los siguientes casos:  
+- Cuando el titular haya revocado su consentimiento para el tratamiento y éste no tenga otro fundamento legal [LEY-19628 p.7].  
+- Cuando los datos hayan sido obtenidos o tratados ilícitamente por el responsable [LEY-19628 p.7].  
+- Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resolución de la autoridad de protección de datos o de una obligación legal [LEY-19628 p.7].  
+- Cuando el titular haya ejercido su derecho de oposición y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].  
+- Cuando el tratamiento de los datos personales del titular resulte indispensable para salvaguardar la vida, salud o integridad física o psíquica del titular o de otra persona, o cuando el titular se encuentre física o jurídicamente impedido de otorgar su consentimiento [LEY-19628 p.19].
+
+
+$env:PYTHONIOENCODING='utf-8'; $env:UMBRAL='0.43'; $env:TOP_K='4'; $out = uv run python main.py rag "¿Qué es el derecho de acceso?" --saltos; $out; [IO.File]::WriteAllLines('entrega/grupo-N-taller2-rag/pruebas/capturas/etapa6_antes_pregunta5_20261028.txt', $out, [System.Text.UTF8Encoding]::new($false))
+[salto] buscar
+  mejor_parecido: 0.5361
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.5361
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.5040
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.5037
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.4990
+[salto] responder
+El derecho de acceso es el derecho del titular de datos a solicitar y obtener del responsable, confirmación acerca de si sus datos personales están siendo tratados por él [LEY-19628 p.4].
+
+El nodo está conectado antes de buscar; conserva la consulta original para responder y solo usa la reescrita para recuperar fragmentos. --saltos imprimirá ambas versiones. Estoy verificando ahora que rutas, memoria, diagrama y respuestas existentes sigan cubiertos por pruebas sin red.
+
+$env:PYTHONIOENCODING='utf-8'; uv run python -m unittest discover -s tests -v
+test_cosine_similarity (test_demos.DemoTests.test_cosine_similarity) ... ok
+test_custom_arguments (test_demos.DemoTests.test_custom_arguments) ... ok
+test_embeddings_output_and_ranking (test_demos.DemoTests.test_embeddings_output_and_ranking) ... ok
+test_errors_do_not_expose_secrets (test_demos.DemoTests.test_errors_do_not_expose_secrets) ... ok
+test_faiss_demo_is_in_memory (test_demos.DemoTests.test_faiss_demo_is_in_memory) ... ok
+test_redis_memory_quota_message (test_demos.DemoTests.test_redis_memory_quota_message) ... ok
+test_redis_missing_url_is_actionable (test_demos.DemoTests.test_redis_missing_url_is_actionable) ... ok
+test_redis_ping_documents_search_and_cleanup (test_demos.DemoTests.test_redis_ping_documents_search_and_cleanup) ... ok
+test_cache_rejects_model_and_text_changes (test_indice_vs_coseno.IndexCosineTests.test_cache_rejects_model_and_text_changes) ... ok
+test_cache_resumes_after_failed_batch (test_indice_vs_coseno.IndexCosineTests.test_cache_resumes_after_failed_batch) ... ok
+test_conclusions_reflect_data_not_assumed_index_win (test_indice_vs_coseno.IndexCosineTests.test_conclusions_reflect_data_not_assumed_index_win) ... ok
+test_document_cache_reuse_and_extension (test_indice_vs_coseno.IndexCosineTests.test_document_cache_reuse_and_extension) ... ok
+test_faiss_and_manual_use_same_vectors_without_embedding_again (test_indice_vs_coseno.IndexCosineTests.test_faiss_and_manual_use_same_vectors_without_embedding_again) ... ok
+test_main_faiss_and_repeat_do_not_reembed (test_indice_vs_coseno.IndexCosineTests.test_main_faiss_and_repeat_do_not_reembed) ... ok
+test_parse_search_response_accepts_resp2_and_resp3 (test_indice_vs_coseno.IndexCosineTests.test_parse_search_response_accepts_resp2_and_resp3) ... ok
+test_parse_search_response_uses_key_when_resp3_omits_id (test_indice_vs_coseno.IndexCosineTests.test_parse_search_response_uses_key_when_resp3_omits_id) ... ok
+test_query_cache_reuses_all_questions (test_indice_vs_coseno.IndexCosineTests.test_query_cache_reuses_all_questions) ... ok
+test_redis_indexed_parses_resp3_dict (test_indice_vs_coseno.IndexCosineTests.test_redis_indexed_parses_resp3_dict) ... ok
+test_redis_indexed_rejects_short_response (test_indice_vs_coseno.IndexCosineTests.test_redis_indexed_rejects_short_response) ... ok
+test_redis_manual_loads_all_vectors_and_knn_returns_no_vectors (test_indice_vs_coseno.IndexCosineTests.test_redis_manual_loads_all_vectors_and_knn_returns_no_vectors) ... ok
+test_sizes_and_deterministic_corpus (test_indice_vs_coseno.IndexCosineTests.test_sizes_and_deterministic_corpus) ... ok
+test_temporary_quota_retries_but_daily_quota_does_not (test_indice_vs_coseno.IndexCosineTests.test_temporary_quota_retries_but_daily_quota_does_not) ... ok
+test_zero_and_nonfinite_vectors_are_rejected (test_indice_vs_coseno.IndexCosineTests.test_zero_and_nonfinite_vectors_are_rejected) ... ok
+test_buscar_returns_fragments_with_similarity (test_models.ModelTests.test_buscar_returns_fragments_with_similarity) ... ok
+test_default_provider_is_ollama (test_models.ModelTests.test_default_provider_is_ollama) ... ok
+test_embedding_and_chat_model_overrides (test_models.ModelTests.test_embedding_and_chat_model_overrides) ... ok
+test_faiss_rejects_endpoint_change (test_models.ModelTests.test_faiss_rejects_endpoint_change) ... ok
+test_generation_uses_selected_factory_and_keeps_context (test_models.ModelTests.test_generation_uses_selected_factory_and_keeps_context) ... ok
+test_google_provider_uses_google_classes (test_models.ModelTests.test_google_provider_uses_google_classes) ... ok
+test_google_still_requires_key (test_models.ModelTests.test_google_still_requires_key) ... ok
+test_model_and_endpoint_get_separate_fingerprints (test_models.ModelTests.test_model_and_endpoint_get_separate_fingerprints) ... ok
+test_new_cache_does_not_overwrite_legacy_gemini_cache (test_models.ModelTests.test_new_cache_does_not_overwrite_legacy_gemini_cache) ... ok
+test_ollama_chat_need_no_google_key (test_models.ModelTests.test_ollama_chat_need_no_google_key) ... ok
+test_ollama_embeddings_need_no_google_key (test_models.ModelTests.test_ollama_embeddings_need_no_google_key) ... ok
+test_provider_and_ollama_settings_validation (test_models.ModelTests.test_provider_and_ollama_settings_validation) ... ok
+test_reformular_uses_its_node_prompt_and_returns_only_query (test_models.ModelTests.test_reformular_uses_its_node_prompt_and_returns_only_query) ... ok
+test_defaults_and_validation (test_rag.RagTests.test_defaults_and_validation) ... ok
+test_diagram_does_not_use_providers (test_rag.RagTests.test_diagram_does_not_use_providers) ... ok
+test_embeddings_require_key (test_rag.RagTests.test_embeddings_require_key) ... ok
+test_empty_corpus_rejected (test_rag.RagTests.test_empty_corpus_rejected) ... ok
+test_faiss_ingestion_reload_threshold_and_idempotency (test_rag.RagTests.test_faiss_ingestion_reload_threshold_and_idempotency) ... ok
+test_faiss_rejects_model_change_and_partial_index (test_rag.RagTests.test_faiss_rejects_model_change_and_partial_index) ... ok
+test_graph_routes_to_responder_when_best_meets_threshold (test_rag.RagTests.test_graph_routes_to_responder_when_best_meets_threshold) ... ok
+test_graph_with_context (test_rag.RagTests.test_graph_with_context) ... ok
+test_graph_without_context_and_trace (test_rag.RagTests.test_graph_without_context_and_trace) ... ok
+test_load_pdf_and_txt (test_rag.RagTests.test_load_pdf_and_txt) ... ok
+test_memory_keeps_messages_by_thread_id (test_rag.RagTests.test_memory_keeps_messages_by_thread_id) ... ok
+test_merge_disabled_when_minimum_is_zero (test_rag.RagTests.test_merge_disabled_when_minimum_is_zero) ... ok
+test_merge_never_crosses_pages (test_rag.RagTests.test_merge_never_crosses_pages) ... ok
+test_merge_never_drops_text (test_rag.RagTests.test_merge_never_drops_text) ... ok
+test_merge_respects_maximum_length (test_rag.RagTests.test_merge_respects_maximum_length) ... ok
+test_merge_short_fragments_keeps_heading_with_its_content (test_rag.RagTests.test_merge_short_fragments_keeps_heading_with_its_content) ... ok
+test_missing_route_and_scanned_pdf_fail_clearly (test_rag.RagTests.test_missing_route_and_scanned_pdf_fail_clearly) ... La ruta indicada no existe: c:\tmp\tmpa1sp2mok\no_existe.pdf
+Error de ingesta: No se extrajo texto de la ruta indicada. Si es un PDF escaneado, requiere OCR externo: el extractor solo lee texto embebido.
+ok
+test_redis_configuration_without_server (test_rag.RagTests.test_redis_configuration_without_server) ... ok
+test_redis_cosine_threshold (test_rag.RagTests.test_redis_cosine_threshold) ... ok
+test_reset_removes_index_before_saving (test_rag.RagTests.test_reset_removes_index_before_saving) ... ok
+test_saltos_shows_fragments_similarity_and_best (test_rag.RagTests.test_saltos_shows_fragments_similarity_and_best) ... ok
+test_split_uses_env_separators_and_reports_overlap (test_rag.RagTests.test_split_uses_env_separators_and_reports_overlap) ... ok
+test_texto_flag_is_not_implied_by_saltos (test_rag.RagTests.test_texto_flag_is_not_implied_by_saltos) ... ok
+test_texto_flag_shows_fragment_bodies (test_rag.RagTests.test_texto_flag_shows_fragment_bodies) ... ok
+
+----------------------------------------------------------------------
+Ran 60 tests in 1.135s
+
+OK
+
+
+
+$env:PYTHONIOENCODING='utf-8'; $diagram = uv run python main.py rag --diagrama; $diagram; [IO.File]::WriteAllLines('entrega/grupo-N-taller2-rag/pruebas/capturas/etapa6_diagrama_despues_20261028.mmd', $diagram, [System.Text.UTF8Encoding]::new($false))
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	reformular(reformular)
+	buscar(buscar)
+	responder(responder)
+	no_se(no_se)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> reformular;
+	buscar -.-> no_se;
+	buscar -.-> responder;
+	reformular --> buscar;
+	no_se --> __end__;
+	responder --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+
+
+
+$env:PYTHONIOENCODING='utf-8'; $env:UMBRAL='0.43'; $env:TOP_K='4'; $out = uv run python main.py rag "¿En qué casos procede la supresión de los datos personales?" --saltos; $out; [IO.File]::WriteAllLines('entrega/grupo-N-taller2-rag/pruebas/capturas/etapa6_despues_pregunta3_20261028.txt', $out, [System.Text.UTF8Encoding]::new($false))
+[salto] reformular
+  pregunta original: ¿En qué casos procede la supresión de los datos personales?
+  pregunta reformulada: ¿En qué casos legalmente se permite la supresión de datos personales?
+[salto] buscar
+  mejor_parecido: 0.6831
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6831
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.19 parecido=0.6655
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6648
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.20 parecido=0.6428
+[salto] responder
+La supresión de los datos personales procede en los siguientes casos:  
+- Cuando el titular haya revocado su consentimiento para el tratamiento y éste no tenga otro fundamento legal [LEY-19628 p.7].  
+- Cuando los datos hayan sido obtenidos o tratados ilícitamente por el responsable [LEY-19628 p.7].  
+- Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resolución de la autoridad de protección de datos o de una obligación legal [LEY-19628 p.7].  
+- Cuando el titular haya ejercido su derecho de oposición de conformidad al artículo siguiente y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].
+
+
+$env:PYTHONIOENCODING='utf-8'; $env:UMBRAL='0.43'; $env:TOP_K='4'; $out = uv run python main.py rag "¿Qué es el derecho de acceso?" --saltos; $out; [IO.File]::WriteAllLines('entrega/grupo-N-taller2-rag/pruebas/capturas/etapa6_despues_pregunta5_20261028.txt', $out, [System.Text.UTF8Encoding]::new($false))
+[salto] reformular
+  pregunta original: ¿Qué es el derecho de acceso?
+  pregunta reformulada: ¿Cuál es el alcance del derecho de acceso en el ámbito jurídico?
+[salto] buscar
+  mejor_parecido: 0.5253
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.5253
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.5126
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.4998
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.4918
+[salto] responder
+El derecho de acceso es el derecho del titular de datos a solicitar y obtener del responsable, confirmación acerca de si sus datos personales están siendo tratados por él [LEY-19628 p.4].
+
+
+Ejecuté la instrucción 13. Añadí el nodo reformular antes de buscar; --saltos muestra el nodo, la pregunta original y la reformulada. La búsqueda usa la reformulación, mientras que responder conserva la pregunta original.
+
+Guardé los diagramas Mermaid antes y después en pruebas/capturas/etapa6_diagrama_{antes,despues}_20261028.mmd.
+Probé las preguntas 3 y 5 con UMBRAL=0.43 y TOP_K=4. En la 3 dejó de aparecer la causal extra de p.19, pero la respuesta siguió omitiendo dos causales. En la 5 la respuesta parcial no cambió. No hubo mejora sustantiva global, y documenté por qué en pruebas/nodo-extra.md.
+El prompt de implementación y PROMPT_REFORMULAR están registrados en pruebas/prompts.md.
+Las 60 pruebas unitarias pasaron.
+No cambié .env ni realicé operaciones Docker. No hice commit ni push porque esta instrucción no los solicitó.
+
+
+
+Comentarios del Usuario: Claramente mejora la respuesta al ser reformulada, al menos para los dos casos probados se evidencia una mejora.
+
+
+Lo registraré como tu evaluación, separada de los resultados medidos, para conservar ambas perspectivas sin reemplazar las respuestas ni las rutas observadas.
+
+
+Registré tu comentario literal en pruebas/nodo-extra.md y docs/entrega.md. También aclaré que tu evaluación considera que ambos casos mejoran, mientras que las métricas observadas muestran que Q3 evita el punto de p.19 pero sigue incompleta y Q5 conserva la misma respuesta. No cambié código ni repetí pruebas.
+

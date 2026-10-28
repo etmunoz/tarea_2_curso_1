@@ -1,0 +1,15 @@
+Crearé las dos demos usando la configuración compartida de embeddings. Probaré FAISS y Redis, aislando los datos de demostración para no mezclarlos con el índice RAG existente.
+
+La demo de embeddings y la prueba real con FAISS funcionan. Redis responde al PING, pero rechaza crear el índice porque superó su límite de memoria. No borraré datos existentes; intentaré completar la prueba con un Redis local aislado.
+
+La prueba real con Redis local también pasó: creó el índice, guardó las frases y recuperó los dos resultados con su metadata. Las 19 pruebas automatizadas pasan. Completaré la verificación de ambos scripts con cada configuración y retiraré el contenedor temporal.
+
+Implementado:
+
+- `scripts/demo_embeddings.py`: vectores, comparación coseno y frase más cercana.
+- `scripts/test_storage.py`: inserción y búsqueda con FAISS o Redis.
+- Documentación actualizada y **19 pruebas aprobadas**.
+
+Ambas demos se probaron con embeddings reales y ambas configuraciones. Redis funcionó en un contenedor local temporal, ya retirado.
+
+**Atención:** tu Redis configurado responde, pero no permite crear el índice por falta de memoria. No modifiqué `.env` ni borré datos.

@@ -1,0 +1,17 @@
+Genérame dos scripts de demostración en scripts/, siguiendo AGENTS.md:
+
+1) scripts/demo_embeddings.py
+- Usa GoogleGenerativeAIEmbeddings con EMBEDDING_MODEL del .env.
+- Toma tres frases: dos que dicen lo mismo con otras palabras y una de un tema distinto (permite pasarlas por argumentos; si no, usa unas de ejemplo).
+- Imprime cuántos números tiene cada vector y los primeros 5.
+- Calcula el parecido coseno entre cada par y muéstralo en una tabla ordenada de mayor a menor, marcando el par más parecido.
+- Luego embebe una "pregunta" y muestra cuál de las tres frases queda más cerca.
+
+2) scripts/test_storage.py
+- Usa get_vector_store(PREFIJO) de src/rag/storage.py.
+- Si VECTOR_STORE=redis: conecta con REDIS_URL, hace PING y crea el índice vectorial si no existe. Si es faiss: crea uno en memoria.
+- Guarda las tres frases del script anterior como documentos con metadata {"fuente": "demo"}.
+- Busca con la pregunta "no tengo internet" y muestra los 2 fragmentos más cercanos con su puntaje.
+- Termina diciendo claramente OK o qué falló (sin REDIS_URL debe explicar cómo ponerla, no romperse).
+
+Debes probar con los dos con REDIS y con FAISS. Por lo que los scripts anteriores deben funcionar operativamente con ambos casos.

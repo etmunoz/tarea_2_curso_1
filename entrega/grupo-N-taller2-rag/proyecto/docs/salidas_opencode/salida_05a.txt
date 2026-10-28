@@ -1,0 +1,38 @@
+Ejecutado. Ruta: buscar → responder (el mejor parecido 0.6827 supera UMBRAL=0.65).
+
+Salida completa:
+
+[salto] buscar
+  mejor_parecido: 0.6827
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.15 parecido=0.6827
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.37 parecido=0.5864
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2  parecido=0.5683
+[salto] responder
+El objeto de la presente ley es regular el tratamiento de datos personales, incluyendo
+su análisis, rastreo, perfilamiento o predicción de comportamiento [1 p.2]. El ámbito
+de aplicación comprende el tratamiento de datos personales realizado por un responsable
+que, sin estar establecido en el territorio nacional, le resulta aplicable la legislación
+nacional a causa de un contrato o del derecho internacional [1 p.2].
+Dos observaciones interesantes (evidencia útil, no las toqué):
+
+La cita salió malformada. El SYSTEM_PROMPT pide [archivo p.N] (ej. [LEY-19628 p.2]), pero qwen3:8b emitió [1 p.2]: mezcló el índice del fragmento con la página. El contenido es correcto y la página coincide, pero el formato no cumple la regla 2. Es justo el tipo de defecto que corrige la etapa 5 (pulido de prompts), así que lo dejo anotado en vez de arreglarlo por mi cuenta.
+El fragmento que motivó la respuesta no fue el mejor. El ganador (0.6827) está en p.15, pero la respuesta usa texto de p.2 (parecido 0.5683, el menor del TOP_K). Esto es comportamiento correcto: el umbral decide si responde usando solo el mejor puntaje, pero responder recibe los 3 fragmentos y elige el relevante. Buena justificación para TOP_K=3 en la etapa 4.
+¿Quieres que deje registrado este caso en docs/preguntas.md o que siga con la siguiente instrucción?
+
+Respuesta Usuario: deja registrado este caso.
+
+Entendido. Reviso el archivo actual y la plantilla de la etapa 5 para colocarlo bien.
+
+Registro el caso en docs/preguntas.md como observación de ejecución real, sin rellenar las plantillas de etapas que aún no se ejecutan.
+
+Actualizo la marca de modificación del archivo:
+
+Registrado en docs/preguntas.md, en la sección "Observación de ejecución real — 20261027_2045":
+
+Salida literal del comando con la ruta buscar → responder, los tres fragmentos con su parecido y página, y la respuesta completa.
+Observación 1 (etapa 5): el defecto de la cita [1 p.2] en vez de [LEY-19628 p.2], identificado como incumplimiento de la regla 2 del SYSTEM_PROMPT. Dejado explícitamente sin corregir, marcado como defecto observado y no como resultado de etapa ejecutada.
+Observación 2 (etapa 4): el mejor fragmento (p.15, 0.6827) no es el que sostiene la respuesta (p.2, 0.5683), con la explicación de por qué es comportamiento esperado y qué argumento aporta para justificar TOP_K=3.
+Actualicé también la marca de modificación del archivo a 20261027_2051.
+
+No toqué las plantillas bateria.md ni antes-despues.md: siguen como pendientes, porque estas observaciones son evidencia de una ejecución suelta, no la etapa 4 ni la 5 completadas.
+

@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: organizar la entrega, sus pendientes y la consolidación final de código y evidencias.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_1936
+fecha_hora_modificacion: 20261028_2008
 -->
 
 # Plan de entrega del taller 2 RAG
@@ -114,6 +114,18 @@ Texto recibido:
 - **Efecto:** incorporado literalmente a `pruebas/nodo-extra.md` como evaluación
   del usuario, separado de los parecidos, rutas y respuestas medidos.
 
+### 20261028_1949 — Contexto de credenciales, cuotas y proveedores
+
+Comentario literal del usuario:
+
+> Comentar de los problemas de acabado de keys, que nos llevaron a instalar en docker el redis y a trabajar con Ollama lo de los embeddings. Además de no tener los tokens para que OpenCode funcionara y que acabaron los modelos gratuitos para la cuenta.
+
+- **Efecto:** se incorporará como contexto de las iteraciones de prompts y
+  proveedores en `pruebas/prompts.md`. Las salidas anteriores documentan la
+  limitación de memoria del Redis compartido y la cuota Gemini 429; la falta de
+  tokens de OpenCode y el fin de los modelos gratuitos se conservan como
+  declaración del usuario, sin datos de cuenta ni credenciales.
+
 ## Estructura preparada
 
 ### Corpus proporcionado (instrucción 02g)
@@ -157,12 +169,16 @@ del repositorio**, no en `entrega/.../proyecto/`. Esta última es el destino de
 la copia final, todavía pendiente, para no mantener dos versiones divergentes.
 Las plantillas no representan pruebas ya ejecutadas.
 
-No se generan todavía `documento-entrega.docx` ni `grupo-N-taller2-rag.zip`.
-Tampoco se crea un PDF de ejemplo ni un script vacío que parezca implementado.
+`entrega/grupo-N-taller2-rag/documento-entrega.docx` se generó a petición del usuario el 20261028.
+El ZIP local existe, pero se excluye del commit/distribución: la auditoría encontró
+`grupo-N-taller2-rag/.env`, `__pycache__` y un layout que no cumple la raíz
+esperada (`documento-entrega.docx`, `pruebas/`, `proyecto/`). Debe reconstruirse
+sin `.env` ni bytecode antes de distribuirlo. El DOCX declara pendientes la
+captura de etapa 1 y la copia estructural incompleta; no inventa resultados.
 
 ## Documento final, al terminar
 
-Construir `documento-entrega.docx` con integrantes, grupo, objetivos, desarrollo,
+El DOCX generado en `entrega/grupo-N-taller2-rag/documento-entrega.docx` compila integrantes, grupo, objetivos, desarrollo,
 pruebas de cada etapa, prompts utilizados y conclusiones sustentadas en resultados.
 Incluir el detalle de **cada** archivo de instrucciones: `instruccion_NN.txt` o
 `instruccion_NNx.txt`, admitiendo también `instrucción` con tilde. Ordenar por
@@ -204,13 +220,14 @@ no atribuir retrospectivamente un contenido nuevo a una ejecución anterior.
 | `instruccion_09` | Revisión de los entregables de la etapa 2: frases + predicción + tabla de cosenos + conclusión de 2 líneas; tabla de tiempos n=200/2000 + regla en 1 línea | **Ejecutada 20261028_0938**. Ambos entregables verificados contra los archivos. **2 huecos corregidos**: faltaba la conclusión de dos líneas y la regla en una sola línea (añadidas en `embeddings.md` §6/§7 y en las dos capturas). **Limitación declarada** en §15: el orden de la predicción no tiene prueba a nivel de archivo, porque el mismo `embeddings.md` se editó después; proceso corregido para las próximas predicciones |
 | `instruccion_10` | Etapa 3: ingerir con 400/50 y con 1200/200, ver fragmentos 1 y 2, preguntar al agente y elegir configuración | **Ejecutada 20261028_1014**. Medido con `--reset` en cada paso: **A 400/50 → 573 frag., 320.4 car., solape 45/50, parecido 0.6055 pero respuesta incorrecta** (TOP_1 de 103 car. solo con el encabezado `c)`); **B 1200/200 → 193 frag., 971.2 car., solape 0/200, parecido 0.5118 respuesta incorrecta**; **base 800/120 → 294 frag., 627.6 car., solape 83/120, parecido 0.5054 respuesta correcta (2 corridas idénticas)**. **Elegida 800/120**, dejada en `.env` y reingerida. Tablas y justificación en `pruebas/chunks.md`; capturas `20261028_1014_etapa3_ingesta_*.txt` |
 
-### Instrucciones 11–13 — actualización
+### Instrucciones 11–14 — actualización
 
 | Instrucción | Estado y resultados |
 | --- | --- |
 | `instruccion_11` | Etapa 4 ejecutada con comparaciones TOP_K=1/3/4/5; **TOP_K=4 elegido** con UMBRAL=0.43 y chunks 800/120. Tabla, falsos positivos, prueba léxica y citas en `pruebas/bateria.md`; JSON y capturas en `pruebas/capturas/`. |
 | `instruccion_12` | Etapa 5: antes/después preguntas 1–3, trampa 120 días y prueba temporal quitando/restaurando regla 1 ejecutadas. La regla 10 no corrigió explícitamente la premisa; sin regla 1 y UMBRAL=0 tampoco hubo alucinación, pues regla 3 permaneció activa. Evidencia y prompt vigente en `pruebas/antes-despues.md` y `pruebas/prompts.md`. La diferencia entre las reglas pedidas por el usuario y el requisito original de dos cambios se declara explícitamente. |
 | `instruccion_13` | Etapa 6: nodo `reformular` antes de `buscar`, prompt propio, diagramas Mermaid antes/después y preguntas 3 y 5 con `--saltos`. El nodo aparece en las rutas; Q3 deja de añadir el punto p.19 pero sigue incompleta, Q5 no cambia sustantivamente. No se afirma mejora donde no la hubo. Evidencia en `pruebas/nodo-extra.md`, `pruebas/prompts.md`, `pruebas/capturas/` y `salidas_opencode/salida_13.txt`. 60 pruebas unitarias OK. |
+| `instruccion_14` | Auditoría cruzada de 28 fuentes y salidas 00–14 en `pruebas/prompts.md`; prompts finales incluidos en DOCX. DOCX generado por solicitud; ZIP pendiente. Etapa 1 aún requiere evidencia y la copia en `proyecto/` no está completa; hay un `.env` en la carpeta de entrega que debe excluirse del ZIP. |
 
 ### Estado actual frente a los valores históricos de la tabla
 
@@ -222,7 +239,7 @@ los demás campos se verificaron el **20261028_0747**):
 | Campo | Valor en la fila de su instrucción | Valor vigente | Qué cambió y cómo se verificó |
 | --- | --- | --- | --- |
 | Fragmentos del corpus | `04`: **318** | **294** | Se corrigió el troceado añadiendo `merge_small_fragments()` a `scripts/ingest.py` (fundir fragmentos < 200 caracteres con un vecino de la misma página) y se reingestó con `--reset` el 20261027_2337. Mínimo 24 → 200 caracteres, 24 fragmentos fusionados. Verificado con `FT.SEARCH` sobre el índice `etmunoz_ollama_rag`: **294 docs** |
-| Pruebas automatizadas | `05`: **52** | **59** | Las 5 nuevas son de `merge_small_fragments()`. Verificado con `uv run python -m unittest discover -s tests`: **Ran 59 tests … OK** |
+| Pruebas automatizadas | `05`: **52** | **60** | 8 pruebas añadidas tras el agente original. Verificado con `uv run python -m unittest discover -s tests -v`: **Ran 60 tests … OK** |
 | `UMBRAL` | `05a`: **0.65** | **0.43** | Valor en `.env` (línea 11), `.env.example` (línea 18) y en el default de `src/rag/config.py` (línea 55); `get_settings()` devuelve `umbral 0.43`. **Historial**: el 20261028 el usuario confirmó **0.58** (coste medido: 6/10 rutas); después pidió determinar el mejor umbral *probando exhaustivamente*, y un barrido de los 101 valores de 0.00 a 1.00 mostró que 0.58 cae en el régimen de **6/10**, el peor de los centrales, con 2 falsos negativos y 1 alucinación. Solo dos intervalos dan 8/10; se ejecutó la batería en ambos y ganó `(0.3636, 0.5054]`, eligiendo **0.43** por ser el punto de mayor margen. Resultado: **8/10 rutas, 0 falsos negativos, 0 alucinaciones**. Barrido y corridas 7–9 en `pruebas/bateria.md`; script `scripts/umbral.py` |
 | `CHUNK_SIZE` / `CHUNK_OVERLAP` / `TOP_K` | — | 800 / 120 / 4 | TOP_K=4 elegido en la instrucción 11 mediante comparación de batería; valor vigente en `.env`, `.env.example` y default |
 
@@ -270,11 +287,10 @@ Los separadores del splitter siguen **fijos** en `["\n\n", ". ", " ", ""]`
       `pruebas/nodo-extra.md`. La rúbrica permite documentar honestamente si no mejora.
 - [ ] Registrar todos los prompts exactos de OpenCode con sus correcciones y los
       efectivos del agente: SYSTEM_PROMPT, USER_PROMPT y prompt del nodo extra.
-      **Parcial**: para la instrucción 12 se conservaron la fuente y la
-      transcripción (`instruccion_12.txt`, `salida_12.txt`), el SYSTEM_PROMPT
-      antes/después y el USER_PROMPT usado (`pruebas/prompts.md`, sección D, y
-      `pruebas/antes-despues.md`). El catálogo histórico general de la sección A
-      aún no está completo; el prompt del nodo extra pertenece a etapa 6 y sigue pendiente.
+      **Sección de prompts compilada** en `pruebas/prompts.md` a partir de los
+      textos fuente y las transcripciones disponibles; los prompts efectivos
+      finales están listos para pegar en el DOCX. La incorporación al documento
+      Word final sigue pendiente junto con el resto de la consolidación.
 - [ ] Añadir una conclusión corta por etapa, incluida cualquier limitación observada.
 - [ ] Si se opta al bonus, repetir la misma batería con FAISS y compararla con Redis.
 - [ ] Guardar capturas legibles de las demos y de una ejecución con `--saltos`.
@@ -296,7 +312,7 @@ Los separadores del splitter siguen **fijos** en `["\n\n", ". ", " ", ""]`
       `.venv/`, `.env`, cachés, secretos, logs sensibles e índices o `data/` pesado.
 - [ ] Verificar los integrantes, objetivo y fechas en cada `.md` y `.py`
       propio, incluidos los archivos que se agreguen en etapas posteriores.
-- [ ] Construir `documento-entrega.docx` a partir de todas las instrucciones y evidencias.
+- [x] Generar `documento-entrega.docx` con los informes y prompts disponibles; el estado de las pruebas pendientes se declara en portada.
 - [ ] Probar la copia de `proyecto/` con un entorno nuevo y sin claves incluidas.
 - [ ] Crear el ZIP con `documento-entrega.docx`, `pruebas/` y `proyecto/`
       directamente en su raíz; revisar su contenido antes de entregar.
@@ -317,4 +333,4 @@ Los comentarios no cambian la lógica de los módulos Python.
 - Validados integrantes, objetivo y formato de ambas fechas en los **23 archivos
   `.md` y `.py`** propios presentes al preparar la entrega.
 - `uv run python -m unittest discover -s tests -v`: **19 pruebas aprobadas**.
-- No se generaron ZIP ni documento final; no se copiaron secretos, entornos ni índices.
+- DOCX generado; ZIP local pendiente de saneamiento/reconstrucción. No se versiona `.env`, bytecode ni índices locales.

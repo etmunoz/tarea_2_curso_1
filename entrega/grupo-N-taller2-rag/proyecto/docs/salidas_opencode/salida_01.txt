@@ -1,0 +1,17 @@
+Implementado según el archivo actualizado:
+
+- Python **3.12.13**, `.venv` y todas las dependencias solicitadas.
+- RAG con **FAISS por defecto** y Redis configurable.
+- Ingesta PDF/TXT, `--saltos` y `--diagrama`.
+- `.env.example`, `AGENTS.md` y documentación.
+- **11 pruebas aprobadas**, sin credenciales ni red.
+
+Para comenzar:
+```powershell
+Copy-Item .env.example .env
+# Completa GOOGLE_API_KEY en .env
+uv run python scripts/ingest.py data/documentos
+uv run python main.py rag "Tu pregunta" --saltos
+```
+
+Añade primero tus documentos a `data/documentos/`. Las llamadas reales a Gemini y Redis quedan pendientes de validar con tus credenciales y servidor.

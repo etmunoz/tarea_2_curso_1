@@ -1,0 +1,14 @@
+Genérame scripts/ingest.py siguiendo AGENTS.md. Uso: python scripts/ingest.py ruta/al/archivo.pdf [--reset]
+
+- Carga el PDF con PyPDFLoader (un Document por página). Usa el PDF que ya dejas te en C:\Users\etmun\proyecto\tarea_2_curso_1\docs\LEY-19628_28-AGO-1999_refundida_20261201.pdf
+- Corta con RecursiveCharacterTextSplitter usando CHUNK_SIZE y CHUNK_OVERLAP del .env y separadores ["\n\n", ". ", " ", ""].
+- Cada fragmento lleva metadata: fuente (nombre del archivo), pagina y numero de fragmento.
+- Embebe con EMBEDDING_MODEL y guarda en la base que devuelve get_vector_store(PREFIJO) de src/rag/storage.py:
+  · redis: índice vectorial con nombre PREFIJO (langchain-redis), claves con ese prefijo;
+  · faiss: índice en data/PREFIJO/ guardado en disco (save_local).
+- --reset borra el índice del prefijo antes de guardar; sin --reset, agrega.
+- Al final imprime: páginas leídas, fragmentos generados, tamaño promedio de fragmento, y muestra el fragmento 1 y el 2 lado a lado para que se vea el solape.
+- Si el PDF no existe o no hay texto (PDF escaneado), dilo claro y termina sin romperse.
+
+
+Anda mostrando lo que vas haciendo para ir copiándolo y pegándolo.

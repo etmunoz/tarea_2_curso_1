@@ -1,0 +1,33 @@
+Ollama ya está funcionando. Tienes varios modelos descargados, pero no qwen3:8b ni bge-m3. Con 32 GB de RAM usaré esos dos para preparar el LLM y los embeddings locales. Instalaré la integración de Python y los probaré, sin borrar tus modelos ni cambiar todavía la configuración o la caché de Gemini.
+
+Instalé langchain-ollama y su cliente en .venv; las 30 pruebas siguen pasando.
+
+Tras revisar tus modelos, inicié las descargas de:
+
+LLM: qwen3:8b.
+Embeddings: bge-m3.
+Las descargas siguen en segundo plano; falta confirmar su finalización y probar ambos modelos. Documentado en docs/ollama.md.
+
+No modifiqué .env, los modelos existentes ni la caché Gemini.
+
+BGE-M3 ya está descargado y probado localmente:
+
+Documentos: 3
+Dimensión: 1024
+Cosenos: 0.793323, 0.765289, 0.416665
+Frase más cercana: 1
+OK: embeddings locales, sin llamadas a Google.
+Resultado guardado en docs/ollama.md. Falta confirmar la descarga y probar qwen3:8b.
+
+Qwen3:8b también terminó de descargarse y quedó verificado por Ollama.
+
+qwen3:8b: 5.2 GB, prueba de generación en curso.
+bge-m3: 1.2 GB, embeddings locales ya probados.
+Ambos están instalados; falta el resultado de generación de Qwen3 para completar la comprobación.
+
+El benchmark Gemini terminó por cuota 429 tras agotar los reintentos.
+
+900 de 2000 vectores guardados y verificados.
+No llegó a ejecutar las búsquedas ni generar tablas.
+Ya no está ejecutándose en segundo plano.
+Estado documentado. Ollama y ambos modelos están listos, pero falta adaptar el proyecto para utilizarlos y repetir la comparación.

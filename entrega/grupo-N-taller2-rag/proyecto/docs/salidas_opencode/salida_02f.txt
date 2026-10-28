@@ -1,0 +1,9 @@
+Registraré los nombres como completos, N como nombre confirmado del grupo y la declaración de que no usaron material de compañeros. Actualizaré las referencias que todavía aparecen pendientes; la carpeta grupo-N-taller2-rag conservará su nombre.
+
+Confirmación registrada en el README, las reglas y la documentación de entrega:
+
+Integrantes: Fabio Durán, Gustavo Reyes y Ezequiel Muñoz; nombres completos confirmados.
+Grupo: N, como nombre definitivo.
+Material de compañeros: no se utilizó.
+Se conserva entrega/grupo-N-taller2-rag/. Estos datos también quedaron establecidos para la primera página del documento final.
+

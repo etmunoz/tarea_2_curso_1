@@ -1,0 +1,10 @@
+Guardaré la rúbrica en la documentación y en AGENTS.md, y ajustaré las plantillas para cubrir las evidencias exigidas. Esta instrucción refuerza las reglas; no implementaré aún el nodo extra ni marcaré como realizadas las pruebas pendientes.
+
+Reglas documentadas y guardadas en:
+
+AGENTS.md: obligaciones para el trabajo futuro.
+docs/reglas-taller.md: rúbrica completa, puntajes y evidencias exigidas.
+docs/entrega.md: checklist actualizado.
+entrega/grupo-N-taller2-rag/pruebas/: plantillas para las seis etapas y ambos tipos de prompts.
+Quedó explícito que las pruebas unitarias no sustituyen las evidencias del taller y que no se inventarán resultados pendientes. No se modificó el comportamiento del agente.
+

@@ -1,0 +1,45 @@
+Me solicitan esto en la Etapa 4.
+
+
+Batería de pruebas: diez preguntas, una decisión
+Tu meta: medir cómo se comporta el agente y elegir UMBRAL y TOP_K con una tabla, no con intuición.
+
+Esta es la etapa que más me interesa ver. Un agente RAG se juzga por tres cosas: responde lo que está en el documento, dice "no sé" cuando no está, y cita bien. Para saberlo hay que preguntarle muchas veces y anotar.
+
+Escribe diez preguntas: cinco cuya respuesta está en el PDF, tres que no tienen nada que ver (el precio del bitcoin, el clima…), dos ambiguas (que rozan el tema pero el documento no responde del todo).
+Haz cada una con --saltos y llena la tabla: ruta, mejor parecido, si respondió o fue a no_se, si la cita apunta a la página correcta (ábrela y compruébalo).
+Mira los parecidos de las "dentro" y de las "fuera": ¿hay un valor que las separa? Ese es tu UMBRAL. Si una "dentro" quedó bajo el umbral o una "fuera" sobre él, anótalo como falso negativo / falso positivo.
+Repite las cinco "dentro" con TOP_K=1 y TOP_K=5. ¿Mejora o empeora la respuesta? Elige y justifica.
+pruebas/bateria.md · plantilla
+Copiar
+| # | Pregunta | Tipo (dentro/fuera/ambigua) | Ruta (--saltos) | Mejor parecido | ¿Respondió o no_se? | ¿Cita correcta? | Comentario |
+|---|----------|-----------------------------|-----------------|----------------|---------------------|-----------------|------------|
+| 1 |          | dentro                      |                 |                |                     |                 |            |
+| 2 |          | dentro                      |                 |                |                     |                 |            |
+| 3 |          | dentro                      |                 |                |                     |                 |            |
+| 4 |          | dentro                      |                 |                |                     |                 |            |
+| 5 |          | dentro                      |                 |                |                     |                 |            |
+| 6 |          | fuera                       |                 |                |                     |                 |            |
+| 7 |          | fuera                       |                 |                |                     |                 |            |
+| 8 |          | fuera                       |                 |                |                     |                 |            |
+| 9 |          | ambigua                     |                 |                |                     |                 |            |
+| 10|          | ambigua                     |                 |                |                     |                 |            |
+
+UMBRAL elegido: ____   TOP_K elegido: ____   Por qué: ____
+Prueba
+Una pregunta "dentro" formulada con palabras que NO aparecen en el PDF (sinónimos).
+
+Debería seguir encontrando el fragmento: el parecido es de significado. Si falla, es candidata al nodo reformular de la etapa 6.
+
+Prueba
+Una pregunta "fuera" que comparte palabras con el PDF pero no el tema.
+
+Puede dar un parecido engañosamente alto. Es el mejor argumento para tener umbral y para la prueba de la trampa de la etapa 5.
+
+Entregables de la etapa 4
+
+La tabla de diez preguntas completa, con capturas de al menos tres rutas (una dentro, una fuera, una ambigua).
+UMBRAL y TOP_K elegidos con la justificación a partir de la tabla, y los falsos positivos/negativos que encontraste.
+
+
+Revisa con detalle, y trabajamos con el set de frases que ya creamos al inicio. Y consolidemos con pruebas y ejemplos en los documentos que corresponda.

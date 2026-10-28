@@ -1,0 +1,32 @@
+name: tarea_2_curso_1
+
+services:
+  redis:
+    # Redis 8.2 con Search vectorial, fijado al digest probado.
+    image: redis:8.2@sha256:d7bb2f262c1e26b9bd0532f808bb493d7a1f2ad07674876cff050361be805f75
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:16379:6379"
+    volumes:
+      - redis_data:/data
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - noeviction
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  redis_data:
+    name: tarea_2_curso_1_redis_data

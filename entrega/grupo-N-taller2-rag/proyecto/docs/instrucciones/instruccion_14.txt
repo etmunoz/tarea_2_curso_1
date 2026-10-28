@@ -1,0 +1,25 @@
+Ahora tenemos que cerrar y asegurarnos de documentar muy bien.
+
+
+Nos piden:
+
+Al terminar
+
+Un agente que probaste, no uno que esperas que funcione.
+Lo armaste con prompts, lo mediste con una batería, elegiste sus parámetros con datos y puliste sus prompts con evidencia. Eso es lo que entregas: el código completo, los prompts de los dos tipos y todas las pruebas. Pega en el documento la plantilla de prompts de abajo antes de cerrar.
+
+documento de entrega · sección de prompts (plantilla)
+Copiar
+## Prompts usados con OpenCode (ayudante programador)
+Para cada prompt del deck, pega el prompt EXACTO que usaste (si lo cambiaste, pega tu versión) y qué tuviste que corregir después:
+
+1. Entorno: ...
+   Correcciones: ...
+2. Demos de embeddings: ...
+3. Índice vs coseno: ...
+4. Ingesta: ...
+5. Agente rag: ...
+6. (Etapa 6) Nodo extra: ...
+
+## Prompts dentro del agente (prompts.py final)
+Pega aquí el SYSTEM_PROMPT y el USER_PROMPT finales, tal cual quedaron en src/rag/prompts.py, y el prompt del nodo extra.

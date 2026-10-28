@@ -1,0 +1,1 @@
+Vuelve a ejecutar las pruebas, pero quiero ver las salidas en pantalla, para copiar y pegarlas.

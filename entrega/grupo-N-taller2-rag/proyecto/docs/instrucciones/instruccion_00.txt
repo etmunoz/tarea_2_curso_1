@@ -1,0 +1,5 @@
+Instrucciones 01:
+
+1. Instala en el Proyecto uv
+2. Usa uv para instalar un ambiente y Python
+3. Crea un repo con el nombre tarea_2_curso_1 para mantener sincronizado el proyecto que desarrollamos acá

@@ -1,0 +1,3 @@
+Adapta ajhora el programa y .env para que ahora trabaje con Ollama.
+
+Anda explicando y mostrando los cambios por pantalla.

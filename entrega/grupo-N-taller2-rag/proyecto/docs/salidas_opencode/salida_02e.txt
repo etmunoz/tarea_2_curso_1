@@ -1,0 +1,10 @@
+Añadiré la identificación obligatoria al README y a las reglas de la portada final. Mantendré pendientes el grupo, la confirmación de los nombres completos y la declaración de material de compañeros, porque esos datos no están confirmados.
+
+Actualicé README.md, AGENTS.md y la documentación de entrega con la identificación obligatoria y las reglas de atribución.
+
+Para completarla, confirma:
+
+¿Los nombres registrados incluyen todos sus nombres y apellidos?
+¿Cuál es el nombre o número del grupo?
+¿Usaron material de algún compañero? Si es así, ¿de quién y qué material?
+

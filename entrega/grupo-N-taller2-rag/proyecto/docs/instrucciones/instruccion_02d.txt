@@ -1,0 +1,22 @@
+PARA REFORZAR REGLAS DEL PROYECTO:
+
+Las Reglas del Taller:
+
+Entregas todo el código, todos los prompts y todas las pruebas
+Este taller no se califica por el código que escribiste (lo escribe OpenCode con los prompts de la clase anterior). Se califica por cómo probaste el agente y por cómo puliste sus prompts. Para poder revisarlo necesito ver las tres cosas completas:
+- Todo el código: el proyecto completo tal como quedó (src/, scripts/, main.py, AGENTS.md, requirements.txt, tests/), con tu PDF en docs/. Sin .venv, sin data/ pesado y nunca el .env; sí el .env.example.
+- Todos los prompts: los dos tipos. Los que le diste a OpenCode (con lo que tuviste que corregir) y los que quedaron dentro del agente en src/rag/prompts.py (SYSTEM_PROMPT, USER_PROMPT y el del nodo extra). Van en el documento de entrega, con la plantilla de abajo.
+- Todas las pruebas: las tablas y capturas de cada etapa (embeddings, chunks, batería de diez preguntas, antes/después del prompt, prueba de la trampa, ruta del nodo extra). Sin pruebas no hay nota: es lo que más me interesa ver.
+- Documento de entrega (Word, notebook o PDF) con identificación del grupo, las pruebas, los prompts y una conclusión corta por etapa.
+
+Entregables:
+
+Etapa	Qué entregas	Dónde	Puntos
+1 · Construir	Captura del agente respondiendo; prompts usados con OpenCode y qué corregiste.	documento · proyecto/	10
+2 · Embeddings	Tus tres frases, tu predicción, la tabla de cosenos y la conclusión.	documento · scripts/demo_embeddings.py	10
+3 · Ingesta	Tabla de dos configuraciones de chunk/solape, la elegida y por qué.	documento · scripts/ingest.py	15
+4 · Batería de pruebas	Tabla de diez preguntas con ruta, parecido, respuesta y cita; UMBRAL y TOP_K elegidos con datos.	documento · pruebas/bateria.md	20
+5 · Pulir prompts	Dos reglas cambiadas con antes/después en tres preguntas; prueba de la trampa; prompts.py final.	documento · src/rag/prompts.py	25
+6 · Nodo extra	Definición del nodo (por qué, para qué, qué hace), ruta con --saltos antes y después, dos preguntas donde mejora.	documento · src/rag/graph.py	15
+Documento	Ordenado, con identificación y conclusión por etapa.	documento	5
+Bonus	La misma batería con VECTOR_STORE=faiss y comparación con Redis.	documento	+10

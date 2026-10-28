@@ -1,0 +1,30 @@
+Este será la estructura que hay que considerar para la entrega:
+
+grupo-N-taller2-rag.zip
+├── documento-entrega.docx  (o .ipynb / .pdf)   ← integrantes, grupo, pruebas de cada etapa, prompts, conclusiones
+├── pruebas/
+│   ├── bateria.md               ← tabla de diez preguntas (plantilla de la etapa 4)
+│   ├── chunks.md                ← tabla de configuraciones (etapa 3)
+│   ├── antes-despues.md         ← prompts pulidos y prueba de la trampa (etapa 5)
+│   └── capturas/                ← terminal con --saltos, salidas de los scripts
+├── proyecto/                    ← TODO el código tal como quedó
+│   ├── AGENTS.md · main.py · requirements.txt · .env.example · README.md
+│   ├── src/rag/{graph.py, prompts.py, tools.py, storage.py}   ← prompts finales adentro
+│   ├── scripts/{demo_embeddings.py, test_storage.py, indice_vs_coseno.py, ingest.py}
+│   ├── tests/
+│   └── docs/tu-documento.pdf
+└── (sin .venv, sin .env, sin data/ pesado)
+
+El documento final de entrega documento-entrega.docx se construirá al final con el contenido de detalle de cada instrucción del tipo instruccion_NN.txt o instrucción_NNx.txt, siendo NN un numero que parte desde el 00 y x una letra del abecedario que parte por a.
+
+Arma los directorios para avanzar en lo que se entregará.
+
+El zip lo generaremos al final del trabajo, junto con el documento-entrega.docx
+
+Los integrantes del grupo son:
+- Fabio Durán
+- Gustavo Reyes
+- Ezequiel Muñoz
+
+Los integrantes déjalos en todos los .md o .py con además la explicación (objetivo) de para qué es ese archivo, la fecha_hora de creación y de modificación con el formato 24hrs YYYYMMDD_hhmm
+

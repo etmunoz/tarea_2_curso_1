@@ -1,0 +1,3 @@
+Actualiza C:\Users\etmun\proyecto\tarea_2_curso_1\entrega\grupo-N-taller2-rag\pruebas\bateria.md con ejemplos ad-hoc al documento, con preguntas y respuestas esperadas para las 10 preguntas que se deben fabricar y las reviso. 
+
+Actualiza el documento y me muestras el resultado en pantalla.

@@ -1,0 +1,459 @@
+Leo main.py y compruebo si el README documenta los flags:
+
+Añado un flag --texto que lista los fragmentos con su contenido. Edito main.py:
+
+Ahora la lógica de impresión, para que --texto muestre el contenido de cada fragmento:
+
+Añado la función auxiliar _indentar:
+
+Pruebo con las tres preguntas que diste:
+
+Funciona. Y revela algo importante: el fragmento 1 sí contiene la definición (literal f: "Dato personal: cualquier información vinculada o referida a una persona natural identificada o identificable") y aun así se descartó. Ejecuto las otras dos:
+
+Verifico que las pruebas sigan pasando (cambié el formato de la línea de fragmento):
+
+Las 52 pruebas pasan. Añado una prueba para el nuevo flag y documento el flag en el README:
+
+El README también tiene nombres de nodos desactualizados (retrieve/generate/no_context) desde la instrucción 05. Lo corrijo junto con el nuevo flag, y añado la prueba:
+
+54 pruebas pasan. Actualizo la marca del README:
+
+Listo. Añadí el flag --texto.
+
+Uso
+python main.py rag "Qué es Dato Personal" --saltos --texto
+--texto lista el cuerpo completo de cada fragmento del TOP_K (fuente, página, parecido, inicio, largo y texto sangrado). Puede usarse solo o junto a --saltos.
+
+Resultado de tus tres preguntas
+1 · "Qué es Dato Personal" — 0.6223 → no_se
+
+#	Pág.	Parecido	¿Contiene la respuesta?
+1	p.2	0.6223	Sí — "f) Dato personal: cualquier información vinculada o referida a una persona natural identificada o identificable"
+2	p.32	0.5890	No — Art. 30, Agencia
+3	p.3	0.5723	No — def. de base de datos/responsable
+2 · "Dato Personal" — 0.5523 → no_se
+
+#	Pág.	Parecido	¿Contiene la respuesta?
+1	p.26	0.5523	No — fragmento de 83 caracteres, casi vacío
+2	p.2	0.5266	Sí — misma definición del literal f)
+3	p.21	0.5157	No — Art. 16 quáter, datos de menores
+3 · "Multas" — 0.5649 → no_se
+
+#	Pág.	Parecido	¿Contiene la respuesta?
+1	p.42	0.5649	Sí — leves 5.000 UTM, graves 10.000, gravísimas 20.000
+2	p.43	0.5577	Parcial — acumulación de multas
+3	p.43	0.5489	Parcial — Art. 37, criterios de monto
+Tres datos para que decidas el umbral
+Las tres son falsos negativos. En las tres, el mejor fragmento sí tenía la respuesta. UMBRAL=0.65 bloqueó contenido que estaba en el primer lugar de recuperación.
+El techo real de "con evidencia" está en 0.56–0.62, muy por debajo de 0.65. Con estas cuatro medidas (junto a las de la batería), ninguna pregunta con respuesta genuina superó 0.7411, y varias quedaron entre 0.55 y 0.62.
+Hay ruido en los fragmentos. El #1 de la pregunta 2 mide 83 caracteres porque CHUNK_SIZE=800 partió un fragmento casi vacío, y aun así quedó el primero. Eso infla mejor_parecido con contenido inservible y perjudica la decisión del umbral.
+Conviene notar que bajar UMBRAL a ~0.55 haría pasar estas tres, pero en la batería dejaría pasar las fuera-de-contexto 6 (0.6286) y 8 (0.6104) al LLM. No modifiqué UMBRAL — sigue pendiente tu decisión.
+
+Cambios
+main.py — flag --texto y auxiliar _indentar
+tests/test_rag.py — 2 pruebas nuevas (54 total, OK); verifican que --texto muestre el cuerpo y que --saltos no lo muestre
+README.md — documentado --texto; corregidos los nombres de nodos que aún decían retrieve/generate/no_context (desactualizados desde la instrucción 05) y la cita [archivo p.N]
+git diff --check sin errores de contenido.
+
+Respuesta Usuario: Y qué más se puede hacer para mejorar, ya que bajar el umbral hará que la 6 y la 8 que son fuera de contexto queden como ok?
+
+Buena pregunta, y la premisa merece matizarse: que la 6 y la 8 pasen a responder no es automáticamente un fallo — el SYSTEM_PROMPT regla 3 ya dice "si el contexto no alcanza, dilo en vez de inventar". Lo que falta es saber si el modelo obedece. Eso se mide, no se supone. Primero verifico cómo se carga UMBRAL para poder probarlo sin tocar ficheros:
+
+get_settings() lee os.getenv("UMBRAL") cada vez, sin caché — así que puedo probar otro umbral por variable de entorno sin modificar ningún fichero. Ejecuto el experimento decisivo: bajo el umbral a 0.53 y mido a la vez los falsos negativos (2, 5) y los fuera-de-contexto (6, 8).
+
+El experimento es revelador y matiza mucho tu pregunta. Antes de comentarlo, verifico una hipótesis: en la pregunta 2 la respuesta fue incorrecta — sospecho que el corte del fragmento truncó el literal c).
+
+El diagnóstico es contundente. Antes de concluir, verifico si la respuesta de la 8 (Argentina) es un dato inventado o una cifra real chilena mal atribuida:
+
+Ejecuté el experimento que respondía a tu pregunta. No modifiqué el .env — probé UMBRAL=0.53 por variable de entorno solo en ese proceso.
+
+Resultado: tu preocupación es real, pero solo a medias
+Nº	Clase	Con 0.65	Con 0.53	¿Mejoró?
+5	En contexto	no_se	responde correcto	✅
+11	"Qué es Dato Personal"	no_se	responde correcto	✅
+12	"Dato Personal"	no_se	responde correcto	✅
+13	"Multas"	no_se	responde correcto	✅
+2	Proporcionalidad	no_se	responde mal	⚠️ empeoró
+6	GDPR (fuera)	no_se	declina bien: "El contexto no incluye información sobre el GDPR"	✅ seguro
+8	Argentina (fuera)	no_se	contesta mal	❌ empeoró
+El matiz clave
+La 6 sí la cubre la regla 3: el modelo reconoció que el contexto no trataba el GDPR y se negó. Tu premisa no se cumple ahí.
+
+La 8 no: dio "cincuenta por ciento de la remuneración mensual del jefe superior del órgano público" citando [LEY-19628 p.49]. Verifiqué con pypdf: esa cifra existe en la ley, pero es chilena (Art. 44, órganos públicos), y "Argentina" no aparece en ninguna de las 57 páginas. El modelo agarró un dato real del corpus y lo atribuyó al país equivocado. Es el fallo más peligroso porque la cita parece válida.
+
+Patrón: la regla 3 protege cuando el contexto es temáticamente ajeno (GDPR), pero falla cuando el contexto es temáticamente parecido pero del sujeto equivocado (multas chilenas para una pregunta argentina).
+
+Además descubrí un problema distinto que el umbral no arregla
+Medí el fragmento TOP_1 de la pregunta 2: mide 125 caracteres y termina justo en c) Principio de proporcionalidad — el encabezado. El contenido del literal ("necesarios, adecuados y pertinentes") queda en el siguiente fragmento, que no entró en el TOP_K.
+
+Por eso, con 0.53 la 2 pasó de "no sé" a respuesta incorrecta: el modelo contestó con el literal b) anterior ("el titular otorgue nuevamente su consentimiento"). Bajar el umbral aquí no desbloquea la respuesta correcta, la sustituye por una equivocada.
+
+Mismo origen en la pregunta 12: su TOP_1 es un fragmento de 83 caracteres sin contenido útil, y la respuesta correcta vino del TOP_2 (p.2, 0.5266).
+
+Qué se puede hacer (además de bajar el umbral)
+Ordenado por lo que arregla:
+
+Arreglar el troceado — previo a todo. Filtrar fragmentos demasiado cortos y aumentar CHUNK_OVERLAP (o partir por sentencias) para que un encabezado no se separe de su contenido. Sin esto, bajar el umbral produce respuestas incorrectas, no mejores. Es el cuello de botella real.
+Regla de sujeto en el prompt (etapa 5, ya motivada con evidencia): añadir "si la pregunta menciona un país, organismo o norma que no aparece en el contexto, dilo en vez de responder". Ataca directamente el fallo de la 8, que la regla actual no cubre.
+Bajar UMBRAL a ~0.58, no a 0.53. Con 0.58 ganas las 11, 12, 13 (0.6223, 0.5523, 0.5649) y sigues descartando la 8 (0.6104) y la 6 (0.6286). Es el punto que separa mejor con los datos que tenemos:
+0.65 → pierde 5, 11, 12, 13
+0.58 → gana 11, 12, 13 y mantiene fuera a 6 y 8 ✅
+0.53 → gana 5 pero deja entrar a 8 → alucina
+Con 0.58 el único coste sigue siendo la 5 (0.5361).
+
+Reconsulta expandida para preguntas cortas: "Multas" y "Dato Personal" puntúan bajo por ser telegráficas. Reescribirlas antes de embeber subiría el parecido de los fragmentos buenos sin tocar el umbral.
+Reranker (opción más pesada): un cross-encoder reordena los candidatos y separa mucho mejor relevante/irrelevante que la similitud coseno sola — atacaría de raíz la superposición de clases.
+Mi recomendación: 1 primero (troceado), luego 2 (regla de sujeto), y después 3 (UMBRAL=0.58). Subir el umbral no es la única vía; bajarlo funciona si se corrige lo que lo hace peligroso.
+
+No he tocado UMBRAL, el prompt ni el troceado — espero tu decisión. ¿Por dónde seguimos?
+
+Respuesta del Usuario: Dejemos UMBRAL=0.58
+
+Ajusto UMBRAL a 0.58. Primero localizo todos los sitios donde aparece el valor, sin imprimir .env completo (contiene GOOGLE_API_KEY):
+
+Localizado. Verifico solo la línea de UMBRAL en .env (sin volcar el resto, que contiene GOOGLE_API_KEY):
+
+Cambio el valor en .env sin volcar el fichero:
+
+El re regex no casó (probablemente por fin de línea CRLF). Inspecciono la línea exacta:
+
+El bloqueo es el \r del CRLF. Uso sustitución simple de cadena:
+
+.env → 0.58. Ahora el .env.example (versionado) y el valor por defecto de config.py:
+
+Verifico que el agente carga 0.58 y que se comporta como esperamos (las tres de la instrucción 06 entran, la 8 sigue fuera):
+
+Cargado. Pero antes de dar por bueno el cambio, voy a verificar algo: en mi recomendación anterior dije que 0.58 "mantiene fuera a la 6 y la 8". Reviso los números y no cuadran — la 8 mide 0.6104 y la 6 mide 0.6286, ambas por encima de 0.58. Ejecuto para comprobarlo:
+
+
+
+
+Respuesta del Usuario: ejecuta de nuevo la bateria.md y actualiza los datos, pero no en la misma tabla, sino que explica lo que sucedió y debajo de la anterior escribe la nueva con lo que se modifique.
+
+
+Antes de nada, algo importante: mi recomendación anterior fue errónea. Dije que 0.58 mantendría fuera a las preguntas 6 y 8; la verificación que acabo de ejecutar lo desmiente (6=0.6286 y 8=0.6104, ambas por encima de 0.58), y que ganaría las 12 y 13, que en realidad quedan bajo el umbral. Lo dejo dicho con datos antes de reejecutar la batería.
+
+Ejecuto las diez con la configuración vigente:
+
+Leo las respuestas completas:
+
+PowerShell con las comillas del -c (lo sé, ya me pasa). Leo el JSON directamente:
+
+Evidencia guardada. Ahora actualizo bateria.md sin tocar la tabla anterior, añadiendo debajo la explicación y la nueva tabla:
+
+Inserto la nueva sección con la comparación, dejando la tabla anterior intacta:
+
+Corrijo una errata que introduje ("órgans") y reviso el resto de las secciones:
+
+Limpio los temporales y verifico el estado:
+
+54 pruebas OK. Aquí está el resultado para copiar y pegar.
+
+Reejecución de bateria.md con UMBRAL=0.58
+Qué hice
+Cambié UMBRAL de 0.65 → 0.58 en .env, .env.example y el default de src/rag/config.py
+Reejecuté las mismas 10 preguntas (mismo corpus, backend, modelos, TOP_K=3, chunks)
+Evidencia: capturas/bateria_20261027_2158_umbra058.json
+La tabla anterior (0.65) quedó intacta; la nueva va debajo en su propia sección
+Comparación — qué cambió pregunta a pregunta
+Nº	Parecido	Ruta 0.65	Ruta 0.58	Qué pasó
+1	0.7285	responder (parcial)	responder (parcial)	Sin cambio: sigue sin "bloqueo" y cita [1 p.4]
+2	0.5850	no_se	responder	Empeoró: deja de decir "no sé" y contesta mal
+3	0.6848	responder (parcial)	responder (parcial)	Sin cambio: 4 de 6 causales
+4	0.6533	responder ✅	responder ✅	Sin cambio
+5	0.5361	no_se	no_se	No mejoró: sigue bajo 0.58
+6	0.6286	no_se ✅	responder	Riesgo asumido, pero declinó bien
+7	0.3636	no_se ✅	no_se ✅	Sin cambio
+8	0.6104	no_se ✅	responder	Empeoró: alucina jurisdicción
+9	0.7411	responder ❌	responder ❌	Sin cambio: mezcla corridos/hábiles
+10	0.7041	responder (parcial)	responder (parcial)	Sin cambio
+Balance comparado
+Evaluación	Con 0.65	Con 0.58
+Rutas correctas	8/10	7/10
+Correctas	4 (4, 6, 7, 8)	3 (4, 7, 6 por declinación)
+Parciales	3 (1, 3, 10)	3 (1, 3, 10)
+Falsos negativos	2 (2, 5)	1 (5)
+Contenido incorrecto	1 (9)	3 (2, 8, 9)
+Alucinaciones	0	1 (8)
+Las tres cosas que hay que contar
+1. El resultado neto empeoró. Bajar el umbral redujo los falsos negativos de 2 a 1, pero convirtió dos aciertos en errores y produjo la primera alucinación de la batería.
+
+2. La 8 es la regresión seria. Antes: rechazo correcto. Ahora: "la multa máxima que aplica la autoridad de protección de datos de Argentina es el cincuenta por ciento de la remuneración mensual del jefe superior del órgano público [LEY-19628 p.49]". Verifiqué con pypdf: la cifra es real pero es chilena (Art. 44) y "Argentina" no aparece en ninguna de las 57 páginas. La cita parece válida, que es lo que lo hace peligroso.
+
+3. La 2 no se arregló, se enmascaró. Su TOP_1 mide 125 caracteres y termina justo en el encabezado c) Principio de proporcionalidad; el contenido real está en el siguiente fragmento, fuera del TOP_K. Por eso pasa el umbral y contesta con el literal b) en vez del c). Ningún valor de umbral arregla esto: es el troceado.
+
+Corrección de mi error
+En el mensaje anterior afirmé que 0.58 "mantendría fuera a la 6 y la 8" y que "ganaría las 11, 12 y 13". Falló en cuatro de cinco casos:
+
+6 = 0.6286 y 8 = 0.6104 → por encima de 0.58, entran
+12 = 0.5523 y 13 = 0.5649 → por debajo, siguen fuera
+Solo 11 (0.6223) entró como dije
+Queda registrado en bateria.md (conclusión 11) para no repetirlo.
+
+Estado y recomendación
+UMBRAL=0.58 es lo que queda vigente, tal como pediste, y así lo documenté.
+
+Pero los datos de ambas ejecuciones favorecen a 0.65 (mejor balance, cero alucinaciones). Lo dejo a la vista sin tocarlo. La vía que sí promete no es el umbral: corregir el troceado (arregla la 2 de raíz) y añadir una regla de sujeto/país al prompt (arregla la 8) — la segunda es material de la etapa 5.
+
+bateria.md ahora tiene: cabecera con las dos ejecuciones, tabla 1 (0.65) intacta, tabla 2 (0.58) debajo con la comparación, tabla de decisión con las tres filas, y 12 conclusiones. Los temporales data/_*.py están eliminados y las 54 pruebas pasan.
+
+
+
+Respuestas del Usuario: Entonces no habrá que cambiar el modelo de embeddings o la similaridad?
+
+
+Buena pregunta, y la respuesta corta es: casi nada de lo que falló se arregla cambiando embeddings o la métrica. Pero antes de afirmarlo, descarto la única hipótesis que sí sería un fallo de la métrica: que el índice Redis esté usando una distancia distinta de la coseno y por tanto la conversión 1 - distancia esté mal.
+
+El índice etmunoz_ollama no existe. Listo los índices reales:
+
+No hay claves idx:* pero hay 2524 claves. Uso FT._LIST, que es la forma correcta de listar índices:
+
+El índice es etmunoz_ollama_rag (con sufijo _rag). Consulto su métrica real:
+
+Métrica verificada correcta: distance_metric: COSINE, dim 1024, 318 documentos. Así que 1 - distancia de storage.py está bien y no hay bug de métrica. Compruebo una segunda cosa relevante — si los vectores están normalizados, porque de eso depende la conversión 1 - d/2 en el camino FAISS:
+
+No hay normalización en embeddings.py. Esto sí importa para tu pregunta: el camino FAISS usa 1 - d/2, que solo es válido con vectores normalizados. Mido la norma real de los vectores almacenados:
+
+Limpio. Ahora, para responderte con datos y no con impresiones, necesito saber si Q1 (falta "bloqueo") y Q3 (faltan 2 causales) son fallo del modelo o del troceado — es decir, si esos contenidos estaban en el fragmento o no:
+
+Mi verificación tiene un fallo metodológico: busqué subcadenas sin normalizar espacios, y el texto tiene saltos de línea ("derecho de\noposición"). Eso da falsos negativos. Lo repito bien:
+
+Verificado. Aquí está la respuesta con datos, no con impresiones.
+
+## 1. La métrica está bien — no hay bug
+
+| Comprobación | Resultado |
+| --- | --- |
+| `FT.INFO` del índice `etmunoz_ollama_rag` | `distance_metric: COSINE`, `dim: 1024`, `num_docs: 318` |
+| Norma de los vectores almacenados | **1.000000** en los 6 muestreados |
+| Conversión Redis (`1 - distancia`) | ✅ válida para coseno |
+| Conversión FAISS (`1 - d/2`) | ✅ válida para vectores unitarios |
+
+**No toques ni la métrica ni la fórmula: ambas son correctas.**
+
+## 2. Dónde está realmente cada fallo
+
+Clasifiqué los 13 fallos observados (10 batería + 3 instrucción 06) verificando si el contenido ausente existía en el fragmento:
+
+| Causa raíz | Fallos | Ejemplos |
+| --- | --- | --- |
+| **Umbral / calibración** | 4 | Q5, Q11, Q13 y Q12: el fragmento **correcto ya era el TOP_1**, solo quedó bajo el umbral |
+| **Troceado** | 2.5 | Q2 (fragmento de 125 car. cortado en el encabezado), Q1 (la causal a) se cortó), Q12 (fragmento de 83 car.) |
+| **Prompt** | 2 | Q1 formato de cita `[1 p.4]`, Q8 falta regla de sujeto/país |
+| **Razonamiento del modelo** | 2.5 | Q9 (mezcla corridos/hábiles), Q10 (no distingue acceso/portabilidad), Q3 (omite "caducos" **sí presente**) |
+| **Bug de métrica** | **0** | — |
+
+Descubrí además algo que corrige una evaluación previa: en Q1 **"bloqueo" no estaba en ninguno de los 3 fragmentos** (existe en el corpus en p.2, p.8, p.11, p.24, con scores 0.39–0.47). El modelo no lo omitió — **la recuperación no se lo dio**. Ese fallo es del `TOP_K`/umbral, no del modelo.
+
+## 3. El dato que responde tu pregunta
+
+**Los embeddings rankean bien.** En Q5, Q11, Q13 y Q12 el fragmento con la respuesta **ya era el resultado #1**. El ranking es correcto; lo que falla es que la **puntuación absoluta** quede por debajo del umbral.
+
+Y ahí está el punto: en Q8, el embedding puso p.49 (multas) como TOP_1 para *"multa máxima Argentina"* — **eso es lo correcto**, porque "multa máxima" sí apunta a multas. El fallo fue que el modelo atribuyó una cifra chilena a Argentina. En Q6, "GDPR" no tiene contenido en el corpus, así que **ningún embedding** encontraría algo.
+
+## 4. Cambiar la métrica no serviría de nada
+
+Con vectores unitarios, coseno, producto escalar y L2 son **monótonamente equivalentes**:
+
+```
+dot(a,b)  = cos(a,b)                ← idéntico
+L2²(a,b)  = 2 − 2·cos(a,b)          ← mismo orden
+```
+
+Los tres dan **exactamente el mismo ranking**. Cambiar la métrica solo reescalaría el número, y tendrías que recalibrar el umbral igualmente. Es un cambio sin efecto en la recuperación.
+
+## 5. Cambiar el modelo de embeddings: sí ayudaría, pero poco
+
+Ayudaría a los **4 fallos de umbral** si el nuevo modelo separase mejor las clases. Pero:
+
+- **No arregla** Q2, Q3, Q12 (troceado) ni Q1-cita, Q8 (prompt) ni Q9, Q10 (razonamiento) → **9 de 13 fallos quedan igual**
+- Exige **reingerir los 318 fragmentos** y descartar todas las mediciones tomadas
+- La superposición de clases es **inherente** a los bi-encoders: comprimen la semántica en un rango estrecho (0.53–0.74 aquí). Otro bi-encoder de la misma familia probablemente reproduzca el mismo solape
+
+No es la palanca con mejor relación beneficio/costo.
+
+## 6. Lo que sí ataca el problema de similitud
+
+Si quieres mejorar la separación de puntuaciones, hay dos vías reales, y **ninguna es cambiar el modelo de embeddings ni la métrica**:
+
+1. **Reranker (cross-encoder)** — re-puntúa los pares pregunta↔fragmento viéndolos juntos. Separa mucho mejor que la similitud coseno de un bi-encoder. Ataca directamente los 4 fallos de umbral. Añade latencia por consulta.
+
+2. **Reescritura de consulta** — "Multas" y "Dato Personal" puntúan bajo por ser telegráficas. Expandirlas antes de embeber sube el parecido de los fragmentos buenos **sin tocar umbral ni modelo**.
+
+## Recomendación
+
+**No cambies embeddings ni métrica.** En orden de rentabilidad:
+
+1. **Troceado** (arregla Q2, Q3, Q12) — es el cuello de botella que convierte aciertos en errores
+2. **Regla de sujeto/país en el prompt** (arregla Q8) — material de etapa 5
+3. **Decidir el umbral** con las dos tablas de `bateria.md` a la vista
+4. Solo después, si aún quieres más separación: **reranker** o **reescritura de consulta**
+
+Nada de esto lo he aplicado aún — dime por dónde seguimos.
+
+
+
+Respuesta del usuario: Vamos por el 1, y volvamos a medir, para visualizar si hay o no mejora. ojo que luego del troceado, hay que decidir el nuevo umbral.
+
+
+Perfecto. Plan: diagnosticar el troceado actual, corregirlo, reingerir, re-medir con UMBRAL=0.58 (para comparar igual que la ejecución 2) y con eso decidir el umbral. Empiezo por leer el troceado real:
+
+Tengo el troceado a la vista. Antes de tocar nada, diagnostico con datos qué produce realmente el RecursiveCharacterTextSplitter actual — sobre todo la página 5, de donde salió el fragmento de 125 car.
+
+Tres hallazgos importantes. El más grave: el solape no se está aplicando (167 de 261 pares tienen solape 0; media 35.3 frente a los 120 configurados). Y eso explica el encabezado huérfano de la p.5. Verifico ambas cosas:
+
+El solape sí funciona en cadena sintética (47-48 car. con CHUNK_OVERLAP=50), pero en el PDF real 167 de 261 pares tienen solape 0. Y el corte de la p.5 está confirmado: el encabezado c) Principio de proporcionalidad queda solo en el fragmento 2 (125 car.) y su contenido en el 3. Localizo por qué el solape desaparece:
+
+Ahora tengo la causa. Los 167 pares sin solape empiezan todos con . — el borde cae exactamente en un corte por . , y ahí el solape se descarta. Veo el código real del splitter antes de decidir el arreglo:
+
+El algoritmo confirma el diseño: tras emitir un fragmento, recorta desde el frente hasta dejar total <= chunk_overlap. Pero eso solo funciona si _merge_splits se invoca; en los 167 pares que empiezan con . no se aplica. Leo la recursión para ver cuándo se salta:
+
+Ahora entiendo el mecanismo completo. Confirmo dos cosas antes de proponer el arreglo: qué dicen las instrucciones sobre los separadores (el docstring dice que son "explícitos de la instrucción") y si hay regla de tamaño mínimo:
+
+Confirmo la restricción clave: instruccion_04.txt fija los separadores en ["\n\n", ". ", " ", ""], así que no puedo tocarlos. Los vectores que sí puedo mover son CHUNK_SIZE/CHUNK_OVERLAP (la rúbrica pide justamente comparar dos configuraciones) y un posproceso de fragmentos. Mido todo offline, sin reingerir aún:
+
+Datos decisivos. Antes de implementar, verifico que la fusión no produzca basura y localizo el script de la batería para la re-medida:
+
+No hay script de batería permanente (se corrió con temporales). Reviso el formato de las capturas para replicarlo exactamente:
+
+La captura confirma el formato. Ahora un barrido amplio de configuraciones puras CHUNK_SIZE/CHUNK_OVERLAP para demostrar con datos si alguna arregla la Q2 sin posproceso, más inspección de calidad de las fusiones:
+
+El barrido es concluyente y da la respuesta técnica:
+
+Configuración pura: solo CHUNK_SIZE=1500 junta el encabezado con su contenido de la Q2, pero deja fragmentos de ~1040 car. de promedio y aún 2-3 degenerados. Ninguna otra (300→1200 con 3 solapes) lo logra.
+Con fusión de fragmentos <200: 800/120 + fundir<200 es la única que junta la Q2 y deja 0 fragmentos degenerados, con 294 fragmentos.
+Verifico la única cabecera duplicada que detectó la fusión y la hora para las cabeceras:
+
+La hora es 20261027_2337; ese python -c de PowerShell salió mal (ya lo sé). Uso un script limpio para revisar la cabecera duplicada:
+
+La fusión está limpia: la única cabecera duplicada (p.1) ya estaba duplicada en el PDF original, y 0 fragmentos sospechosos — ninguna fusión repite texto.
+
+Diagnóstico cerrado. Resumen antes de implementar:
+
+Defecto medido	Causa	Evidencia
+11 fragmentos <150 car. (mín. 24)	colas de troceado por página	800/120 → deg150=11
+Q2 respondía mal	encabezado c) Principio de proporcionalidad separado de su contenido	frag. 125 car. vs frag. 704 car.
+Solape real 0 en 167/261 pares	los 167 empiezan todos con .	media 35.3 vs 120 configurados
+Y la respuesta al barrido: ninguna configuración pura de CHUNK_SIZE/CHUNK_OVERLAP arregla Q2 salvo 1500 (deja fragmentos de ~1040 car.). Con fusión, 800/120 + fundir<200 es la única que junta Q2 y deja 0 degenerados. Reviso las pruebas para mantener el estilo:
+
+Reviso la prueba que valida el troceado, porque mi cambio puede afectarla:
+
+La fusión está validada: 0 fragmentos con texto repetido, y la única cabecera duplicada (p.1) ya venía así del PDF. Implemento en scripts/ingest.py:
+
+Ahora lo conecto en main() y añado el informe de fusión:
+
+La lógica es correcta. Añado pruebas para la función nueva:
+
+59 pruebas OK (54 + 5 nuevas; el "Exited with code 1" es el falso positivo conocido del pipe de PowerShell — el resumen dice OK). Actualizo la cabecera de la prueba:
+
+Ahora reingero con el troceado corregido. Usa --reset sobre nuestro índice (etmunoz_ollama), no borra el volumen de Redis:
+
+Ingesta correcta: 294 fragmentos, mínimo 24 → 200, 24 fusionados. Verifico el índice y las agujas clave antes de la batería:
+
+Índice correcto: 294 docs, COSINE. Corrijo esa línea (el almacén Redis es SearchIndex, no FAISS):
+
+Resultado crucial para la decisión de umbral:
+
+Q2: el fragmento TOP_1 (829 car.) ya contiene encabezado + contenido, pero su parecido bajó de 0.5850 → 0.5054 — la fusión diluye la similitud al añadir más texto. Con UMBRAL=0.58 ahora iría a no_se en vez de responder mal.
+Q3: la causal a) que faltaba ahora está en el TOP_3 (p.7, 0.6485).
+Q1: sin cambios (0.7285).
+Leo las preguntas oficiales para la re-medida:
+
+Tengo las 10 preguntas. Creo un script de batería permanente en scripts/ (antes eran temporales) para que la re-medida sea reproducible. Primero leo cómo se invoca el grafo:
+
+Creo el script de batería permanente en scripts/:
+
+Hay una línea defectuosa al final (claves := "nodos" es un error mío). La corrijo:
+
+Ahora ejecuto la batería con UMBRAL=0.58 (el vigente) para comparar manzanas con manzanas frente a la corrida anterior:
+
+Batería ejecutada. Comparo ambas corridas a UMBRAL=0.58 (misma ingesta distinta) para aislar el efecto del troceado:
+
+La captura antigua es una lista directa, la nueva es un dict con metadatos. Adaptador para ambos formatos:
+
+La comparación es clara. Efecto del troceado con UMBRAL=0.58 fijo (solo cambia la ingesta):
+
+ANTES (318 frag.)	DESPUÉS (294 frag.)
+Rutas correctas	7/10	6/10
+Q2	responder con respuesta equivocada	no_se (ya no responde mal)
+Q8	responder con alucinación	igual (0.6104)
+Fragmento más corto recuperado	—	271 car. (antes llegaba a 83)
+Q2 empeoró solo en el conteo de rutas: su parecido bajó 0.5850 → 0.5054 porque el fragmento de 125 car. (solo encabezado, muy parecido a la pregunta) se convirtió en uno de 829 car. con encabezado + contenido, que es el correcto. Ahora el contenido está, pero el umbral lo bloquea.
+
+Mido los dos umbrales candidatos con la nueva ingesta:
+
+$env:PYTHONIOENCODING='utf-8'; uv run python -u scripts/bateria.py --umbral 0.50 --etiqueta "troceado_nuevo_umbra050"; uv run python -u scripts/bateria.py --umbral 0.63 --etiqueta "troceado_nuevo_umbra063"
+
+[ 1] en_contexto  mejor=0.7285096645360001 nodos=['buscar', 'responder']
+[ 2] en_contexto  mejor=0.505384743214 nodos=['buscar', 'responder']
+[ 3] en_contexto  mejor=0.684826433659 nodos=['buscar', 'responder']
+[ 4] en_contexto  mejor=0.6533370018010001 nodos=['buscar', 'responder']
+[ 5] en_contexto  mejor=0.536074697971 nodos=['buscar', 'responder']
+[ 6] fuera        mejor=0.628648996353 nodos=['buscar', 'responder']
+[ 7] fuera        mejor=0.36361426114999995 nodos=['buscar', 'no_se']
+[ 8] fuera        mejor=0.610448420048 nodos=['buscar', 'responder']
+[ 9] ambigua      mejor=0.741050183773 nodos=['buscar', 'responder']
+[10] ambigua      mejor=0.698589026928 nodos=['buscar', 'responder']
+
+Evidencia guardada en entrega\grupo-N-taller2-rag\pruebas\capturas\bateria_20261028_0008_umbra05.json
+Con respuesta: 10/10
+  9x buscar -> responder
+  1x buscar -> no_se
+[ 1] en_contexto  mejor=0.7285096645360001 nodos=['buscar', 'responder']
+[ 2] en_contexto  mejor=0.505384743214 nodos=['buscar', 'no_se']
+[ 3] en_contexto  mejor=0.684826433659 nodos=['buscar', 'responder']
+[ 4] en_contexto  mejor=0.6533370018010001 nodos=['buscar', 'responder']
+[ 5] en_contexto  mejor=0.536074697971 nodos=['buscar', 'no_se']
+[ 6] fuera        mejor=0.628648996353 nodos=['buscar', 'no_se']
+[ 7] fuera        mejor=0.36361426114999995 nodos=['buscar', 'no_se']
+[ 8] fuera        mejor=0.610448420048 nodos=['buscar', 'no_se']
+[ 9] ambigua      mejor=0.741050183773 nodos=['buscar', 'responder']
+[10] ambigua      mejor=0.698589026928 nodos=['buscar', 'responder']
+
+Evidencia guardada en entrega\grupo-N-taller2-rag\pruebas\capturas\bateria_20261028_0012_umbra063.json
+Con respuesta: 10/10
+  5x buscar -> responder
+  5x buscar -> no_se
+
+Ambos umbrales dan 8/10 rutas, pero fallan en clases opuestas. Reviso las respuestas para decidir cuál falla es preferible:
+
+Los datos son decisivos. Corrijo la última sección y saco la tabla de decisión completa:
+
+Mi script de Pareto tenía un error: cargaba las respuestas del umbral 0.50 en ambas filas. Los datos de rutas sí son correctos (salieron del resumen previo), pero la tabla está mal. La corrijo y la vuelvo a ejecutar:
+
+Datos correctos ahora. Limpio los scripts temporales:
+
+Terminado. Resumen del trabajo:
+
+1. Diagnóstico del troceado (offline, sin reingerir)
+Defecto medido	Antes
+Fragmentos degenerados	11 <150 car. (mínimo 24: '. La Agencia fiscalizará')
+Q2 respondía mal	encabezado c) Principio de proporcionalidad (125 car.) separado de su contenido (704 car.)
+Solape real	0 en 167/261 pares; media 35.3 frente a 120 configurados
+Barrido de 30 configuraciones puras CHUNK_SIZE/CHUNK_OVERLAP (300→1500): ninguna une el encabezado con su contenido salvo 1500, que deja fragmentos de ~1040 car. Los separadores ["\n\n", ". ", " ", ""] los fija instruccion_04.txt y no se tocaron.
+
+2. Corrección aplicada
+Posproceso en scripts/ingest.py: merge_small_fragments() funde fragmentos < CHUNK_SIZE//4 con un vecino de la misma página (dos pasadas, tope 1.5·CHUNK_SIZE, nunca cruza páginas).
+
+Verificado: 0 fragmentos con texto repetido; la única cabecera duplicada (p.1) ya venía del PDF.
+59 pruebas OK (5 nuevas).
+Reingesta (--reset sobre etmunoz_ollama, volumen intacto): 294 fragmentos (antes 318), mínimo 24 → 200, máximo 988, 24 fusionados.
+
+3. Re-medida con UMBRAL=0.58 fijo (solo cambia el troceado)
+Q2 dejó de responder mal → no_se. Pero su parecido bajó 0.5850 → 0.5054: el fragmento de 125 car. (solo encabezado, casi idéntico a la pregunta) ahora es uno de 829 car. con encabezado + contenido, que es el correcto. Rutas: 7/10 → 6/10.
+
+4. Datos para el nuevo umbral
+Parecidos ordenados (nuevo troceado): 0.7411 · 0.7285 · 0.6986 · 0.6848 · 0.6533 · 0.6286(Q6) · 0.6104(Q8) · 0.5361(Q5) · 0.5054(Q2) · 0.3636(Q7)
+
+Dos valores "fuera de contexto" siguen dentro del rango de los que sí tienen contexto:
+
+UMBRAL	Rutas	Falsos negativos	Alucinación real	Q2
+0.50	8/10	ninguno	1 (Q8)	✅ correcta
+0.58 (actual)	6/10	Q2, Q5	1 (Q8)	no_se
+0.63	8/10	Q2, Q5	ninguna	no_se
+A 0.50, Q2 responde: *"los datos personales que se traten deben limitarse estrictamente a aquéllos que resulten necesarios, adecuados y pertinentes [...] [LEY-19628 p.5]"*. Q5 también acierta. Q6 va por responder pero se niega en el texto (cumple lo que exige docs/preguntas.md); el único fallo de contenido real es Q8.
+
+La asimetría decisiva: a 0.63, Q2 y Q5 van a no_se antes de que el LLM corra → ningún prompt podrá arreglarlo, solo el umbral. A 0.50, Q8 sí llega al LLM y alucina → es el fallo de la etapa 5 (regla de sujeto/país), que está pendiente.
+
+Evidencias guardadas: bateria_20261027_2357_umbra058.json, bateria_20261028_0008_umbra05.json, bateria_20261028_0012_umbra063.json.
+

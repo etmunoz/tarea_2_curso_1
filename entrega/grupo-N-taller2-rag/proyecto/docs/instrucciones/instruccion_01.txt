@@ -1,0 +1,19 @@
+Genérame un proyecto RAG en Python 3.12 con entorno virtual .venv e instala: langgraph, langchain, langchain-google-genai, langchain-redis, redis, langchain-community, langchain-text-splitters, pypdf, faiss-cpu, numpy y python-dotenv.
+
+Crea un .env.example con estas variables (y nunca pongas valores reales en el código):
+- GOOGLE_API_KEY
+- REDIS_URL (ej. redis://localhost:6379)
+- VECTOR_STORE=redis   (alternativa: faiss)
+- EMBEDDING_MODEL=models/gemini-embedding-001
+- MODELO=gemini-3.5-flash-lite
+- PREFIJO=etmunoz   (prefijo del índice: cada equipo usa uno distinto)
+- CHUNK_SIZE=800, CHUNK_OVERLAP=120, TOP_K=3, UMBRAL=0.65
+
+Crea un AGENTS.md con estas reglas:
+- Los agentes van en src/{{nombre_agente}}/ con graph.py, prompts.py y tools.py; este proyecto tendrá además src/rag/storage.py con una función get_vector_store(prefijo) que devuelve Redis o FAISS según VECTOR_STORE.
+- Se ejecutan desde la raíz: python main.py {{nombre_agente}} "pregunta".
+- Flag --saltos: imprime los nodos por los que pasó el grafo. Flag --diagrama: imprime el Mermaid del grafo sin ejecutarlo.
+- Los scripts sueltos (demos, ingesta) van en scripts/ y los índices FAISS en data/.
+- El modelo de embeddings se lee SIEMPRE de EMBEDDING_MODEL, en un solo lugar.
+
+Considera el proyecto que utilice alternativamente REDIS o FAISS. Implementa por default FAISS.

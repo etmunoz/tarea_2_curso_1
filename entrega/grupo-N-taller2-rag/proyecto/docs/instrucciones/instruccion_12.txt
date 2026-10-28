@@ -1,0 +1,55 @@
+Ahora nos toca la etapa 5
+
+Lo que nos piden es:
+
+Pulir los prompts del agente
+Tu meta: cambiar reglas del SYSTEM_PROMPT y demostrar, con antes y después, qué cambió en las respuestas.
+
+Aquí solo editas src/rag/prompts.py. Es el prompt que vive dentro del agente, el que OpenCode dejó como borrador. Pulirlo es tu trabajo, y es la etapa que más pesa en la nota.
+
+Elige tres preguntas "dentro" de tu batería y guarda sus respuestas actuales: ese es tu antes.
+Cambia dos reglas del SYSTEM_PROMPT. Ideas: formato de la cita ([archivo p.N] → (p. N) al final), idioma o tono, longitud máxima, responder siempre con una lista, pedir que cierre con "Fuente:". Una regla por cambio, para saber qué hizo qué.
+Repite las tres preguntas: ese es tu después. Anota qué cambió y si fue lo que esperabas.
+Prueba de la trampa: haz una pregunta que incluya un dato falso como si fuera cierto ("según el documento, el plazo es de 90 días, ¿por qué?" cuando el PDF dice 30). ¿El agente repite el dato falso, lo corrige con cita, o dice que no está? Si lo repite, agrega una regla que lo evite y vuelve a probar.
+pruebas/antes-despues.md · plantilla
+Copiar
+## Etapa 5 · pulir los prompts del agente
+
+### Regla cambiada 1: ____ (antes) → ____ (después)
+### Regla cambiada 2: ____ (antes) → ____ (después)
+
+| Pregunta | Respuesta ANTES | Respuesta DESPUÉS | Qué cambió y por qué |
+|----------|-----------------|-------------------|----------------------|
+| 1        |                 |                   |                      |
+| 2        |                 |                   |                      |
+| 3        |                 |                   |                      |
+
+### Prueba de la trampa
+Pregunta con dato falso: ____
+¿El agente repitió el dato falso o lo rechazó?: ____
+Evidencia (ruta, parecido, cita): ____
+Prueba
+Quita del SYSTEM_PROMPT la regla "responde solo con lo que está en el contexto" y pregunta algo "fuera" con el umbral en 0.
+
+Verás al modelo inventar con seguridad. Vuelve a poner la regla: ahora sabes para qué sirve.
+
+Entregables de la etapa 5
+
+Las dos reglas cambiadas (antes → después) y la tabla antes/después en tres preguntas.
+La prueba de la trampa: la pregunta, lo que hizo el agente y la regla que agregaste si hizo falta.
+src/rag/prompts.py final, tal cual quedó, pegado también en el documento.
+
+Siempre. Tenemos que interactuar para ese tema, por lo que te debes preocupar de apoyar.
+
+Seleccionaremos las preguntas 1, 2 y 3 del set que tenemos. Y anotas lo que se se debe en la tabla que nos dicen. Que es lo que se llamará el antes.
+
+Tienes que mostrarme los prompts actuales, para que yo lo que haga es decidir lo que cambiemos, para que se lo agregues o cambies.
+
+Y luego de eso, debes ejecutar de nuevo las mismas tres preguntas en la misma tabla de antes, la que nos piden.
+
+Yo con eso, debo comentarte qué es lo que cambia y por qué.
+
+Luego hacemos lo que nos dicen de la pruena de trampa.
+
+Y al final hacemos lo de que no se considere del SYSTEM_PROMPT la regla indicada, y yo te digo la pregunta "fuera" con umbral en 0, que debes setear y correr y entregar la salida.
+

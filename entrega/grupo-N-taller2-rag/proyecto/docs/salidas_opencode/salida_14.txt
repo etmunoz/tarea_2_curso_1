@@ -1,0 +1,44 @@
+Esta instrucción pide consolidar los prompts y las pruebas, y pegar la plantilla antes del cierre. Voy a revisar los documentos y pendientes actuales; respetaré la regla de no generar el DOCX ni el ZIP antes de confirmar que ese paso final corresponde ahora.
+
+La auditoría muestra que aún no existe documento-entrega.docx ni ZIP y que la sección A de prompts.md sigue siendo una plantilla genérica. Voy a comprobar qué prompts exactos están realmente disponibles para completar la plantilla sin reconstruir los que no quedaron registrados; no generaré un DOCX/ZIP mientras esos pendientes sigan abiertos.
+
+
+Preparé la sección solicitada en entrega/grupo-N-taller2-rag/pruebas/prompts.md: incluye los seis prompts principales con sus fuentes y correcciones, y los SYSTEM_PROMPT, USER_PROMPT y PROMPT_REFORMULAR vigentes, listos para incorporar al documento final. También registré la instrucción 14 en docs/entrega.md y salidas_opencode/salida_14.txt.
+
+No generé el DOCX ni el ZIP. El checklist aún tiene pendientes, incluida la evidencia de respuesta y captura de la etapa 1; el plan del proyecto reserva esos archivos para el cierre final. Por eso, la entrega final todavía no se puede dar por cerrada.
+
+
+
+
+
+
+
+Instrucción del Usuario: debes hacer un barrido entre todas las instrucciones y entre todas las salidas para dejar muy bien documentado lo que debe documentarse de los prompts. Ya que los prompts residen en las instrucciones y en las salidas. En la instrucción en general lo que nos piden y las instrucciones generales. Y luego la salida, lo que sale de la instrucción, pero que la fuimos ajustando en la medida que íbamos avanzando. Se riguroso en esa revisión.
+
+
+Entendido. Haré un inventario cruzado de cada instruccion_* y salida_*, separando lo que pedía la instrucción de lo que realmente se pidió, corrigió o ajustó durante la ejecución. Registraré como pendiente cualquier texto literal que no se pueda verificar, sin reconstruirlo de memoria.
+
+
+Completé el barrido cruzado de las 28 instrucciones y sus 28 archivos salida_*, incluidos los sufijos. Actualicé:
+
+entrega/grupo-N-taller2-rag/pruebas/prompts.md: añadí una matriz fuente→salida para cada instrucción, qué pidió, los ajustes registrados y las referencias a las pruebas. La sección con los seis prompts principales y los prompts finales del agente queda lista para copiar al documento.
+docs/entrega.md: registré la revisión de la instrucción 14 y el estado pendiente del documento final.
+También anoté las cautelas encontradas: salida_07.txt reúne varias partes de una sesión y salida_14.txt es un resumen, no una transcripción literal completa. Las instrucciones son la fuente de los prompts originales; las salidas documentan ajustes y resultados. No reconstruí como citas literales lo que no está registrado.
+
+El DOCX y el ZIP siguen sin generarse. El checklist aún señala, entre otros pendientes, la captura y respuesta de la etapa 1. Los cambios actuales están sin commitear ni pushear.
+
+
+
+
+
+
+Instrucción del Usuario: Comentar de los problemas de acabado de keys, que nos llevaron a instalar en docker el redis y a trabajar con Ollama lo de los embeddings. Además de no tener los tokens para que OpenCode funcionara y que acabaron los modelos gratuitos para la cuenta.
+
+
+Lo agregaré como contexto de las iteraciones de prompts y cambios de proveedor, conservando tu comentario literalmente. Separaré lo que confirmas de usuario de lo que respaldan las salidas técnicas, para no presentar el agotamiento de tokens/modelos gratuitos como una medición independiente.
+
+Registré tu comentario literal en docs/entrega.md y entrega/grupo-N-taller2-rag/pruebas/prompts.md, vinculándolo con las salidas que documentan el límite de memoria de Redis y la cuota Gemini 429. La falta de tokens de OpenCode y el fin de los modelos gratuitos quedan identificados como contexto declarado por ti, no como datos verificados independientemente.
+
+No incluí credenciales ni cambié el código. Los cambios quedan sin commit.
+
+
