@@ -1,0 +1,89 @@
+Voy a leer el estado actual del agente para ver qué cambia respecto a la instrucción 05.
+
+Necesito ver main.py y las pruebas que dependen del grafo antes de refactorizar.
+
+Ahora tengo el panorama completo. La instrucción 05 exige renombrar estado y nodos al español, añadir mejor_parecido, memoria con MemorySaver, prompts con etiquetas y un set de 10 preguntas. Reviso primero todas las dependencias de los nombres actuales.
+
+Ahora tengo el mapa completo. La instrucción 05 exige renombrar el estado y los nodos al español, añadir mejor_parecido, memoria con MemorySaver y prompts con etiquetas. Empiezo por storage.py, que necesita devolver el parecido.
+
+Ahora reescribo prompts.py con las cuatro reglas y las etiquetas que pide la instrucción.
+
+Ahora reescribo tools.py con las funciones buscar y responder.
+
+Ahora el grafo con los nombres en español, mejor_parecido y memoria MemorySaver.
+
+Ahora actualizo main.py para usar las claves nuevas, pasar thread_id a la memoria y mostrar los fragmentos con --saltos.
+
+Dejé un bloque muerto en main.py. Lo limpio y aprovecho para mostrar mejor_parecido en --saltos.
+
+Ahora actualizo las pruebas que usan los nombres antiguos (retrieve, generate, no_context, claves question/answer).
+
+Actualizo la prueba restante de test_models.py que usaba tools.generate.
+
+Falta que el estado messages se llene: la memoria no tiene nada que recordar. Añado el mensaje humano en buscar y la respuesta en responder, que es lo que da memoria real por thread_id.
+
+Las 52 pruebas pasan. Ahora pruebo el agente real sobre la ley con --saltos.
+
+El grafo funciona y muestra la ruta, los fragmentos con parecido y página. Fue a no_se porque 0.6464 < 0.65 (UMBRAL). Pruebo una pregunta que sí supera el umbral para verificar responder con citas reales.
+
+El agente responde con citas [LEY-19628 p.6] reales. Ahora verifico la memoria entre turnos y leo el documento para generar las 10 preguntas.
+
+La memoria por thread_id funciona (hilo prueba-2 conservado). Ahora leo el documento para generar las 10 preguntas con base real.
+
+Sigo leyendo para anclar bien las preguntas fuera de contexto y las ambiguas.
+
+Ya tengo contenido real de las páginas 2-7. Elimino el temporal y creo el documento de las 10 preguntas.
+
+Hay una plantilla bateria.md para el set de preguntas. La leo para respetar su formato.
+
+Ya tengo contenido real de las páginas 2-7. Creo el documento con las 10 preguntas.
+
+Ahora actualizo el plan de entrega con la instrucción 05 y verifico el estado final.
+
+Verifico que todos los archivos editados tengan la marca de modificación correcta.
+
+Actualizo las marcas de modificación de los dos archivos que edité en esta ronda.
+
+Verificación final de pruebas y formato.
+
+Terminado. 52 pruebas pasan y git diff --check está limpio.
+
+Instrucción 05 completada
+Estado (renombrado al español, con mejor_parecido y memoria)
+class RagState(TypedDict, total=False):
+    pregunta: str
+    fragmentos: list[dict]      # texto, fuente, pagina, parecido
+    mejor_parecido: float
+    respuesta: str
+    messages: Annotated[list, add_messages]
+Nodos y arista condicional
+Nodo	Qué hace
+buscar	Embebe con EMBEDDING_MODEL, consulta get_vector_store(PREFIJO), trae TOP_K con su parecido y guarda mejor_parecido
+¿evidencia?	Arista condicional: mejor_parecido >= UMBRAL → responder; si no → no_se
+responder	Llama a MODELO con SYSTEM_PROMPT (4 reglas) y USER_PROMPT con <contexto> y <pregunta>
+no_se	Devuelve el mensaje sin llamar al modelo
+La memoria usa MemorySaver por thread_id (flag --thread). Verifiqué que un hilo conserva sus mensajes y otro hilo no los ve.
+
+Prompts en prompts.py (sin reglas en graph.py)
+Las 4 reglas: responder solo con el contexto, citar como [archivo p.N], decir cuando el contexto no alcanza, y español breve. NO_CONTEXT ahora es "No encontré evidencia en los documentos para responder eso."
+
+--saltos real
+[salto] buscar
+  mejor_parecido: 0.7367
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.7367
+  ...
+[salto] responder
+El titular de los datos tiene los siguientes derechos: acceso, rectificación,
+supresión, oposición, portabilidad y bloqueo [LEY-19628 p.6]...
+Y la ruta completa con no_se cuando no pasa el umbral.
+
+Set de 10 preguntas — docs/preguntas.md
+Leí el PDF (páginas 2-7) y documenté:
+
+5 dentro del contexto: derechos del titular (Art. 4°, p.6), principio de proporcionalidad (Art. 3°, p.5), casos de supresión (Art. 7°, p.7), anonimización (Art. 2° k, p.3), derecho de acceso (Art. 2° q, p.4)
+3 fuera: GDPR europeo, replicación de Redis Cluster, multa de la autoridad argentina
+2 ambiguas: plazo de respuesta del responsable (no hay uno único), información a entregar (depende del derecho ejercido)
+Quedan registradas como entrada de la etapa 4; su ejecución completa va en entrega/grupo-N-taller2-rag/pruebas/bateria.md, que sigue pendiente.
+
+Pendiente que ya te señalé
+UMBRAL=0.65 sigue ajustado con Gemini. Con BGE-M3, la pregunta "¿Qué es un dato personal?" da 0.6464 y cae en no_se. Eso se justifica con datos en la etapa 4, no lo toqué.

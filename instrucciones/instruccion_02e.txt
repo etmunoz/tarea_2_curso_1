@@ -1,0 +1,1 @@
+Identificación obligatoria: nombres y apellidos completos de los integrantes y nombre o número del grupo, en la primera página del documento y en el README.md del proyecto. Si usaste material de un compañero, di de quién.

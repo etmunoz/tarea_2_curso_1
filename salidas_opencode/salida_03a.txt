@@ -1,0 +1,37 @@
+Sí. Para evitar las cuotas de Gemini, recomiendo Ollama local para el LLM y los embeddings. Puedes conservar LangGraph, Redis y FAISS.
+
+Alternativas
+Alternativa	LLM	Embeddings	Librerías Python	Consideraciones
+Ollama local — recomendada	Qwen3, por ejemplo qwen3:4b	bge-m3, multilingüe	langchain-ollama	Sin cuotas de API; velocidad y capacidad dependen de tu equipo.
+Híbrida	OpenAI u otro proveedor remoto	Modelo local de Sentence Transformers	langchain-openai, langchain-huggingface, sentence-transformers	Evita cuotas de embeddings; el LLM sigue sujeto a costes y límites.
+OpenAI remoto	Modelo de chat disponible en tu cuenta	text-embedding-3-small	langchain-openai	Configuración sencilla, pero también tiene cuotas y requiere facturación según la cuenta.
+Propuesta para este proyecto
+LLM: Qwen3 mediante Ollama.
+Embeddings: BGE-M3 mediante Ollama, adecuado para probar recuperación en español.
+Almacenamiento: mantener nuestro Redis persistente.
+Alternativa de almacenamiento: conservar FAISS.
+La instalación sería:
+
+# Después de instalar e iniciar Ollama:
+uv add langchain-ollama
+ollama pull qwen3:4b
+ollama pull bge-m3
+Las clases que reemplazarían a las actuales son:
+
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+Los modelos deben seguir leyéndose desde la configuración, no quedar fijados en el código:
+
+OLLAMA_BASE_URL=http://localhost:11434
+MODELO=qwen3:4b
+EMBEDDING_MODEL=bge-m3
+Esto requiere adaptar el código: cambiar esas variables por sí solo no sustituye las clases de Google.
+
+Precauciones al cambiar
+No mezclar embeddings de modelos diferentes, aunque tengan igual dimensión.
+Conservar la caché Gemini por separado y generar una nueva para BGE-M3.
+Usar otro PREFIJO para los índices y volver a ingerir el corpus.
+Volver a evaluar UMBRAL: los puntajes del nuevo modelo pueden distribuirse de otra manera.
+Mantener el mismo modelo y los mismos vectores en ambas formas de búsqueda del benchmark.
+Ollama puede funcionar con CPU, pero para recomendar el tamaño del LLM conviene conocer tu RAM y GPU. No cambié la configuración ni cancelé la ejecución de Gemini.
+
+Referencias: ChatOllama · OllamaEmbeddings.

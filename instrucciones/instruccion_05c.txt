@@ -1,0 +1,5 @@
+Están aprobadas las preguntas y las respuestas esperadas.
+
+Ejecuta la bateria.md y completa la tabla.
+
+Luego muestra los resultados en pantalla para copiar y pegar.

@@ -1,0 +1,18 @@
+El Requerimiento:
+
+Embeddings: predice antes de medir
+Tu meta: comprobar con tus propias frases que "parecido" significa parecido en significado, no en palabras.
+
+1. Escribe tres frases de tu dominio: dos que digan lo mismo con palabras distintas y una de otro tema.
+frase_1 : "Qué nos dice la ley respecto de los tratamientos de los datos personales"
+frase_2 : "Para los datos personales la ley nos indica respecto del tratamiento de ellos"
+frase_3 : "Qué hay de los viajes que se tienen que realizar para ir a Colombia"
+
+2. Antes de ejecutar, anota cuál par crees que saldrá más parecido y qué número esperas (0,9, 0,6…).
+Pienso que las primeras dos frases debiesen estar su scoring dentro del 0,5 a 0,7 y que la tercera frase bajo 0,5. 
+--> Instrucción, anótalo para ver la comparación contra lo que resultó realmente.
+
+3. --> Instrucción: Corre python scripts/demo_embeddings.py frase_1 frase_2 frase_3 y copia la tabla de cosenos. Imprime los resultados en pantalla para la comparación contra lo indicado en 2.
+
+4. --> Corre python scripts/indice_vs_coseno.py --n 2000 y copia la tabla de tiempos en pantalla para revisar. 
+Yo debo escribir en función de eso una línea cuándo usarías cada forma.

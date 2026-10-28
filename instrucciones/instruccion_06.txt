@@ -1,0 +1,30 @@
+Me sale la salida así:
+
+(tarea-2-curso-1) PS C:\Users\etmun\proyecto\tarea_2_curso_1> python main.py rag "Qué es Dato Personal" --saltos         
+[salto] buscar
+  mejor_parecido: 0.6223
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2 parecido=0.6223
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.32 parecido=0.5890
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.3 parecido=0.5723
+[salto] no_se
+No encontré evidencia en los documentos para responder eso.
+(tarea-2-curso-1) PS C:\Users\etmun\proyecto\tarea_2_curso_1> python main.py rag "Dato Personal" --saltos       
+[salto] buscar
+  mejor_parecido: 0.5523
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.26 parecido=0.5523
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2 parecido=0.5266
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.21 parecido=0.5157
+[salto] no_se
+No encontré evidencia en los documentos para responder eso.
+(tarea-2-curso-1) PS C:\Users\etmun\proyecto\tarea_2_curso_1> python main.py rag "Multas" --saltos       
+[salto] buscar
+  mejor_parecido: 0.5649
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.42 parecido=0.5649
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.43 parecido=0.5577
+  fragmento: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.43 parecido=0.5489
+[salto] no_se
+No encontré evidencia en los documentos para responder eso.
+
+
+Me gustaría ver los textos de cada fragmento seleccionado en los top 3, para ajustar el threshold para decidir. Así que modifia el código para listarlos, si quieres colócale otro flag.
+

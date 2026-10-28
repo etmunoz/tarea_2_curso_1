@@ -1,0 +1,80 @@
+Voy a ejecutar la instrucción 04. Primero leo el estado actual de scripts/ingest.py y src/rag/storage.py para ver qué cambia.
+
+Reviso las pruebas que tocan ingest.py y el esquema de metadatos de Redis antes de reescribirlo.
+
+Ahora verifico que PyPDFLoader esté disponible y reviso el PDF real.
+
+PyPDFLoader está disponible con mode='page' (un Document por página), justo lo que pide la instrucción. Antes de reescribir el script, necesito una función de reset en storage.py. Reviso la API de RedisVectorStore.
+
+RedisVectorStore solo expone delete por IDs, así que para --reset necesito dropear el índice y borrar las claves del prefijo. Añado esa función a storage.py.
+
+Ahora añado el campo fragment al esquema de metadatos de Redis para que el número de fragmento sea consultable.
+
+Ahora reescribo scripts/ingest.py según la instrucción 04: PyPDFLoader, separadores explícitos, --reset, metadatos con número de fragmento e informe con solape.
+
+Actualizo la prueba que parcheaba PdfReader (ya no existe) para que use PyPDFLoader.
+
+Cometí un error de sintaxis (TemporaryDirectory() directory). Lo corrijo.
+
+Una prueba esperaba el mensaje antiguo. La actualizo al texto nuevo, que es más claro.
+
+Las 48 pruebas pasan. Ahora ejecuto la ingesta real sobre el PDF del corpus. Primero muestro la configuración vigente (sin secretos).
+
+Ahora ejecuto la ingesta real con --reset para partir de un índice limpio en Redis.
+
+La ingesta real funcionó: 57 páginas, 318 fragmentos. Verifico que los datos quedaron en Redis y que el agente responde sobre la ley.
+
+PowerShell vuelve a corromper las comillas. Uso un archivo temporal.
+
+La recuperación funciona con los metadatos completos. Ejecuto ahora el agente completo sobre la ley para verificar el recorrido real.
+
+El agente devolvió no_context: con BGE-M3 los cosenos quedan por debajo de UMBRAL=0.65, que se ajustó con Gemini. Mido los puntajes reales para documentar el dato.
+
+Documento la ingesta y el hallazgo del umbral.
+
+Faltaba la fila de 03c; la añado junto con 04.
+
+Verifico el estado final de las pruebas y el formato.
+
+Instrucción 04 completada
+Reescribí scripts/ingest.py y añadí una función de reset en src/rag/storage.py. Las 48 pruebas pasan.
+
+Cambios en src/rag/storage.py
+Añadí reset_vector_store(prefijo), que borra el índice antes de guardar:
+
+def reset_vector_store(prefijo: str) -> bool:
+    """Borra el índice del prefijo. Devuelve True si había algo que borrar."""
+    # Redis: FT.DROPINDEX con DD (borra también los HASH); FAISS: data/PREFIJO/
+Y registré fragment en el esquema de metadatos de Redis para que el número de fragmento sea consultable.
+
+Cambios en scripts/ingest.py
+Requisito	Implementación
+Uso	python scripts/ingest.py ruta/al/archivo.pdf [--reset]
+Carga	PyPDFLoader con mode='page' → un Document por página (pasa de 0-based a 1-based)
+Corta	RecursiveCharacterTextSplitter con CHUNK_SIZE/CHUNK_OVERLAP del .env y SEPARATORS = ["\n\n", ". ", " ", ""]
+Metadatos	source (ruta), filename, page, fragment (número 1-based)
+Guardado	get_vector_store(PREFIJO); Redis con índice PREFIJO_rag y claves PREFIJO:rag; FAISS en data/PREFIJO/
+--reset	Borra el índice antes de guardar; sin él, agrega (IDs estables por hash, sin duplicar)
+Informe	Páginas, fragmentos, tamaño medio y fragmentos 1 y 2 lado a lado con el solape calculado
+Fallos	Ruta inexistente o PDF escaneado: mensaje claro y salida sin traza de pila
+Ejecución real sobre el PDF del corpus
+uv run python scripts/ingest.py docs/LEY-19628_28-AGO-1999_refundida_20261201.pdf --reset
+Páginas leídas: 57
+Guardado en Redis con PREFIJO 'etmunoz_ollama': 318 fragmentos nuevos
+Fragmentos generados: 318
+Tamaño promedio de fragmento: 580.3 caracteres (mínimo 24, máximo 800).
+Solape real entre 1 y 2: 83 caracteres (CHUNK_OVERLAP del .env = 120).
+El solape real (83) es menor que CHUNK_OVERLAP=120 porque el separador ajusta el corte a límites de palabra, no corta en medio.
+
+Hallazgo que necesito reportarte
+Al probar el agente sobre la ley ya ingerida, el umbral no se ajusta a BGE-M3:
+
+UMBRAL actual = 0.65
+¿Qué es un dato personal y quién es su titular?  mejor coseno 0.6464 -> QUEDA BAJO
+¿Cuáles son los principios de la protección?      mejor coseno 0.6752 -> PASA
+¿Qué derechos tiene el titular de los datos?      mejor coseno 0.7367 -> PASA
+¿Qué es la autoridad de control?                  mejor coseno 0.4713 -> QUEDA BAJO
+UMBRAL=0.65 se ajustó con embeddings de Gemini. Con BGE-M3 hay preguntas legítimas que quedan apenas por debajo (0.6464) y el agente responde no_context. Esto pertenece a la etapa 4 de la rúbrica, que exige justificar UMBRAL y TOP_K con datos.
+
+No modifiqué UMBRAL porque es trabajo de etapa 4 y prefiero no adelantarlo sin tu indicación. ¿Quieres que ajuste el umbral ahora con esta evidencia, o lo dejamos para cuando trabjemos la etapa 4?
+

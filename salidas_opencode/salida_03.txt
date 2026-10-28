@@ -1,0 +1,9 @@
+Implementaré la comparación reutilizando exactamente los mismos vectores en ambas búsquedas y guardando una caché local para evitar repetir embeddings. Ejecutaré tamaños de 200 y 2000 fragmentos con el Redis del proyecto, y mostraré las tablas y conclusiones calculadas para que puedas copiar las salidas.
+
+Las 29 pruebas automatizadas pasan, pero Google detuvo la ejecución real con un error 429 de cuota después del primer lote de 100 fragmentos. Ese lote quedó guardado. Añadiré reintentos acotados para los límites temporales, sin repetir los embeddings ya almacenados; no daré la comparación por completada mientras falten datos.
+
+Creado scripts/indice_vs_coseno.py con caché, comparación Redis/FAISS y conclusiones calculadas. 30 pruebas automatizadas aprobadas.
+
+La ejecución real de --n 2000 encontró una cuota Google 429 tras guardar 100 vectores. Está reanudándose en segundo plano con reintentos acotados, sin repetir los lotes guardados.
+
+Las tablas reales siguen pendientes; no se han inventado resultados. Documentación en docs/indice-vs-coseno.md.

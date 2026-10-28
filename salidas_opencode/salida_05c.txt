@@ -1,0 +1,66 @@
+Preguntas aprobadas. Escribo un script que ejecute las diez y deje los resultados en JSON (ruta, parecido, fragmentos y respuesta), para completar la tabla sin parsear salidas sueltas.
+
+Ejecuto la batería completa. Son 10 llamadas al LLM local, así que tarda unos minutos:
+
+Las diez ejecutadas. Leo los resultados completos:
+
+Diez ejecutadas. Antes de completar la tabla verifico la afirmación de la pregunta 9 —"treinta días hábiles [p.10]"— porque si no está en esa página sería una invención.
+
+Hallazgo crítico en la pregunta 9. La página 10 contiene dos plazos distintos:
+
+"treinta días corridos" → plazo del responsable para pronunciarse
+"treinta días hábiles" → plazo del titular para reclamar ante la Agencia
+El agente respondió "treinta días hábiles para responder al titular", mezclando las dos cifras. Verifico dónde guardar la evidencia:
+
+Guardo la evidencia en JSON y escribo la tabla completa:
+
+Evidencia guardada. Ahora escribo la tabla completa con los resultados:
+
+Limpio el script temporal y muestro el resultado:
+
+Ejecutado y completado. Aquí está el resultado para copiar y pegar:
+
+Resumen de la ejecución
+Fecha/hora: 20261027_2059 · 8 de 10 rutas correctas · 0 alucinaciones
+
+Evaluación	Cant.	Preguntas
+Correcta	4	4, 6, 7, 8
+Parcial	3	1, 3, 10
+Fallo por UMBRAL	2	2, 5
+Fallo de contenido	1	9
+Las diez filas
+Nº	Pregunta	Parecido	Nodos	Evaluación
+1	Derechos del titular	0.7285	buscar → responder	Parcial: omite "bloqueo", añade confirmación/información; citas malformadas [1 p.4]
+2	Principio de proporcionalidad	0.5849	buscar → no_se	FALLO por UMBRAL: el fragmento p.5 con la respuesta literal era el primer resultado y se descartó
+3	Casos de supresión	0.6848	buscar → responder	Parcial: 4 de 6 causales (faltan innecesarios y caducos); citas bien formadas
+4	Anonimización	0.6533	buscar → responder	Correcta: texto legal exacto, [LEY-19628 p.3]
+5	Derecho de acceso	0.5361	buscar → no_se	FALLO por UMBRAL: peor falso negativo; p.4 contenía la definición
+6	GDPR encargados	0.6286	buscar → no_se	Correcta (a 0.0214 del umbral)
+7	Redis Cluster	0.3636	buscar → no_se	Correcta
+8	Multa Argentina	0.6104	buscar → no_se	Correcta (a 0.0396 del umbral)
+9	Plazo del responsable	0.7411	buscar → responder	FALLO de contenido: ver abajo
+10	Información a entregar	0.7041	buscar → responder	Parcial: no distinguió acceso de portabilidad
+Hallazgo importante — pregunta 9
+Verifiqué contra el PDF con pypdf. La página 10 contiene dos plazos distintos:
+
+"treinta días corridos" → plazo del responsable para pronunciarse
+"treinta días hábiles" → plazo del titular para reclamar ante la Agencia (Art. 41)
+El agente respondió "treinta días hábiles para responder al titular": mezcló las dos cifras de la misma página. El error es del modelo, no de la recuperación (el fragmento p.10 era correcto y el más alto de todos, 0.7411).
+
+Justificación de TOP_K y UMBRAL con datos
+TOP_K=3 elegido. En las preguntas 1 y 10 el contenido citado vino del fragmento 2 y 3 (p.6 con 0.7203; p.5 con 0.6894), no del primero. Con TOP_K=1 se pierden.
+
+UMBRAL=0.65 se mantiene. Dato clave: con bge-m3 los parecidos no separan las dos clases — la en-contexto 5 (0.5361) queda por debajo de la fuera-de-contexto 8 (0.6104). Ningún umbral las distingue:
+
+Umbral	Rutas correctas	Problema
+0.65 (actual)	8/10	Pierde las 2 y 5
+0.53 (calculado, no ejecutado)	8/10	Dejaría pasar 6 y 8 al LLM → riesgo de alucinar
+Mismo puntaje, pero 0.65 invoca el LLM cero veces sin evidencia. Queda documentado el coste: los falsos negativos 2 y 5.
+
+Pendiente para etapa 5 (motivado con evidencia, no ejecutado): dos cambios de regla posibles — formato de cita y manejo de plazos/ambigüedad — sobre las preguntas 1, 2 y 9.
+
+Evidencia
+entrega/grupo-N-taller2-rag/pruebas/capturas/bateria_20261027_2059.json — salida cruda de los 10 grafos
+entrega/grupo-N-taller2-rag/pruebas/bateria.md — tabla completa con respuestas íntegras, citas y balance
+Los scripts temporales (data/_*.py) están eliminados. El bonus FAISS sigue sin ejecutar (solo se marcó Redis como ejecutado).
+

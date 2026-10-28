@@ -1,0 +1,10 @@
+Genérame scripts/indice_vs_coseno.py siguiendo AGENTS.md, para comparar las dos formas de buscar con los MISMOS datos. Uso: python scripts/indice_vs_coseno.py --n 2000
+
+- Genera n fragmentos de texto sintéticos (frases cortas variadas sobre 5 temas) y embébelos UNA vez con EMBEDDING_MODEL; guarda los vectores en data/vectores_demo.npy para no volver a pagar embeddings si se repite.
+- Forma A, "coseno a mano": guarda los vectores en Redis como HASH por fragmento (o en una lista si VECTOR_STORE=faiss), y para buscar trae TODOS los vectores a Python y calcula el coseno con numpy contra el vector de la pregunta; ordena y toma top-k.
+- Forma B, "índice vectorial": guarda los mismos vectores en un índice vectorial (langchain-redis con índice KNN, o FAISS) y busca con similarity_search_with_score / FT.SEARCH KNN.
+- Para 5 preguntas, imprime una tabla: pregunta, top-3 de A, top-3 de B, ¿coinciden?, tiempo de A en ms, tiempo de B en ms, cuántos vectores viajaron a Python en cada caso.
+- Repite para n = 200, 2000 y (si --n lo permite) 20000, y muestra cómo crece el tiempo de A frente a B.
+- Al final imprime una conclusión de dos líneas generada por el propio script a partir de los números (no la escribas fija).
+
+Lo que ejecutes que se vea por pantalla para ir copiando las salidas.

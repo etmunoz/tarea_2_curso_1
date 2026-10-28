@@ -1,0 +1,16 @@
+Nuevo agente
+Nombre: rag
+Agente en LangGraph (src/rag/) que responde preguntas usando SOLO los fragmentos guardados por scripts/ingest.py. Se ejecuta con: python main.py rag "pregunta".
+
+Estado: pregunta, fragmentos (lista con texto, fuente, pagina, parecido), mejor_parecido, respuesta y messages (memoria con MemorySaver por thread_id).
+
+Nodos:
+- buscar: embebe la pregunta con EMBEDDING_MODEL, consulta get_vector_store(PREFIJO) y trae TOP_K fragmentos con su parecido; guarda el mejor parecido en el estado.
+- ¿evidencia? (arista condicional): si mejor_parecido ≥ UMBRAL va a responder; si no, va a no_se.
+- responder: llama a MODELO con un SYSTEM_PROMPT en prompts.py con estas reglas: (1) responde SOLO con lo que está en el contexto; (2) cita cada afirmación como [archivo p.N]; (3) si el contexto no alcanza para una parte, dilo en vez de inventar; (4) español, breve. El USER_PROMPT lleva el contexto y la pregunta entre etiquetas <contexto> y <pregunta>.
+- no_se: devuelve "No encontré evidencia en los documentos para responder eso" sin llamar al modelo.
+
+El flag --saltos debe mostrar la ruta (buscar → responder o buscar → no_se) y los fragmentos recuperados con su parecido y página. Los prompts van en prompts.py; nada de reglas dentro de graph.py.
+
+Lee el documento tu y genera un set de 10 preguntas  (5 dentro del contexto del documento, 3 fuera del contexto del documento, 2 ambiguas). Y las dejas documentadas en el proyecto.
+

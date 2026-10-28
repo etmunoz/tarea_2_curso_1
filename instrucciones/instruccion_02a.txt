@@ -1,0 +1,7 @@
+Instala un REDIS en mi Docker, para trabajar ahí el resto del proyecto.
+
+Deja documentado en el proyecto las instrucciones para Docker y todo lo que hagas con ál, de ahí en adelante.
+
+Déjame las instrucciones para levantar y bajar el Docker cuando se necesite.
+
+Deja probado con los nuevos scripts lo que probaste con el Docker temporal, ya que este será con el que trabajaremos en esta tarea.

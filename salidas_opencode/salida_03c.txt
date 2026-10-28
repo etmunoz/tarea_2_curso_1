@@ -1,0 +1,125 @@
+Haré tres cambios: seleccionar Ollama para el chat y los embeddings, actualizar .env con qwen3:8b y bge-m3, y separar los índices y la caché para no mezclar los vectores nuevos con los 900 de Gemini. Mostraré la configuración sin secretos y ejecutaré pruebas reales al terminar.
+
+El cambio ya está activo: la fábrica devuelve OllamaEmbeddings para BGE-M3 y el chat usa ChatOllama con Qwen3. No se exige clave Google cuando el proveedor es Ollama.
+
+Las 41 pruebas automatizadas pasan y las demos reales de embeddings y Redis terminaron con OK. Ahora comprobaré el recorrido del grafo con datos de demostración y repetiré el benchmark con una caché local separada.
+
+El grafo completo ya funciona con Ollama: recuperó los fragmentos demo y respondió con citas. Actualizaré la documentación con los cambios aplicados mientras el benchmark sigue ejecutándose.
+
+Inicio Compactación de la Sesión
+
+Objective
+Desarrollar y documentar un proyecto RAG en Python 3.12 (LangGraph + Gemini + Redis/FAISS) siguiendo una serie de instrucciones (instruccion_00 … instruccion_03a) y preparando la entrega del taller: código, prompts, pruebas por etapa, documento final y ZIP.
+Requirements
+Python 3.12 con uv y .venv; ejecutar desde la raíz con uv run python ….
+Agentes en src/{nombre_agente}/ (graph.py, prompts.py, tools.py); src/rag/storage.py expone get_vector_store(prefijo) (Redis o FAISS); embeddings leídos solo en src/rag/embeddings.py.
+Flags: --saltos (nodos recorridos), --diagrama (Mermaid sin ejecutar).
+Nunca versionar .env, claves, .venv ni data/ pesado; sí .env.example.
+Todos los .md y .py propios llevan: Integrantes (Fabio Durán, Gustavo Reyes, Ezequiel Muñoz), Objetivo, fecha_hora_creacion y fecha_hora_modificacion en formato YYYYMMDD_hhmm (24 hrs).
+Entregar todo el código, ambos tipos de prompts (los dados a OpenCode y los del agente) y todas las pruebas por etapa; sin pruebas no hay nota (rúbrica en docs/reglas-taller.md, base 100 pts + bonus FAISS/Redis +10).
+ZIP y documento-entrega.docx se generan solo al final; no inventar resultados pendientes.
+Identificación obligatoria confirmada (instruccion_02f.txt): nombres completos de los tres integrantes, grupo N (nombre literal confirmado), y declaración "no se utilizó material de compañeros".
+PDF del corpus incorporado: docs/LEY-19628_28-AGO-1999_refundida_20261201.pdf (57 páginas con texto, SHA256 4E469D6D0F9A3D4ADEF986E55B9ADD2E7B47BB97C6CEADB98E8BBC9C4EEA2CAD); copiado pero no ingerido.
+Operaciones Docker se documentan en docs/docker.md; no detener contenedores ajenos ni borrar tarea_2_curso_1_redis_data sin autorización.
+Decisions
+Redis persistente propio via compose.yaml (Redis 8.2 con digest fijado, AOF, maxmemory=256mb noeviction, 127.0.0.1:16379, volumen tarea_2_curso_1_redis_data); .env usa VECTOR_STORE=redis, REDIS_URL=redis://localhost:16379.
+Código fuente canónico en la raíz; entrega/grupo-N-taller2-rag/proyecto/ es destino de copia final (no duplicar hasta cerrar).
+Benchmark indice_vs_coseno.py cachea embeddings en data/vectores_demo.npy + .json (y preguntas_demo.*), usa HASH Redis + FT.SEARCH KNN vs barrido coseno, o FAISS in-memory vs IndexFlatIP.
+Ante 429 de Google: reintentos acotados (3) respetando retryDelay, sin repetir lotes guardados; cuota diaria no se reintenta.
+Consulta del usuario sobre alternativa a Gemini respondida (recomendación: Ollama local con langchain-ollama, Qwen3 LLM + BGE-M3 embeddings); sin implementar aún.
+Work State
+Completed
+Instrucciones 00–02g: uv/Python 3.12, repo GitHub etmunoz/tarea_2_curso_1, proyecto RAG completo (FAISS default + Redis), demos demo_embeddings.py y test_storage.py probadas en ambos backends, Redis Docker persistente instalado y probado (incluye persistencia tras down/up), estructura de entrega con plantillas, rúbrica en docs/reglas-taller.md, identificación confirmada, PDF del corpus incorporado.
+30 pruebas automatizadas aprobadas (uv run python -m unittest discover -s tests -v).
+scripts/indice_vs_coseno.py implementado con caché, pruebas unitarias y documentación (docs/indice-vs-coseno.md).
+Active
+Ejecución real de uv run python scripts/indice_vs_coseno.py --n 2000 en segundo plano (shell ID sh_17f77f409001LsellnGsHVLp8h, sin límite de tiempo) tras dos interrupciones por cuota 429/límite de 120 s; avance: 200/2000 vectores cacheados al momento de la última reanudación.
+Blocked
+Tablas reales de rendimiento y conclusión calculada pendientes de que termine esa ejecución (Gemini limita con 429).
+Escala 20000 no ejecutada (memoria Redis probablemente insuficiente con maxmemory=256mb).
+Cambio a Ollama (LLM + embeddings) propuesto pero no implementado; usuario aún no eligió proveedor ni confirmó hardware.
+Next Move
+Recibir notificación de sh_17f77f409001LsellnGsHVLp8h; si termina, mostrar las salidas completas (tablas por tamaño, crecimiento y conclusión calculada) al usuario para copiar y pegar.
+Si vuelve a fallar por 429, reportar el progreso de la caché y la salida real sin inventar resultados; ofrecer esperar y reanudar o la alternativa Ollama.
+Registrar resultados/estado en docs/indice-vs-coseno.md y bitácora docs/docker.md (fecha YYYYMMDD_hhmm), y actualizar metadatos de modificación de los .md/.py tocados.
+Relevant Files
+C:\Users\etmun\proyecto\tarea_2_curso_1\scripts\indice_vs_coseno.py: benchmark coseno vs índice; caché y reintentos.
+C:\Users\etmun\proyecto\tarea_2_curso_1\docs\indice-vs-coseno.md: metodología, caché, límites y estado de verificación.
+C:\Users\etmun\proyecto\tarea_2_curso_1\docs\entrega.md: plan de entrega, checklist y tabla de instrucciones.
+C:\Users\etmun\proyecto\tarea_2_curso_1\docs\reglas-taller.md: rúbrica (etapas 1–6, documento, bonus).
+C:\Users\etmun\proyecto\tarea_2_curso_1\docs\docker.md: operaciones y bitácora Docker.
+C:\Users\etmun\proyecto\tarea_2_curso_1\AGENTS.md: reglas vigentes del proyecto.
+C:\Users\etmun\proyecto\tarea_2_curso_1\README.md: identificación, uso y demos.
+C:\Users\etmun\proyecto\tarea_2_curso_1\tests\test_indice_vs_coseno.py: 11 pruebas del benchmark.
+C:\Users\etmun\proyecto\tarea_2_curso_1\src\rag\storage.py: backends Redis/FAISS y search_documents.
+C:\Users\etmun\proyecto\tarea_2_curso_1\src\rag\embeddings.py: única fábrica de embeddings.
+C:\Users\etmun\proyecto\tarea_2_curso_1\entrega\grupo-N-taller2-rag\pruebas\: plantillas de etapas (bateria, chunks, antes-despues, prompts, nodo-extra, construccion, embeddings).
+C:\Users\etmun\proyecto\tarea_2_curso_1\instrucciones\: instrucciones 00–03a.
+Important Context
+Estado Git: todo sin commit ni push; working tree sucio con archivos nuevos y modificados (repo remoto origin https://github.com/etmunoz/tarea_2_curso_1.git, rama main con a931ae6 como último commit conocido).
+.env local tiene GOOGLE_API_KEY válida (no imprimir ni copiar), VECTOR_STORE=redis, REDIS_URL=redis://localhost:16379; .env está en .gitignore.
+Redis del proyecto corriendo en 127.0.0.1:16379 (contenedor tarea_2_curso_1-redis-1, healthy); no usar docker compose down -v.
+Cuota Gemini 429 activa (RESOURCE_EXHAUSTED, rate/quota); la caché local permite reanudar sin reembeber.
+El PDF del corpus está en docs/ pero aún no se ha ejecutado scripts/ingest.py sobre él; el usuario aún no solicitó la ingesta real ni la etapa 3 de chunks con el corpus definitivo.
+
+Fin Compactación de la Sesión
+
+
+El benchmark terminó la carga completa de 2000 embeddings con BGE-M3, pero falló en la fase de búsqueda con un KeyError. Voy a inspeccionar esa parte.
+
+El fallo ocurrió después de crear el índice Redis de n=200, en la fase de búsqueda. El script oculta el traceback, así que lo haré visible y reproduciré el error reutilizando la caché completa (2000 vectores ya están en disco, no se repetirá la llamada a Ollama).
+
+El índice Redis se creó bien, pero el parser de la respuesta de FT.SEARCH falló con KeyError. Haré un diagnóstico puntual contra la caché ya guardada para ver la respuesta cruda.
+
+El error anterior fue por mi escaping en PowerShell, no por el script. Pruebo directamente con el método real del script.
+
+Reproduje el error exacto: el manual funciona, el indexed falla. Veamos la estructura real que devuelve Redis.
+
+PowerShell está corrompiendo el $q. Uso un archivo temporal para evitar el escaping.
+
+Encontré la causa: el cliente Redis responde con el protocolo RESP3, que devuelve FT.SEARCH como un diccionario, no como la lista plana que el parser esperaba (RESP2). Veamos el contenido completo.
+
+Confirmado: con RESP3 los puntajes coinciden (1 - 0.246328294277 = 0.7536717), solo falla el parser. Era un bug latente que Gemini nunca alcanzó por el 429. Reviso las pruebas existentes antes de corregir.
+
+La causa raíz está clara. Corrijo el parser para aceptar ambos protocolos (RESP2 lista y RESP3 diccionario) y añado una prueba.
+
+Ahora añado pruebas para ambos formatos de protocolo.
+
+Las 45 pruebas pasan. Elimino el archivo de diagnóstico y relanzo el benchmark reutilizando la caché completa (no repetirá embeddings).
+
+La caché Ollama está completa y separada de la Gemini original. Relanzo el benchmark.
+
+Mientras corre, documento el bug RESP3 detectado y corregido.
+
+El benchmark terminó correctamente con BGE-M3. Documento ahora el bug RESP3 y los resultados reales.
+
+Las 45 pruebas pasan y git diff --check no reporta problemas (el "Exited with code 1" es una peculiaridad de PowerShell al redirigir stderr).
+
+Resumen de la migración a Ollama (instrucción 03c)
+Programa — añadí un selector MODEL_PROVIDER (predeterminado ollama; Google sigue disponible):
+
+Archivo	Cambio
+src/rag/config.py	Nuevos campos y validación de OLLAMA_BASE_URL, timeout, contexto y salida
+src/rag/llm.py	Nuevo: get_chat_model() construye ChatOllama o ChatGoogleGenerativeAI
+src/rag/embeddings.py	get_embeddings() devuelve OllamaEmbeddings; añade huella por proveedor
+src/rag/storage.py	El índice guarda la identidad del proveedor y rechaza mezclarlos
+scripts/indice_vs_coseno.py	Caché por proveedor en data/embeddings/<huella>/
+.env — MODEL_PROVIDER=ollama, MODELO=qwen3:8b, EMBEDDING_MODEL=bge-m3, PREFIJO=etmunoz_ollama. La clave Google se conservó sin mostrarse.
+
+Verificación real:
+
+Recorrido completo del grafo con --saltos: recuperó contexto y respondió con citas.
+Demos de embeddings y Redis: OK (vectores de 1024 componentes).
+Bug latente encontrado y corregido: el benchmark fallaba con KeyError: 2. La causa era que redis-py usa RESP3, que devuelve FT.SEARCH como diccionario, no como la lista plana de RESP2. Con Gemini nunca se había llegado a esa fase por el 429. Añadí parse_search_response() (compatible con ambos protocolos) y 4 pruebas.
+
+Resultado del benchmark (Redis + BGE-M3):
+
+n	Coseno a mano	Índice KNN	A/B
+200	17.261 ms	2.535 ms	6.81x
+2000	206.693 ms	4.145 ms	49.87x
+Top-3 idénticos en 10/10 consultas; B más rápido en 10/10.
+
+Todo quedó registrado en docs/ollama.md, docs/indice-vs-coseno.md y docs/docker.md.
+
+Pendientes que no toqué sin tu indicación: ingerir el PDF del corpus con BGE-M3, reevaluar UMBRAL=0.65 (que se ajustó con Gemini) y la escala 20000.
+

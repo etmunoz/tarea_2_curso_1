@@ -1,0 +1,334 @@
+{
+  "fecha": "20261028_0008",
+  "etiqueta": "troceado_nuevo_umbra050",
+  "umbral": 0.5,
+  "top_k": 3,
+  "chunk_size": 800,
+  "chunk_overlap": 120,
+  "prefijo": "etmunoz_ollama",
+  "vector_store": "redis",
+  "modelo": "qwen3:8b",
+  "embedding": "bge-m3",
+  "resultados": [
+    {
+      "numero": 1,
+      "tipo": "en_contexto",
+      "pregunta": "¿Cuáles son los derechos que tiene el titular de los datos personales?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.7285096645360001,
+      "fragmentos": [
+        {
+          "pagina": 4,
+          "parecido": 0.7285,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 800
+        },
+        {
+          "pagina": 6,
+          "parecido": 0.7203,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 408
+        },
+        {
+          "pagina": 5,
+          "parecido": 0.7166,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 763
+        }
+      ],
+      "respuesta": "El titular de los datos personales tiene los siguientes derechos: derecho de acceso [1 p.4], derecho de rectificación [1 p.4], derecho de supresión [1 p.4], derecho de oposición [1 p.4], derecho a la portabilidad de los datos personales [1 p.4], derecho a la confirmación [2 p.6], y derecho a la información sobre el tratamiento de los datos [2 p.6].",
+      "error": null
+    },
+    {
+      "numero": 2,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué establece el principio de proporcionalidad?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.505384743214,
+      "fragmentos": [
+        {
+          "pagina": 5,
+          "parecido": 0.5054,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 829
+        },
+        {
+          "pagina": 4,
+          "parecido": 0.4125,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 584
+        },
+        {
+          "pagina": 5,
+          "parecido": 0.394,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 763
+        }
+      ],
+      "respuesta": "El principio de proporcionalidad establece que los datos personales que se traten deben limitarse estrictamente a aquéllos que resulten necesarios, adecuados y pertinentes en relación con los fines del tratamiento [LEY-19628 p.5].",
+      "error": null
+    },
+    {
+      "numero": 3,
+      "tipo": "en_contexto",
+      "pregunta": "¿En qué casos procede la supresión de los datos personales?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.684826433659,
+      "fragmentos": [
+        {
+          "pagina": 7,
+          "parecido": 0.6848,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 726
+        },
+        {
+          "pagina": 19,
+          "parecido": 0.6836,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 521
+        },
+        {
+          "pagina": 7,
+          "parecido": 0.6485,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 551
+        }
+      ],
+      "respuesta": "La supresión de los datos personales procede en los siguientes casos:  \n- Cuando el titular haya revocado su consentimiento para el tratamiento y éste no tenga otro fundamento legal [LEY-19628 p.7].  \n- Cuando los datos hayan sido obtenidos o tratados ilícitamente por el responsable [LEY-19628 p.7].  \n- Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resolución de la autoridad de protección de datos o de una obligación legal [LEY-19628 p.7].  \n- Cuando el titular haya ejercido su derecho de oposición y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].",
+      "error": null
+    },
+    {
+      "numero": 4,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué se entiende por anonimización?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.6533370018010001,
+      "fragmentos": [
+        {
+          "pagina": 3,
+          "parecido": 0.6533,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 686
+        },
+        {
+          "pagina": 29,
+          "parecido": 0.5581,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 705
+        },
+        {
+          "pagina": 20,
+          "parecido": 0.5183,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 792
+        }
+      ],
+      "respuesta": "Anonimización es un procedimiento irreversible mediante el cual un dato personal no puede vincularse o asociarse a una persona determinada, ni permitir su identificación, por haberse destruido o eliminado el nexo con la información que vincula, asocia o identifica a esa persona [LEY-19628 p.3].",
+      "error": null
+    },
+    {
+      "numero": 5,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué es el derecho de acceso?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.536074697971,
+      "fragmentos": [
+        {
+          "pagina": 4,
+          "parecido": 0.5361,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 343
+        },
+        {
+          "pagina": 6,
+          "parecido": 0.504,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 477
+        },
+        {
+          "pagina": 6,
+          "parecido": 0.5037,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 789
+        }
+      ],
+      "respuesta": "El derecho de acceso es el derecho del titular de datos a solicitar y obtener del responsable, confirmación acerca de si sus datos personales están siendo tratados por él [LEY-19628 p.4].",
+      "error": null
+    },
+    {
+      "numero": 6,
+      "tipo": "fuera",
+      "pregunta": "¿Qué establece el GDPR de la Unión Europea sobre los encargados de tratamiento?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.628648996353,
+      "fragmentos": [
+        {
+          "pagina": 52,
+          "parecido": 0.6286,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 271
+        },
+        {
+          "pagina": 11,
+          "parecido": 0.6033,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 742
+        },
+        {
+          "pagina": 17,
+          "parecido": 0.5982,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 759
+        }
+      ],
+      "respuesta": "El contexto proporcionado no incluye información sobre el GDPR de la Unión Europea, por lo que no es posible responder a la pregunta basándose únicamente en los documentos mencionados.",
+      "error": null
+    },
+    {
+      "numero": 7,
+      "tipo": "fuera",
+      "pregunta": "¿Cómo se configura la replicación en Redis Cluster?",
+      "nodos": [
+        "buscar",
+        "no_se"
+      ],
+      "mejor_parecido": 0.36361426114999995,
+      "fragmentos": [
+        {
+          "pagina": 10,
+          "parecido": 0.3636,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 663
+        },
+        {
+          "pagina": 10,
+          "parecido": 0.348,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 570
+        },
+        {
+          "pagina": 43,
+          "parecido": 0.3479,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 459
+        }
+      ],
+      "respuesta": "No encontré evidencia en los documentos para responder eso.",
+      "error": null
+    },
+    {
+      "numero": 8,
+      "tipo": "fuera",
+      "pregunta": "¿Cuál es la multa máxima que aplica la autoridad de protección de datos de Argentina?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.610448420048,
+      "fragmentos": [
+        {
+          "pagina": 49,
+          "parecido": 0.6104,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 738
+        },
+        {
+          "pagina": 43,
+          "parecido": 0.5922,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 697
+        },
+        {
+          "pagina": 44,
+          "parecido": 0.5855,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 575
+        }
+      ],
+      "respuesta": "La multa máxima que aplica la autoridad de protección de datos de Argentina es el cincuenta por ciento de la remuneración mensual del jefe superior del órgano público, en el caso de tratarse de datos personales sensibles [LEY-19628 p.49].",
+      "error": null
+    },
+    {
+      "numero": 9,
+      "tipo": "ambigua",
+      "pregunta": "¿Qué plazo tiene el responsable para responder al titular?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.741050183773,
+      "fragmentos": [
+        {
+          "pagina": 10,
+          "parecido": 0.7411,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 570
+        },
+        {
+          "pagina": 47,
+          "parecido": 0.7169,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 632
+        },
+        {
+          "pagina": 10,
+          "parecido": 0.6909,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 283
+        }
+      ],
+      "respuesta": "El responsable tiene un plazo de treinta días hábiles para responder al titular [LEY-19628 p.10].",
+      "error": null
+    },
+    {
+      "numero": 10,
+      "tipo": "ambigua",
+      "pregunta": "¿Qué información debe entregar el responsable?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.698589026928,
+      "fragmentos": [
+        {
+          "pagina": 13,
+          "parecido": 0.6986,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 631
+        },
+        {
+          "pagina": 13,
+          "parecido": 0.6906,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 794
+        },
+        {
+          "pagina": 5,
+          "parecido": 0.6894,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 763
+        }
+      ],
+      "respuesta": "El responsable debe entregar al titular toda la información necesaria para el ejercicio de los derechos establecidos en la ley, incluyendo las políticas y prácticas sobre el tratamiento de los datos personales [1 p.13]. Además, debe facilitar y mantener permanentemente a disposición del público la política de tratamiento de datos personales, la individualización del responsable de datos y su responsable en conformidad a la ley [1 p.13]. También debe adoptar medidas adecuadas para facilitar al titular el acceso a toda la información que señala esta ley [3 p.5].",
+      "error": null
+    }
+  ]
+}

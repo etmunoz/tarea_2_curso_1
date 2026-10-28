@@ -1,0 +1,66 @@
+Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
+Objetivo: conservar la salida literal de la comparación índice vs coseno (n=2000).
+fecha_hora_ejecucion: 20261028_0737
+instruccion: instrucciones/instrucción_07.txt (paso 4)
+
+COMANDO (desde la raíz):
+  $env:PYTHONIOENCODING='utf-8'; $env:PYTHONUTF8='1'; uv run python scripts/indice_vs_coseno.py --n 2000
+
+INCIDENCIA: la primera ejecución falló con UnicodeEncodeError, porque las
+líneas 387-388 de scripts/indice_vs_coseno.py imprimen "→" (U+2192), carácter
+que no existe en cp1252 (codificación por defecto de la consola Windows).
+Se resolvió sin modificar el código, forzando UTF-8 en la salida.
+La ejecución previa a esa (uv run python scripts/indice_vs_coseno.py --n 2000,
+sin las variables de entorno) terminó con:
+  "FALLO en embeddings y caché (UnicodeEncodeError)."
+y salió con código 1.
+
+-------------------------------------------------------------------------------
+SAIDA LITERAL
+-------------------------------------------------------------------------------
+
+C:\Users\etmun\proyecto\tarea_2_curso_1\scripts\indice_vs_coseno.py:22: DeprecationWarning: `langchain-community` is being sunset and is no longer actively maintained. See https://github.com/langchain-ai/langchain-community/issues/674 for details and migration guidance toward standalone integration packages.
+  from langchain_community.docstore.in_memory import InMemoryDocstore
+Backend: redis; tamaños: [200, 2000]; top-k: 3; repeticiones: 3
+A y B reciben el MISMO vector de pregunta y los MISMOS vectores de documentos.
+Modelo: bge-m3
+Archivo de caché: data\embeddings\fe5309331e3296e4\vectores_demo.npy
+Caché vectores_demo: 2000/2000 reutilizados; 0 embeddings nuevos.
+Archivo de caché: data\embeddings\fe5309331e3296e4\preguntas_demo.npy
+Caché preguntas_demo: 5/5 reutilizados; 0 embeddings nuevos.
+Dimensión: 1024; los tamaños menores reutilizan el prefijo de la misma matriz.
+Puntajes mostrados: similitud coseno, mayor es mejor. IDs F00001... identifican fragmentos.
+Vectores A→Python: Redis = n vectores completos por red; FAISS = n vectores ya en RAM (sin red).
+Vectores B→Python = 0: solo vuelven IDs/documentos y puntajes, no embeddings. No incluye el vector de consulta enviado.
+Tiempos: mediana de repeticiones por pregunta, con calentamiento; sin embeddings ni construcción del índice.
+Índice Redis: etmunoz_ollama_coseno_200_de3bbaaa2e8821c0; HASH e índice comparten los mismos vectores.
+
+n=200
+Pregunta | Top-3 A (ID:coseno) | Top-3 B (ID:coseno) | ¿Coinciden? | A ms | B ms | Vectores A→Python | Vectores B→Python
+--- | --- | --- | --- | ---: | ---: | ---: | ---:
+¿Cómo recupero la conexión a internet si el router no funciona? | F00001:0.7537, F00081:0.7188, F00041:0.7184 | F00001:0.7537, F00081:0.7188, F00041:0.7184 | sí | 18.153 | 2.728 | 200 | 0
+¿Cómo preparo una comida casera con verduras? | F00022:0.6725, F00102:0.6496, F00182:0.6483 | F00022:0.6725, F00102:0.6496, F00182:0.6483 | sí | 16.249 | 2.725 | 200 | 0
+¿Qué hábitos ayudan a cuidar la salud y descansar? | F00048:0.6381, F00008:0.6256, F00168:0.6216 | F00048:0.6381, F00008:0.6256, F00168:0.6216 | sí | 18.498 | 2.478 | 200 | 0
+¿Cómo organizo un viaje y reservo alojamiento? | F00064:0.6767, F00144:0.6556, F00004:0.6553 | F00064:0.6767, F00144:0.6556, F00004:0.6553 | sí | 19.205 | 2.487 | 200 | 0
+¿Cómo pruebo y depuro un programa en Python? | F00035:0.6925, F00195:0.6698, F00115:0.6664 | F00035:0.6925, F00195:0.6698, F00115:0.6664 | sí | 17.994 | 2.588 | 200 | 0
+Índice Redis: etmunoz_ollama_coseno_2000_c5828ea4b9e088bd; HASH e índice comparten los mismos vectores.
+
+n=2000
+Pregunta | Top-3 A (ID:coseno) | Top-3 B (ID:coseno) | ¿Coinciden? | A ms | B ms | Vectores A→Python | Vectores B→Python
+--- | --- | --- | --- | ---: | ---: | ---: | ---:
+¿Cómo recupero la conexión a internet si el router no funciona? | F00001:0.7537, F00801:0.7486, F00401:0.7482 | F00001:0.7537, F00801:0.7486, F00401:0.7482 | sí | 199.435 | 3.199 | 2000 | 0
+¿Cómo preparo una comida casera con verduras? | F00742:0.6829, F00342:0.6809, F01542:0.6767 | F00742:0.6829, F00342:0.6809, F01542:0.6767 | sí | 182.918 | 3.244 | 2000 | 0
+¿Qué hábitos ayudan a cuidar la salud y descansar? | F01248:0.6474, F01648:0.6449, F01888:0.6440 | F01248:0.6474, F01648:0.6449, F01888:0.6440 | sí | 186.191 | 3.235 | 2000 | 0
+¿Cómo organizo un viaje y reservo alojamiento? | F01664:0.6800, F00784:0.6790, F00384:0.6790 | F01664:0.6800, F00784:0.6790, F00384:0.6790 | sí | 203.414 | 3.276 | 2000 | 0
+¿Cómo pruebo y depuro un programa en Python? | F01155:0.7133, F01555:0.7089, F00755:0.7084 | F01155:0.7133, F01555:0.7089, F00755:0.7084 | sí | 184.362 | 3.882 | 2000 | 0
+
+Crecimiento (mediana entre las cinco preguntas):
+n | A ms | B ms | A/B
+---: | ---: | ---: | ---:
+200 | 18.153 | 2.588 | 7.01x
+2000 | 186.191 | 3.244 | 57.39x
+
+Conclusión calculada:
+Coincidieron los top-3 ordenados en 10/10 consultas; B fue más rápido en 10/10. Con n=2000, A/B=57.39x (medianas).
+Al pasar de n=200 a 2000, el tiempo mediano de A cambió 10.26x y el de B 1.25x; los tiempos excluyen embeddings e inserción y no demuestran por sí solos complejidad asintótica.
+OK: comparación terminada; caché conservada para repetir sin nuevos embeddings.

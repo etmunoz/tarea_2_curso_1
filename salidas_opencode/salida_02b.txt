@@ -1,0 +1,68 @@
+Pruebas ejecutadas: todas correctas. Estas son las salidas completas para copiar.
+
+> docker compose exec -T redis redis-cli ping
+PONG
+
+> uv run python scripts/demo_embeddings.py
+
+Modelo: models/gemini-embedding-001
+Frase 1: No tengo conexión a internet en mi casa.
+  Dimensión: 3072 números; primeros 5: [-0.0063434304, 0.025530633, 0.0026728392, -0.08334063, -0.0016544876]
+Frase 2: En mi hogar no puedo conectarme a la red de internet.
+  Dimensión: 3072 números; primeros 5: [-0.011508048, 0.01822251, 0.01876357, -0.06881665, -0.006054299]
+Frase 3: Para preparar una tortilla hay que batir los huevos.
+  Dimensión: 3072 números; primeros 5: [-0.0058246744, 0.013316457, 0.021945607, -0.06049319, -0.0148047395]
+
+Par de frases | Coseno   | Observación
+-------------|----------|-----------------
+1 - 2        |  0.927308 | MÁS PARECIDO
+1 - 3        |  0.746329 |
+2 - 3        |  0.708278 |
+
+Pregunta: no tengo internet
+  Dimensión: 3072 números; primeros 5: [-0.011070191, 0.0071477564, 0.0040726, -0.079797454, 0.008854119]
+Frase más cercana: 1 (coseno=0.811020): No tengo conexión a internet en mi casa.
+OK: demo de embeddings completada.
+
+> uv run python scripts/test_storage.py
+
+Backend: redis; prefijo de demostración: etmunoz_demo
+PING Redis: OK
+Índice listo (creado si no existía).
+
+Pregunta: no tengo internet
+Puntaje = distancia; menor es mejor (FAISS: L2² normalizada; Redis: coseno).
+1. Puntaje: 0.188980 | No tengo conexión a internet en mi casa.
+   Metadata: {'fuente': 'demo'}
+2. Puntaje: 0.214275 | En mi hogar no puedo conectarme a la red de internet.
+   Metadata: {'fuente': 'demo'}
+OK: inserción y búsqueda en redis completadas.
+
+> uv run python -m unittest discover -s tests -v
+
+test_cosine_similarity (test_demos.DemoTests.test_cosine_similarity) ... ok
+test_custom_arguments (test_demos.DemoTests.test_custom_arguments) ... ok
+test_embeddings_output_and_ranking (test_demos.DemoTests.test_embeddings_output_and_ranking) ... ok
+test_errors_do_not_expose_secrets (test_demos.DemoTests.test_errors_do_not_expose_secrets) ... ok
+test_faiss_demo_is_in_memory (test_demos.DemoTests.test_faiss_demo_is_in_memory) ... ok
+test_redis_memory_quota_message (test_demos.DemoTests.test_redis_memory_quota_message) ... ok
+test_redis_missing_url_is_actionable (test_demos.DemoTests.test_redis_missing_url_is_actionable) ... ok
+test_redis_ping_documents_search_and_cleanup (test_demos.DemoTests.test_redis_ping_documents_search_and_cleanup) ... ok
+test_defaults_and_validation (test_rag.RagTests.test_defaults_and_validation) ... ok
+test_diagram_does_not_use_providers (test_rag.RagTests.test_diagram_does_not_use_providers) ... ok
+test_embeddings_require_key (test_rag.RagTests.test_embeddings_require_key) ... ok
+test_empty_corpus_rejected (test_rag.RagTests.test_empty_corpus_rejected) ... ok
+test_faiss_ingestion_reload_threshold_and_idempotency (test_rag.RagTests.test_faiss_ingestion_reload_threshold_and_idempotency) ... ok
+test_faiss_rejects_model_change_and_partial_index (test_rag.RagTests.test_faiss_rejects_model_change_and_partial_index) ... ok
+test_graph_with_context (test_rag.RagTests.test_graph_with_context) ... ok
+test_graph_without_context_and_trace (test_rag.RagTests.test_graph_without_context_and_trace) ... ok
+test_load_pdf_and_txt (test_rag.RagTests.test_load_pdf_and_txt) ... ok
+test_redis_configuration_without_server (test_rag.RagTests.test_redis_configuration_without_server) ... ok
+test_redis_cosine_threshold (test_rag.RagTests.test_redis_cosine_threshold) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.124s
+
+OK
+
+Reejecución registrada en docs/docker.md.

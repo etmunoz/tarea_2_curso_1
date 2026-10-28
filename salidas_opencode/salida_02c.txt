@@ -1,0 +1,12 @@
+Prepararé entrega/grupo-N-taller2-rag/ con las carpetas y plantillas de evidencias, sin generar aún el ZIP ni el documento final. Dejaré el número de grupo pendiente y añadiré integrantes, objetivo y fechas a los archivos .md y .py del proyecto, excluyendo .venv y dependencias.
+
+Preparada la estructura en entrega/grupo-N-taller2-rag/:
+
+Plantillas de batería, chunks, prompts y carpeta de capturas.
+Directorios para incorporar el código final.
+Integrantes, objetivo y fechas añadidos a los 23 archivos .md y .py propios.
+requirements.txt exportado y plan documentado en docs/entrega.md.
+19 pruebas aprobadas. No se generaron el ZIP ni el documento final.
+
+Pendiente: confirmar el número de grupo para reemplazar N.
+

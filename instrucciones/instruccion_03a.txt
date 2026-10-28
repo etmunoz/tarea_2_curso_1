@@ -1,0 +1,1 @@
+Dado lo que sucedió con la cuota de Gemini, por qué alternativa puedo cambiarlo, que sea utilizando otras librerías. Tengo que considerar el LLM y además el embeddings.

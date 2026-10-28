@@ -1,0 +1,44 @@
+Leo la plantilla y verifico cómo almacena ingest.py el número de página, para que las citas esperadas coincidan exactamente con lo que reporta el agente.
+
+Confirmado: ingest.py guarda page 1-based (línea 53), así que coincide con la numeración impresa. Ahora localizo con precisión la página de cada respuesta esperada para no citar de memoria.
+
+Ubicación confirmada para las cinco en-contexto. Solo falta precisar el Art. 1 (objeto y ámbito), que mi frase exacta no encontró; reviso las páginas 1-2.
+
+Reviso directamente las páginas 1 y 2, donde está el Art. 1:
+
+Confirmo la ubicación exacta de la anonimización antes de fijar las citas:
+
+Confirmado todo. Limpio los temporales y escribo la batería:
+
+Limpio. Ahora escribo la batería con las 10 preguntas y sus respuestas esperadas verificadas contra el PDF:
+
+Actualizado. Aquí está el resultado:
+
+entrega/grupo-N-taller2-rag/pruebas/bateria.md
+Cabecera y condiciones de ejecución — comando, corpus, backend, modelos, chunks, TOP_K/UMBRAL, y la aclaración de que las páginas 1–57 impresas coinciden con metadata['page'] (verifiqué en ingest.py línea 53 que se guarda 1-based).
+
+Preguntas 1–5 · dentro del contexto → buscar → responder
+Nº	Pregunta	Respuesta esperada y fuente/página
+1	¿Cuáles son los derechos que tiene el titular de los datos personales?	Acceso, rectificación, supresión, oposición, portabilidad y bloqueo; personales, intransferibles e irrenunciables. Art. 4°, p. 6
+2	¿Qué establece el principio de proporcionalidad?	Limitar los datos a los necesarios, adecuados y pertinentes, y conservarlos solo el tiempo necesario. Art. 3° lit. c), p. 5
+3	¿En qué casos procede la supresión de los datos personales?	Seis causales: innecesarios, consentimiento revocado, obtención ilícita, caducos, sentencia/resolución/obligación, oposición sin otro fundamento. Art. 7°, p. 7
+4	¿Qué se entiende por anonimización?	Procedimiento irreversible que impide vincular el dato a una persona determinada. Art. 2° lit. k), p. 3
+5	¿Qué es el derecho de acceso?	Confirmación de tratamiento, acceso a los datos y a la información prevista en la ley. Art. 2° lit. q), p. 4 y Art. 5°, p. 6
+Preguntas 6–8 · fuera del contexto → esperado no_se
+Nº	Pregunta	Respuesta esperada
+6	GDPR europeo sobre encargados de tratamiento	Sin respuesta en el corpus. Esperado no_se o contexto insuficiente, sin inventar el texto
+7	Replicación en Redis Cluster	Sin respuesta. Esperado no_se
+8	Multa máxima de la autoridad argentina	Sin respuesta (otra jurisdicción). Esperado no_se
+Preguntas 9–10 · ambiguas → responder, pero debe aclarar
+Nº	Pregunta	Respuesta esperada
+9	¿Qué plazo tiene el responsable para responder?	Que varía según el derecho y el artículo citando Art. 5°/7°, pp. 6–7; no fijar un número de días no escrito
+10	¿Qué información debe entregar el responsable?	Diferenciar acceso (Art. 2° q, p. 4; Art. 5°, p. 6) de portabilidad (Art. 2° u, p. 4) y decirlo explícitamente
+Caso ad-hoc ya ejecutado
+Incluí en su propia tabla lo de "Objeto y ámbito de aplicación" con su ruta, parecidos, respuesta, la cita malformada [1 p.2] marcada como defecto para la etapa 5 sin corregir, y la fuente correcta (Art. 1°, p. 1 y lit. b)–c), p. 2).
+
+Lo que NO rellené
+Columnas de resultado (Respuesta obtenida, Fragmentos, Parecido, Nodos, Evidencia): siguen como No ejecutada / Pendiente.
+Elección de TOP_K y UMBRAL con datos: marcado Pendiente, con las tres medidas parciales de bge-m3 (0.6464 / 0.6752 / 0.7367) en una nota separada, explícitamente como "no sustituyen la batería".
+Bonus FAISS y conclusiones: pendientes.
+Verificación de las citas: localicé cada artículo con pypdf en vez de citar de memoria — Art. 1° en p. 1 (no p. 2), anonimización en p. 3, acceso en p. 4, proporcionalidad en p. 5, derechos en p. 6, supresión en p. 7. Los temporales de búsqueda (data/_*.py) ya están eliminados.
+

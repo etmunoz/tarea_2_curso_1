@@ -1,0 +1,17 @@
+Dejaré un Redis persistente del proyecto con Docker Compose, un volumen para conservar los datos y acceso solo desde este equipo. Configuraré el proyecto para usarlo, documentaré cómo levantarlo y detenerlo, y repetiré las demos contra ese servidor.
+
+Redis ya está activo y ambas demos terminaron con OK usando la configuración local del proyecto. Ahora comprobaré que los tres documentos sobrevivan a retirar y recrear el contenedor, conservando el volumen, y lo dejaré encendido.
+
+Redis quedó instalado, encendido y saludable en Docker, con almacenamiento persistente y acceso en localhost:16379. El .env ya apunta a él, conservando tus credenciales.
+
+Verificado:
+
+Ambas demos: OK.
+Datos conservados al recrear el contenedor.
+19 pruebas aprobadas.
+Desde la raíz del proyecto:
+
+docker compose up -d --wait  # Levantar
+docker compose stop         # Detener sin perder datos
+
+Instrucciones y bitácora en docs/docker.md. También quedó indicada en AGENTS.md la obligación de documentar futuras operaciones Docker.
