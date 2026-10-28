@@ -2,13 +2,16 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: registrar frases, predicción previa, cosenos y conclusión de la etapa de embeddings.
 fecha_hora_creacion: 20261027_1907
-fecha_hora_modificacion: 20261028_0737
+fecha_hora_modificacion: 20261028_0938
 -->
 
 # Embeddings — etapa 2 (10 puntos)
 
 Estado: **ejecutada el 20261028_0737** con `instrucciones/instrucción_07.txt`
-("Embeddings: predice antes de medir"). Grupo: **N (confirmado)**.
+("Embeddings: predice antes de medir"), **ampliada el 20261028_0921** con
+`instrucciones/Instruccion_08.txt` (mismo léxico, distinto sentido; secciones
+8–12) y **auditada el 20261028_0938** con `instrucciones/instruccion_09.txt`
+(revisión de entregables; secciones 13–15). Grupo: **N (confirmado)**.
 Integrantes: Fabio Durán, Gustavo Reyes, Ezequiel Muñoz.
 
 Meta declarada en la instrucción: comprobar con frases propias que
@@ -146,6 +149,12 @@ OK: comparación terminada; caché conservada para repetir sin nuevos embeddings
 
 ### Cuándo usar cada forma (línea pedida en el paso 4)
 
+> **Una línea**: usa el **barrido coseno en Python** para depurar y auditar con
+> cientos de datos, y el **índice vectorial** para buscar sobre el corpus real,
+> porque da los mismos resultados a 3 ms en lugar de 186 ms (n=2000).
+
+Desglose:
+
 > **Barrido coseno en Python (A)**: para verificar o depurar con pocos datos
 > (cientos de fragmentos), cuando necesitas ver todos los vectores y auditar los
 > puntajes. **Índice vectorial (B)**: para la búsqueda en producción sobre el
@@ -164,6 +173,17 @@ $env:PYTHONIOENCODING='utf-8'; $env:PYTHONUTF8='1'; uv run python scripts/indice
 ```
 
 ## 7. Conclusión de la etapa
+
+**Conclusión de dos líneas (lo pedido en el entregable):**
+
+> Las dos frases que dicen lo mismo con palabras distintas salieron muy por
+> encima (0.888802) que las de otro tema (0.379792 y 0.343577): en `bge-m3`
+> "parecido" es parecido en **significado**, no en palabras.
+> El margen de 0,509 entre ambos grupos no se solapa, aunque la magnitud quedó
+> fuera de la banda predicha (0,889 frente a 0,5–0,7); con la prueba de
+> polisemia de la instrucción 08 ese margen se reduce a 0,1596.
+
+Detalle:
 
 1. **El orden de la predicción se acertó**: 1–2 es el par más parecido y las dos
    frases del tema distinto quedan por debajo de 0,5, como se esperaba.
@@ -186,3 +206,156 @@ $env:PYTHONIOENCODING='utf-8'; $env:PYTHONUTF8='1'; uv run python scripts/indice
    índice devuelve los **mismos top-3 ordenados en 10/10 consultas** a 3 ms
    frente a 186 ms (57,39x con n=2000), de modo que no se sacrifica calidad de
    recuperación al usar Redis en lugar del barrido en Python.
+
+---
+
+# Instrucción 08 — mismo léxico, distinto sentido
+
+Fuente: `instrucciones/Instruccion_08.txt`. Pregunta: *"Dos frases con las
+mismas palabras pero sentido distinto ('el banco cerró' / 'me senté en el
+banco'). ¿Salen parecidas?"* y la expectativa: *"que el parecido sea menor que
+el de las dos frases de significado igual; si no, anótalo: es un hallazgo
+válido"*.
+
+## 8. Las cuatro frases (embebidas en una sola llamada)
+
+| Etiqueta | Frase exacta | Rol |
+| --- | --- | --- |
+| A1 | El banco cerró sus puertas al público. | **control**: igual significado que A2 |
+| A2 | El banco dejó de operar. | **control**: igual significado que A1 |
+| B1 | El banco cerró. | **objetivo**: mismas palabras que B2, distinto sentido |
+| B2 | Me senté en el banco. | **objetivo**: mismas palabras que B1, distinto sentido |
+
+Los dos pares van en el **mismo lote** para que la comparación sea justa (mismo
+modelo, misma llamada, mismas condiciones).
+
+## 9. Predicción previa — escrita antes de medir
+
+| Campo | Registro |
+| --- | --- |
+| Fecha/hora de la predicción | **20261028_0919** (creación de `scripts/sentido.py`, antes de su primera ejecución) |
+| Par que creemos más parecido | **A1 – A2** (control, igual significado) |
+| Puntuación esperada para A1–A2 | **entre 0,70 y 0,90** (análoga al 0.888802 de la etapa 2) |
+| Puntuación esperada para B1–B2 | **entre 0,40 y 0,70**, y **menor** que A1–A2 |
+| Orden esperado | A1–A2 > B1–B2 |
+| Riesgo anticipado | "El banco" aparece en las cuatro frases y B1 es casi subcadena de A1: el solapamiento léxico **podría** acercar B1–B2 al control. Si el orden se invierte, se anota como hallazgo válido, no se corrige la predicción |
+| Fecha/hora de ejecución posterior | **20261028_0921** |
+| Orden verificable | Este bloque se escribió **antes** de ejecutar `scripts/sentido.py`; el archivo de la predicción (0919) **precede** a la ejecución (0921) |
+
+## 10. Tabla de cosenos — salida literal
+
+```
+Modelo: bge-m3  (dimensión 1024)
+
+Frases de IGUAL significado (control):
+  A1: El banco cerró sus puertas al público.
+  A2: El banco dejó de operar.
+
+Frases con las MISMAS palabras pero DISTINTO sentido (objetivo):
+  B1: El banco cerró.
+  B2: Me senté en el banco.
+
+Par        | Coseno   | Tipo
+-----------|----------|----------------------------------
+A1 - A2    |  0.876027 | igual significado (control)
+B1 - B2    |  0.716434 | mismo léxico, distinto sentido (objetivo)
+A1 - B1    |  0.912659 | cruce A1-B1
+A1 - B2    |  0.626854 | cruce A1-B2
+A2 - B1    |  0.921761 | cruce A2-B1
+A2 - B2    |  0.659422 | cruce A2-B2
+
+Veredicto:
+  control  (A1-A2, igual significado)   = 0.876027
+  objetivo (B1-B2, distinto sentido)    = 0.716434
+  control - objetivo                    = +0.159592
+  ¿Objetivo MENOR que control? SÍ — se cumple lo esperado.
+OK: prueba de significado completada.
+```
+
+Comando y fecha: `uv run python scripts/sentido.py`, **20261028_0921**.
+Evidencia cruda: `capturas/20261028_0921_etapa2_instruccion08_sentido.txt`.
+
+## 11. Predicción frente a medición
+
+| Par | Predicho | Medido | ¿Acierto? |
+| --- | --- | --- | --- |
+| **A1 – A2** (igual significado) | 0,70 – 0,90 | **0.876027** | ✅ dentro de la banda |
+| **B1 – B2** (mismo léxico, distinto sentido) | 0,40 – 0,70 y **menor** que A1–A2 | **0.716434** | ⚠️ **orden correcto**, pero **por encima** de la banda estimada (0,716 > 0,70) |
+| Orden A1–A2 > B1–B2 | sí | **sí** (margen **+0,159592**) | ✅ |
+
+**La instrucción se cumple**: el parecido de las dos frases con las mismas
+palabras y distinto sentido es **menor** que el de las dos de igual significado
+(0.716434 < 0.876027). No hubo que anotar el hallazgo contrario.
+
+## 12. Conclusión de la instrucción 08
+
+1. **El orden esperado se mantiene, pero el margen es fino**: +0,16 frente a los
+   +0,51 que separó el par equivalente del par de otro tema en la etapa 2
+   (0.888802 vs 0.379792). Separar *significado* funciona; separar *sentido de
+   una palabra ambigua* le cuesta mucho más.
+2. **0.716 es alto en términos absolutos**: el par "el banco cerró" /
+   "me senté en el banco" queda **por encima** de cualquier cosa que en la
+   etapa 2 se considerara "otro tema" (0.34–0.38). Un umbral ingenuo en torno a
+   0.7 los trataría como equivalentes. Es el mismo efecto que se ve en
+   `pruebas/bateria.md`, donde preguntas **fuera de contexto** (0.6104, 0.6286)
+   superan a preguntas **en contexto** (0.5054, 0.5361).
+3. **El solapamiento léxico explica la inflación**: "El banco" está en las cuatro
+   frases y **B1 es casi subcadena de A1**, por eso los cruces A1–B1 (0.9127) y
+   A2–B1 (0.9218) son los más altos de la tabla; B2, la única que aporta un
+   sentido nuevo, es la más alejada de todo (0.6269 y 0.6594). El modelo no
+   ignora el léxico: lo promedia con el contexto.
+4. **Predicción honesta**: se acertó el **orden** y se subestimó la
+   **magnitud** del par objetivo (0,716 frente a la banda 0,40–0,70), igual que
+   en la etapa 2 se subestimó el par equivalente (0,889 frente a 0,5–0,7). En
+   ambos casos la predicción se escribió antes de medir.
+5. **Alcance limitado**: son 4 frases cortas de un solo lexema ambiguo, con un
+   solo modelo (`bge-m3`). **No** valida por sí sola el `UMBRAL=0.43` del
+   agente: aquí no hay corpus, ni recuperación, ni LLM.
+
+---
+
+# Revisión de entregables de la etapa 2 (instrucción 09)
+
+Auditoría hecha el **20261028_0938** sobre lo realmente escrito y guardado,
+pidiendo los dos entregables literales de `instrucciones/instruccion_09.txt`.
+
+## 13. Entregable 1 — frases, predicción, tabla y conclusión
+
+| Requisito | Dónde está | Estado |
+| --- | --- | --- |
+| Las tres frases | `embeddings.md` §1 (tabla con rol de cada una) y `capturas/20261028_0737_etapa2_demo_embeddings.txt` | ✅ |
+| La predicción **antes** de ejecutar | `embeddings.md` §2 y bloque `PREDICCION REGISTRADA ANTES DE EJECUTAR` de la misma captura | ✅ con la salvedad de la §15 |
+| La tabla real de cosenos | `embeddings.md` §4 (salida literal) y la captura, líneas 28–32 | ✅ (0.888802 / 0.379792 / 0.343577) |
+| **Conclusión de dos líneas** | **no existía**: había 5 puntos de detalle, pero ninguna conclusión de dos líneas | ❌ **añadida** en `embeddings.md` §7 y en la captura |
+
+## 14. Entregable 2 — tabla de tiempos y regla
+
+| Requisito | Dónde está | Estado |
+| --- | --- | --- |
+| Tabla de tiempos **n = 200** | `embeddings.md` §6 y captura, líneas 38–45 (A 18.153 ms / B 2.588 ms / 7.01x) | ✅ |
+| Tabla de tiempos **n = 2000** | `embeddings.md` §6 y captura, líneas 48–55 (A 186.191 ms / B 3.244 ms / 57.39x) | ✅ |
+| **Una línea** con cuándo usar cada uno | existía como párrafo de dos frases, no como una línea | ⚠️ **añadida** la versión de una línea sobre el desglose, en `embeddings.md` §6 y en la captura |
+
+## 15. Lo que sigue sin estar del todo (honestamente)
+
+1. **El orden de la predicción no tiene prueba independiente a nivel de archivo.**
+   `embeddings.md` contiene la predicción, pero su fecha de modificación es
+   **20261028_0922** porque el mismo archivo se editó después para añadir
+   resultados: el mtime ya no demuestra qué se escribió primero. Lo único con
+   mtime 07:28 es `instrucciones/instrucción_07.txt`, que es la **instrucción**,
+   no la predicción. Para la instrucción 08 ocurre lo mismo (predicción 0919,
+   ejecución 0921, mtime del archivo 09:22).
+   *Lo que sí sostiene el orden es el registro de la sesión, no el sistema de
+   archivos.* **Corrección de proceso de aquí en adelante**: escribir cada
+   predicción en su **propio archivo de captura** (`prediccion_YYYYMMDD_hhmm.txt`),
+   cuya fecha de creación queda como prueba.
+2. **La "conclusión de dos líneas" y la "regla en una línea" se añadieron en
+   esta revisión**, no en el momento original de la etapa. Queda anotado para no
+   presentarlo como si hubiera estado desde el principio.
+3. **`salidas_opencode/salida_09.txt` no existe**: los `salida_NN.txt` son
+   transcripciones de sesión de OpenCode y esta instrucción es una revisión, no
+   una salida de comando. La evidencia vive en `pruebas/capturas/`.
+4. **Los dos entregables que lista la instrucción quedan completos** después de
+   esta revisión. Lo que la rúbrica pide además para las evidencias en general
+   (capturas `.png` de terminal, ver `pruebas/capturas/README.md`) sigue
+   pendiente y **no** es parte de esta instrucción.

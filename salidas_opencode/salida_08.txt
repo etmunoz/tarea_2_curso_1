@@ -1,0 +1,90 @@
+Primero registro la predicción previa (antes de medir, como en la etapa 2):
+
+Ahora creo el script permanente para esta prueba:
+
+Registro la predicción antes de ejecutar:
+
+Predicción registrada a las 09:19. Ahora ejecuto:
+
+$env:PYTHONIOENCODING='utf-8'; uv run python scripts/sentido.py
+Modelo: bge-m3  (dimensión 1024)
+
+Frases de IGUAL significado (control):
+  A1: El banco cerró sus puertas al público.
+  A2: El banco dejó de operar.
+
+Frases con las MISMAS palabras pero DISTINTO sentido (objetivo):
+  B1: El banco cerró.
+  B2: Me senté en el banco.
+
+Par        | Coseno   | Tipo
+-----------|----------|----------------------------------
+A1 - A2    |  0.876027 | igual significado (control)
+B1 - B2    |  0.716434 | mismo léxico, distinto sentido (objetivo)
+A1 - B1    |  0.912659 | cruce A1-B1
+A1 - B2    |  0.626854 | cruce A1-B2
+A2 - B1    |  0.921761 | cruce A2-B1
+A2 - B2    |  0.659422 | cruce A2-B2
+
+Veredicto:
+  control  (A1-A2, igual significado)   = 0.876027
+  objetivo (B1-B2, distinto sentido)    = 0.716434
+  control - objetivo                    = +0.159592
+  ¿Objetivo MENOR que control? SÍ — se cumple lo esperado.
+OK: prueba de significado completada.
+
+Resultado medido. Guardo la evidencia cruda:
+
+Ahora registro resultados y conclusión en embeddings.md:
+
+Instrucción 08 ejecutada — resultados para copiar/pegar
+Predicción escrita a las 09:19 (antes de medir) → ejecución a las 09:21
+
+Modelo: bge-m3  (dimensión 1024)
+
+Frases de IGUAL significado (control):
+  A1: El banco cerró sus puertas al público.
+  A2: El banco dejó de operar.
+
+Frases con las MISMAS palabras pero DISTINTO sentido (objetivo):
+  B1: El banco cerró.
+  B2: Me senté en el banco.
+
+Par        | Coseno   | Tipo
+-----------|----------|----------------------------------
+A1 - A2    |  0.876027 | igual significado (control)
+B1 - B2    |  0.716434 | mismo léxico, distinto sentido (objetivo)
+A1 - B1    |  0.912659 | cruce A1-B1
+A1 - B2    |  0.626854 | cruce A1-B2
+A2 - B1    |  0.921761 | cruce A2-B1
+A2 - B2    |  0.659422 | cruce A2-B2
+
+Veredicto:
+  control  (A1-A2, igual significado)   = 0.876027
+  objetivo (B1-B2, distinto sentido)    = 0.716434
+  control - objetivo                    = +0.159592
+  ¿Objetivo MENOR que control? SÍ — se cumple lo esperado.
+OK: prueba de significado completada.
+Predicción frente a medición
+Par	Predicho	Medido	¿Acierto?
+A1–A2 (igual significado)	0,70 – 0,90	0.876027	✅ dentro de la banda
+B1–B2 (mismo léxico, distinto sentido)	0,40 – 0,70 y menor que A1–A2	0.716434	⚠️ orden correcto, magnitud por encima de la banda
+Orden A1–A2 > B1–B2	sí	sí, margen +0,159592	✅
+Conclusión
+Se cumple lo esperado: 0.716434 < 0.876027. No hubo que anotar el hallazgo contrario.
+El margen es fino (+0,16) frente a los +0,51 de la etapa 2 (0.888802 vs 0.379792): separar significado le es fácil al modelo; separar sentido de una palabra ambigua le cuesta mucho.
+0.716 es alto en términos absolutos: supera todo lo que en la etapa 2 era "otro tema" (0.34–0.38). Un umbral ingenuo en torno a 0.7 los trataría como equivalentes — el mismo efecto que en pruebas/bateria.md, donde preguntas fuera de contexto (0.6104, 0.6286) superan a las en contexto (0.5054, 0.5361).
+El solapamiento léxico explica la inflación: "El banco" está en las cuatro frases y B1 es casi subcadena de A1 → cruces A1–B1 (0.9127) y A2–B1 (0.9218) son los más altos; B2, la única con sentido nuevo, es la más alejada (0.6269 / 0.6594).
+Predicción honesta: acerté el orden y subestimé la magnitud del par objetivo, igual que en la etapa 2 subestimé el par equivalente. En ambos casos el texto se escribió antes de medir.
+Archivos creados/actualizados
+Archivo	Acción
+scripts/sentido.py	Nuevo, con cabecera reglamentaria; reutiliza cosine_similarity de demo_embeddings.py
+pruebas/embeddings.md	Secciones 8–12 (frases, predicción 0919, salida literal, comparación, conclusión); secciones 1–7 intactas
+pruebas/capturas/20261028_0921_etapa2_instruccion08_sentido.txt	Salida cruda
+pruebas/capturas/README.md, docs/entrega.md	Fila nueva + checklist de predicción previa ampliado
+59 pruebas OK. No commiteo (no lo pediste) y sigo sin generar el ZIP ni el documento final.
+
+Nota: no creé salidas_opencode/salida_08.txt porque los salida_NN.txt existentes son transcripciones de sesión de OpenCode, no salidas de comandos; la evidencia queda en capturas/. Dime si quieres que lo agregue igual.
+
+Comentario del Usuario: Finalmente el tema es muy sensible, la comparación tiene un alto score entre B1 y B2, por dos razones, el poco contexto y segundo el umbral es muy pequeño, por lo mismo dado lo corto que son las frases. Claramente no alcanza para tener un buen resultado, es necesario trabajar más adelante otros aspectos para poder discriminar mejor. Quizás otro aspecto a considerar es la iteración con el usuario, que permita darle más contexto. Y otra cosa, el pedir feedback, para obtener mejor contexto. Ahí el tema se entronca con lo que comentamos en clases del buen manejo de la memoria, para no perder ese contexto conversacional.
+

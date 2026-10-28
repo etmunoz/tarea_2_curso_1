@@ -1,0 +1,6 @@
+Prueba
+Dos frases con las mismas palabras pero sentido distinto ("el banco cerró" / "me senté en el banco"). ¿Salen parecidas?
+
+Se espera que el parecido sea menor que el de las dos frases de significado igual. Si no, anótalo: es un hallazgo válido.
+
+Trabaja y entrega por pantalla resultados para copiar y pegar.

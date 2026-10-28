@@ -1,0 +1,26 @@
+Nos solicitaron esto:
+
+Embeddings: predice antes de medir
+Tu meta: comprobar con tus propias frases que "parecido" significa parecido en significado, no en palabras.
+
+Escribe tres frases de tu dominio: dos que digan lo mismo con palabras distintas y una de otro tema.
+Antes de ejecutar, anota cuál par crees que saldrá más parecido y qué número esperas (0,9, 0,6…).
+Corre python scripts/demo_embeddings.py "frase 1" "frase 2" "frase 3" y copia la tabla de cosenos.
+Corre python scripts/indice_vs_coseno.py --n 2000 y copia la tabla de tiempos. Escribe en una línea cuándo usarías cada forma.
+Prueba
+Dos frases con las mismas palabras pero sentido distinto ("el banco cerró" / "me senté en el banco"). ¿Salen parecidas?
+
+
+Y lo trabajamos.
+
+Ahora debemos chequear que cumplamos con las entregas solicitadas de esta etapa 2:
+
+Entregables de la etapa 2
+
+Tus tres frases, tu predicción y la tabla real de cosenos, con una conclusión de dos líneas.
+La tabla de tiempos índice vs coseno a mano para n = 200 y 2000, y tu regla de cuándo usar cada uno.
+
+
+Revisa por favor todo lo realizado y entregar un comentario respecto de que todo lo documentado esté ok, y si no es así, indicar qué falta.
+
+Todo por pantalla para ir copiando y pegando.

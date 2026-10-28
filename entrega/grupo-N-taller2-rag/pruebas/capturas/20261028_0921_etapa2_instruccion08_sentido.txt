@@ -1,0 +1,31 @@
+Instrucción 08 — mismas palabras, distinto sentido
+Comando: $env:PYTHONIOENCODING='utf-8'; uv run python scripts/sentido.py
+Fecha/hora: 20261028_0921
+Modelo: bge-m3 (Ollama local), 1024 dimensiones
+Predicción previa escrita a las 0919 (ver pruebas/embeddings.md, sección 9)
+
+Modelo: bge-m3  (dimensión 1024)
+
+Frases de IGUAL significado (control):
+  A1: El banco cerró sus puertas al público.
+  A2: El banco dejó de operar.
+
+Frases con las MISMAS palabras pero DISTINTO sentido (objetivo):
+  B1: El banco cerró.
+  B2: Me senté en el banco.
+
+Par        | Coseno   | Tipo
+-----------|----------|----------------------------------
+A1 - A2    |  0.876027 | igual significado (control)
+B1 - B2    |  0.716434 | mismo léxico, distinto sentido (objetivo)
+A1 - B1    |  0.912659 | cruce A1-B1
+A1 - B2    |  0.626854 | cruce A1-B2
+A2 - B1    |  0.921761 | cruce A2-B1
+A2 - B2    |  0.659422 | cruce A2-B2
+
+Veredicto:
+  control  (A1-A2, igual significado)   = 0.876027
+  objetivo (B1-B2, distinto sentido)    = 0.716434
+  control - objetivo                    = +0.159592
+  ¿Objetivo MENOR que control? SÍ — se cumple lo esperado.
+OK: prueba de significado completada.

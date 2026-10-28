@@ -704,3 +704,111 @@ Verifico en el JSON de la corrida 7 las afirmaciones sobre las preguntas 8 y 9:
 
 Las afirmaciones antes/después están verificadas en los JSON. Actualizo las cabeceras de los archivos tocados:
 
+Verificación final de consistencia:
+
+Verificación final (pruebas + valores configurados):
+
+Todo ejecutado, verificado y documentado. Aquí está el resumen completo:
+
+1. Barrido exhaustivo de UMBRAL (scripts/umbral.py, nuevo y permanente)
+La ruta solo depende de mejor_parecido >= UMBRAL y la recuperación es determinista → hay 11 regímenes, no infinitos. Barrido de 0.00 a 1.00 paso 0.01 (101 valores) → produce exactamente las mismas 11 configuraciones:
+
+Intervalo de UMBRAL	Ejemplo	OK	Falsos negativos	Fuera que llega al LLM
+[0.0000, 0.3636]	0.1818	7	–	6,7,8
+(0.3636, 0.5054]	0.4345	8	–	6,8
+(0.5054, 0.5361]	0.5207	7	2	6,8
+(0.5361, 0.6104] ← 0.58 caía aquí	0.5733	6	2,5	6,8
+(0.6104, 0.6286]	0.6195	7	2,5	6
+(0.6286, 0.6533]	0.6410	8	2,5	–
+(0.6533, 0.6848]	0.6691	7	2,4,5	–
+(0.6848, 0.6986]	0.6917	6	2,3,4,5	–
+(0.6986, 0.7285]	0.7135	5	2,3,4,5,10	–
+(0.7285, 0.7410]	0.7348	4	1,2,3,4,5,10	–
+(0.7410, 1.0000]	0.8705	3	1,2,3,4,5,9,10	–
+0.58 estaba en el régimen de 6/10 (el peor de los centrales). Máximo 8/10 en dos intervalos → se ejecutó la batería en ambos.
+
+2. Regla 5 (sujeto/país) — añadida al SYSTEM_PROMPT
+Corrida	Umbral	La 8 llega al LLM	Respuesta de la 8
+6 (prompt viejo)	0.58	sí	alucinó: cifra del Art. 44 (p.49, ley chilena) atribuida a Argentina
+7 (regla 5)	0.50	sí	"El documento mencionado no especifica la multa máxima que aplica la autoridad de protección de datos de Argentina [1]."
+9 (regla 5)	0.43	sí	misma negativa, sin alucinar
+Confirmado además end-to-end con el .env real: main.py … --saltos → 0.6104 ≥ 0.43 → responder → se niega.
+
+3. Decisión: UMBRAL = 0.43
+Intervalo A (0.50): 8/10, 0 FN, 0 alucinaciones (la 8 la resuelve el prompt).
+Intervalo B (0.64): 8/10, 2 FN (2 y 5), 0 alucinaciones solo porque bloquea.
+Gana A; dentro de él, 0.43 es el punto de mayor margen (+0.0664 / −0.0754).
+Resultado final (corrida 9, 20261028_0848): 8/10 rutas · 0 falsos negativos · 0 alucinaciones · 6 correctas, 3 parciales, 1 fallo de contenido (la 9, que alternó "corridos"/"hábiles" entre corridas). Antes (0.58 + prompt viejo): 6/10, 2 FN, 1 alucinación.
+
+4. Aplicado y verificado
+.env, .env.example y default de src/rag/config.py → 0.43 (las tres rutas comprobadas).
+uv run python -m unittest discover -s tests → 59 pruebas OK. test_redis_cosine_threshold pasó a fijar UMBRAL explícito para no depender del default.
+FT.SEARCH etmunoz_ollama_rag → 294 docs; contenedor healthy. Sin reingesta ni operación Docker: el umbral se lee por consulta.
+5. Documentado (sin borrar nada)
+Archivo	Qué se añadió
+pruebas/bateria.md	Sección "Barrido exhaustivo y configuración final" (tabla, corridas 7–9, antes/después, conclusiones 19–24, limitaciones); filas 7–9 en la tabla resumen; anotaciones de "vigente entonces → hoy 0.43"
+pruebas/prompts.md	Sección C: texto íntegro ANTES (reglas 1–4) y DESPUÉS (1–5), motivo, evidencia y límite
+pruebas/capturas/README.md	3 JSON nuevos (9 en total)
+docs/entrega.md	Fila UMBRAL → 0.43 con historial; checklist actualizado (9 corridas; etapa 5 marcada parcial)
+docs/preguntas.md, docs/docker.md, README.md	Tabla de estado final 08:53; bitácora del cambio sin tocar datos; valor en README
+Pendiente honesto: la etapa 5 solo está parcial (1 de 2 reglas, sin las 3 preguntas concretas ni la prueba de la trampa), el formato de citas sigue inestable ([1], [1 p.4], [19628 p.5]) y queda el fallo de contenido de la pregunta 9.
+
+Respuesta del Usuario: detengo aquí las mejoras, para poder continuar.
+
+Perfecto, me detengo aquí. Estado congelado y verificado para que puedas continuar cuando quieras:
+
+Configuración vigente (aplicada y probada)
+
+UMBRAL = 0.43 en .env, .env.example y default de src/rag/config.py
+SYSTEM_PROMPT con 5 reglas (regla 5: sujeto/país)
+294 fragmentos, TOP_K=3, chunks 800/120 — sin reingesta ni operación Docker
+59 pruebas OK; Redis healthy con 294 docs
+Evidencias generadas en esta ronda (9 corridas en total)
+
+scripts/umbral.py (barrido 0.00–1.00, 11 regímenes) + salida en pruebas/bateria.md
+Corridas 7, 8 y 9 → capturas/bateria_20261028_0836_umbra05.json, …_0841_umbra064.json, …_0848_umbra043.json
+Resultado final: 8/10 rutas, 0 falsos negativos, 0 alucinaciones
+pruebas/prompts.md sección C: texto antes/después de la regla 5 con motivo y evidencia
+Pendiente (no tocado, por si lo retomas)
+
+Etapa 5 completa: segunda regla, comparación en las tres preguntas concretas, prueba de la trampa
+Formato de citas inestable ([1], [1 p.4], [19628 p.5]) y el fallo de contenido de la pregunta 9
+Etapas 1, 2 (capturas .png), 3, 6, bonus FAISS, documento final y ZIP
+Nada commiteado ni pusheado; sin ZIP ni documento-entrega.docx (como corresponde)
+Cuando digas "continuar", dime por cuál seguimos.
+
+Instrucción del Usuario: commitea y pushea
+
+Voy a revisar primero qué se commitea (nada de .env ni índices locales):
+
+Reviso que ningún archivo por agregar contenga secretos (solo rutas, sin imprimir valores):
+
+Solo referencias de código, sin literales de claves. Reviso qué contiene data/ y el peso de lo por agregar:
+
+Todo limpio (en data/ solo hay .gitkeep, sin índices). Stage y revisión final antes de commitear:
+
+103 archivos staged, .env fuera (solo .env.example). Commiteo:
+
+PowerShell rompió las comillas. Uso un archivo de mensaje:
+
+Commit 26003a8 creado (103 archivos). Ahora el push:
+
+Listo. Commiteado y pusheado.
+
+a931ae6..26003a8  main -> main
+Commit 26003a8 — Implementa el agente RAG con Redis/FAISS y las evidencias de las etapas 00-07
+
+103 archivos, 14 868 líneas agregadas
+Rama main sincronizada con origin/main; árbol de trabajo limpio
+Verificaciones previas al commit:
+
+.env no se agregó (solo .env.example, que está permitido por .gitignore)
+data/ solo aporta .gitkeep → ningún índice FAISS versionado
+Escaneo de secretos (AIza…, sk-…, ghp_…, GOOGLE_API_KEY=<valor>) en docs/, entrega/, salidas_opencode/, scripts/, src/, tests/, instrucciones/: 0 coincidencias reales (los dos avisos eran google_api_key=require_api_key() en código)
+Incluye el PDF autorizado del corpus en docs/ (exigido por la rúbrica)
+Queda en el repo: código fuente canónico en la raíz, las 9 corridas de batería con sus JSON, pruebas/prompts.md con la regla 5 antes/después, docs/ completo y las 59 pruebas verificadas.
+
+Siguiendo las reglas del proyecto, no generé el ZIP ni documento-entrega.docx. Cuando quieras retomar, dime por cuál etapa seguimos.
+
+
+

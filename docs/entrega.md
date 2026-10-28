@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: organizar la entrega, sus pendientes y la consolidación final de código y evidencias.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_0905
+fecha_hora_modificacion: 20261028_0938
 -->
 
 # Plan de entrega del taller 2 RAG
@@ -127,6 +127,8 @@ no atribuir retrospectivamente un contenido nuevo a una ejecución anterior.
 | `05c` | Ejecutar la batería aprobada y completar la tabla | Las 10 preguntas ejecutadas y verificadas una a una contra el PDF; crudo en `pruebas/capturas/bateria_20261027_2059.json`; salida en `salidas_opencode/salida_05c.txt` |
 | `06` | Añadir un flag para listar el texto de cada fragmento del `TOP_K` | Flag **`--texto`** en `main.py` junto a `--saltos`, con la función `_indentar()`; permitió diagnosticar que el TOP_1 de la pregunta 2 mide 125 caracteres y se corta en el encabezado; salida en `salidas_opencode/salida_06.txt` |
 | `instrucción_07` | Embeddings: predecir antes de medir y comparar índice contra coseno | Etapa 2 completada: 3 frases, predicción escrita 20261028_0728 antes de la ejecución 20261028_0737, tabla de cosenos (1–2 = 0.888802; 1–3 = 0.379792; 2–3 = 0.343577) y tabla de tiempos con `--n 2000` (10/10 coincidencias, A/B=57.39x); evidencia en `entrega/grupo-N-taller2-rag/pruebas/embeddings.md` y `pruebas/capturas/20261028_0737_etapa2_*.txt` |
+| `Instruccion_08` | Dos frases con las mismas palabras y distinto sentido: ¿salen menos parecidas que dos de igual significado? | **Ejecutada 20261028_0921** con `scripts/sentido.py` (script nuevo): control A1–A2 (igual significado) = **0.876027**, objetivo B1–B2 (mismo léxico, distinto sentido) = **0.716434**, margen **+0.159592** → **se cumple el orden esperado**. Predicción escrita a las 0919 antes de medir; evidencia en `pruebas/embeddings.md` (secciones 8–12) y `pruebas/capturas/20261028_0921_etapa2_instruccion08_sentido.txt` |
+| `instruccion_09` | Revisión de los entregables de la etapa 2: frases + predicción + tabla de cosenos + conclusión de 2 líneas; tabla de tiempos n=200/2000 + regla en 1 línea | **Ejecutada 20261028_0938**. Ambos entregables verificados contra los archivos. **2 huecos corregidos**: faltaba la conclusión de dos líneas y la regla en una sola línea (añadidas en `embeddings.md` §6/§7 y en las dos capturas). **Limitación declarada** en §15: el orden de la predicción no tiene prueba a nivel de archivo, porque el mismo `embeddings.md` se editó después; proceso corregido para las próximas predicciones |
 
 ### Estado actual frente a los valores históricos de la tabla
 
@@ -158,6 +160,8 @@ Los separadores del splitter siguen **fijos** en `["\n\n", ". ", " ", ""]`
       no reconstruir retrospectivamente una predicción a partir de sus resultados.
       Hecho en `pruebas/embeddings.md`: predicción escrita en
       `instrucciones/instrucción_07.txt` a las 07:28 y ejecución a las 07:37.
+      **Repetido con `Instruccion_08.txt`**: predicción escrita a las **09:19**
+      y ejecución a las **09:21** del 20261028 (secciones 8–12 del mismo archivo).
 - [ ] Comparar dos configuraciones de chunks y justificar la elegida.
 - [x] Ejecutar diez preguntas con ruta, parecido, respuesta y cita; justificar
       TOP_K y UMBRAL con datos. Ejecutado **nueve veces** (ver `pruebas/bateria.md`):

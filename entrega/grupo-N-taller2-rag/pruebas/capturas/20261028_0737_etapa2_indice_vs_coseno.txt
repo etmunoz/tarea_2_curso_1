@@ -64,3 +64,9 @@ Conclusión calculada:
 Coincidieron los top-3 ordenados en 10/10 consultas; B fue más rápido en 10/10. Con n=2000, A/B=57.39x (medianas).
 Al pasar de n=200 a 2000, el tiempo mediano de A cambió 10.26x y el de B 1.25x; los tiempos excluyen embeddings e inserción y no demuestran por sí solos complejidad asintótica.
 OK: comparación terminada; caché conservada para repetir sin nuevos embeddings.
+
+REGLA EN UNA LINEA (entregable de la etapa 2; añadida en la revision de la
+instruccion_09, no forma parte de la salida literal de arriba):
+  Usa el barrido coseno en Python para depurar y auditar con cientos de datos, y
+  el indice vectorial para buscar sobre el corpus real, porque da los mismos
+  resultados a 3 ms en lugar de 186 ms (n=2000).
