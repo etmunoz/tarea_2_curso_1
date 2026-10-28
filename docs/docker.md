@@ -286,6 +286,42 @@ uv run python -m unittest discover -s tests -v
   Detalle en `pruebas/bateria.md` (sección "Barrido exhaustivo de `UMBRAL` y
   configuración final").
 
+---
+
+## 20261028_1014 — tres reingestas para la etapa 3 (comparar chunk y solape)
+
+- **Propósito**: medir con datos cómo cambia el documento al cortarlo distinto
+  (`instrucciones/instruccion_10.txt`), no cambiar de servidor.
+- **Comando, repetido tres veces** (solo cambiaba `CHUNK_SIZE`/`CHUNK_OVERLAP`
+  en `.env`):
+
+  ```powershell
+  uv run python scripts/ingest.py "docs/LEY-19628_28-AGO-1999_refundida_20261201.pdf" --reset
+  ```
+
+- **Orden y resultados**:
+
+  | Paso | `.env` | Páginas | Fragmentos nuevos | Promedio | Mín / máx | Fusionados |
+  | --- | --- | ---: | ---: | ---: | ---: | ---: |
+  | A | 400 / 50 | 57 | **573** | 320.4 | 101 / 490 | 54 (mín. 100) |
+  | B | 1200 / 200 | 57 | **193** | 971.2 | 322 / 1399 | 17 (mín. 300) |
+  | Final | **800 / 120** | 57 | **294** | 627.6 | 200 / 988 | 24 (mín. 200) |
+
+- **Efecto sobre los datos**: cada paso ejecutó **`--reset` sobre el índice
+  `etmunoz_ollama`**, es decir, **borró y repobló** ese índice dentro del volumen
+  `tarea_2_curso_1_redis_data`. Las tres salidas confirman
+  `0 ya existían`, es decir que **no se mezclaron** fragmentos de ingestas
+  anteriores. **El volumen no se borró, el contenedor no se reinició ni se
+  detuvo** y `docker compose down` **no** se ejecutó.
+- **Estado final**: índice `etmunoz_ollama_rag` con **294 fragmentos**, la
+  configuración **elegida (800/120)**, coherente con el `.env` que queda para el
+  resto del taller.
+- **Índices ajenos no afectados**: `etmunoz_ollama_demo` y
+  `etmunoz_ollama_coseno_*` siguen como estaban.
+- **Salidas guardadas**: `entrega/grupo-N-taller2-rag/pruebas/capturas/
+  20261028_1014_etapa3_ingesta_{A_400_50,B_1200_200,base_800_120}.txt`.
+  Análisis y elección en `pruebas/chunks.md`.
+
 Registrar aquí cada operación o cambio Docker de esta tarea: propósito,
 comandos, resultado y efecto sobre contenedores, volúmenes o datos. Nunca
 incluir claves, contraseñas ni URLs privadas.

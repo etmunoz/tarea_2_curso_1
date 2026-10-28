@@ -1,0 +1,106 @@
+Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
+Objetivo: conservar la salida literal de la ingesta de la configuración B de la etapa 3.
+fecha_hora_ejecucion: 20261028 (corrida de la mañana de la etapa 3; transcrito de la salida de la terminal)
+instruccion: instrucciones/instruccion_10.txt (etapa 3)
+
+CONFIGURACIÓN: CHUNK_SIZE=1200, CHUNK_OVERLAP=200 (escritos en .env antes de ejecutar)
+COMANDO (desde la raíz):
+  uv run python scripts/ingest.py "docs/LEY-19628_28-AGO-1999_refundida_20261201.pdf" --reset
+
+-------------------------------------------------------------------------------
+SALIDA LITERAL
+-------------------------------------------------------------------------------
+
+Páginas leídas: 57
+--reset: índice 'etmunoz_ollama' borrado antes de guardar.
+Guardado en Redis con PREFIJO 'etmunoz_ollama': 193 fragmentos nuevos (0 ya existían).
+Tamaño de fragmento configurado: CHUNK_SIZE del .env; solape: CHUNK_OVERLAP del .env.
+Separadores: ['\n\n', '. ', ' ', '']
+Fragmentos generados: 193
+Tamaño promedio de fragmento: 971.2 caracteres (mínimo 322, máximo 1399).
+Fragmentos fusionados por debajo de 300 caracteres: 17.
+
+Fragmento 1 y 2 lado a lado (se resalta el texto en común):
+  Fragmento 1 (página 1, 1120 car.)
+    Ley 19628
+Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+ página 1 de 57
+Ley 19628
+SOBRE PROTECCION DE LOS DATOS PERSONALES
+MINISTERIO SECRETARÍA GENERAL DE LA PRESIDENCIA
+Fecha Publicación: 28-AGO-1999 | Fecha Promulgación: 18-AGO-1999Tipo Versión: Con Vigencia Diferida por Fecha De : 01-DIC-2026Ultima Modificación: 13-DIC-2024 Ley 21719Url Corta: https://bcn.cl/3eVHFS
+ 
+SOBRE PROTECCION DE LOS DATOS PERSONALES                        Ley 21719
+                                                                Art. primero N° 1)
+     Teniendo presente que el H. Congreso Nacional ha dado      D.O. 13.12.2024
+su aprobación al siguiente
+     P r o y e c t o  d e  l e y:
+     PROTECCION DE DATOS DE CARACTER PERSONAL 
+ 
+     Título Preliminar
+     Disposiciones generales
+ 
+     Artículo 1°.- Objeto y ámbito de aplicación. La
+presente ley tiene por objeto regular la forma y condiciones
+en la cual se efectúa el tratamiento y protección de los
+datos personales de las personas naturales, en conformidad
+al artículo 19, N° 4, de la Constitución Política de la
+República
+  Fragmento 2 (página 1, 647 car.)
+    .                                                      Ley 21719
+    Todo tratamiento de datos personales que realice una        Art. primero N° 2)
+persona natural o jurídica, incluidos los órganos               D.O. 13.12.2024
+públicos, debe respetar los derechos y libertades de las
+personas y quedará sujeto a las disposiciones de esta ley.
+    El régimen de tratamiento y protección de datos
+establecido en esta ley no se aplicará al tratamiento de
+datos que se realice en el ejercicio de las libertades de
+emitir opinión y de informar reguladas por las leyes a que
+se refiere el artículo 19, N° 12, de la Constitución
+Política de la República
+  Solape real entre 1 y 2: 0 caracteres (CHUNK_OVERLAP del .env = 200).
+
+-------------------------------------------------------------------------------
+CONSULTA AL AGENTE CON ESTA CONFIGURACIÓN (misma pregunta que en las otras dos)
+-------------------------------------------------------------------------------
+
+Comando: uv run python main.py rag "¿Qué establece el principio de proporcionalidad?" --saltos --texto
+
+[salto] buscar
+  mejor_parecido: 0.5118
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.5118
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 816 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       página 5 de 57
+      limitarse al cumplimiento de estos fines.
+          En aplicación de este principio, no se pueden tratar
+      los datos personales con fines distintos a los informados al
+      momento de la recolección, salvo que el tratamiento sea
+      para fines compatibles con los autorizados originalmente;
+      que exista una relación contractual o precontractual entre
+      el titular y el responsable que justifique el tratamiento de
+      los datos con una finalidad distinta, siempre que el
+      enmarque dentro de los fines del contrato o sea coherente
+      con las tratativas o negociaciones previas a la celebración
+      del mismo; que el titular otorgue nuevamente su
+      consentimiento, y cuando lo disponga la ley.
+          c) Principio de proporcionalidad
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.4 parecido=0.4125
+    inicio: '. El tratamiento de los datos\npersonales se rige por los siguientes principios: '
+    largo: 584 caracteres
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.4096
+    inicio: '. Las medidas de\nseguridad deben ser apropiadas y acordes con el tratamiento\nque'
+    largo: 1314 caracteres
+[salto] responder
+El principio de proporcionalidad establece que el tratamiento de los datos personales debe limitarse al cumplimiento de los fines autorizados, no pudiendo tratarlos con fines distintos a los informados al momento de la recolección, salvo que el tratamiento sea para fines compatibles, exista una relación contractual o precontractual, el titular otorgue nuevamente su consentimiento, o lo disponga la ley [LEY-19628 p.5].
+
+OBSERVACIÓN (añadida en la revisión de la etapa 3):
+  El TOP_1 (816 car.) termina también en el encabezado "c) Principio de
+  proporcionalidad" SIN su contenido, y el contenido del literal c) no quedó
+  entre los tres fragmentos recuperados: el modelo respondió con el literal b)
+  (finalidad) atribuyéndolo a proporcionalidad. Respuesta incorrecta.
+  Además, el solape configurado de 200 no se materializó entre los fragmentos
+  1 y 2: midió 0 caracteres.
