@@ -1,0 +1,128 @@
+{
+  "fecha": "20261028_1805",
+  "etiqueta": "Etapa 5: antes; preguntas 1-3; prompt sin cambios",
+  "umbral": 0.43,
+  "top_k": 4,
+  "chunk_size": 800,
+  "chunk_overlap": 120,
+  "prefijo": "etmunoz_ollama",
+  "vector_store": "redis",
+  "modelo": "qwen3:8b",
+  "embedding": "bge-m3",
+  "resultados": [
+    {
+      "numero": 1,
+      "tipo": "en_contexto",
+      "pregunta": "¿Cuáles son los derechos que tiene el titular de los datos personales?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.7285096645360001,
+      "fragmentos": [
+        {
+          "pagina": 4,
+          "parecido": 0.7285,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 800
+        },
+        {
+          "pagina": 6,
+          "parecido": 0.7203,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 408
+        },
+        {
+          "pagina": 5,
+          "parecido": 0.7166,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 763
+        },
+        {
+          "pagina": 6,
+          "parecido": 0.7073,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 789
+        }
+      ],
+      "respuesta": "Los derechos que tiene el titular de los datos personales son: acceso, rectificación, supresión, oposición, portabilidad y bloqueo [1 p.4]. Además, tiene derecho a solicitar y obtener confirmación acerca de si sus datos personales están siendo tratados, así como acceder a dichos datos y a la información relevante [2 p.6]. El responsable debe entregar al titular toda la información necesaria para el ejercicio de estos derechos, incluyendo las políticas y prácticas sobre el tratamiento de los datos personales [3 p.5].",
+      "error": null
+    },
+    {
+      "numero": 2,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué establece el principio de proporcionalidad?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.505384743214,
+      "fragmentos": [
+        {
+          "pagina": 5,
+          "parecido": 0.5054,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 829
+        },
+        {
+          "pagina": 4,
+          "parecido": 0.4125,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 584
+        },
+        {
+          "pagina": 5,
+          "parecido": 0.394,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 763
+        },
+        {
+          "pagina": 25,
+          "parecido": 0.3859,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 349
+        }
+      ],
+      "respuesta": "El principio de proporcionalidad establece que los datos personales que se traten deben limitarse estrictamente a aquéllos que resulten necesarios, adecuados y pertinentes en relación con los fines del tratamiento [LEY-19628 p.5].",
+      "error": null
+    },
+    {
+      "numero": 3,
+      "tipo": "en_contexto",
+      "pregunta": "¿En qué casos procede la supresión de los datos personales?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.684826433659,
+      "fragmentos": [
+        {
+          "pagina": 7,
+          "parecido": 0.6848,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 726
+        },
+        {
+          "pagina": 19,
+          "parecido": 0.6836,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 521
+        },
+        {
+          "pagina": 7,
+          "parecido": 0.6485,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 551
+        },
+        {
+          "pagina": 5,
+          "parecido": 0.641,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 829
+        }
+      ],
+      "respuesta": "La supresión de los datos personales procede en los siguientes casos:  \na) Cuando los datos no resulten necesarios en relación con los fines del tratamiento [LEY-19628 p.7].  \nb) Cuando el titular haya revocado su consentimiento para el tratamiento y éste no tenga otro fundamento legal [LEY-19628 p.7].  \nc) Cuando los datos hayan sido obtenidos o tratados ilícitamente por el responsable [LEY-19628 p.7].  \nd) Cuando se trate de datos caducos [LEY-19628 p.7].  \ne) Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resolución de la autoridad de protección de datos o de una obligación legal [LEY-19628 p.7].  \nf) Cuando el titular haya ejercido su derecho de oposición y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].",
+      "error": null
+    }
+  ]
+}

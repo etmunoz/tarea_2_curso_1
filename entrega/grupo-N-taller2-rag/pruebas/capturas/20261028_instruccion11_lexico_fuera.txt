@@ -1,0 +1,10 @@
+uv run python main.py rag "¿Qué establece esta ley sobre el tratamiento de datos personales en las criptomonedas?" --saltos
+
+[salto] buscar
+  mejor_parecido: 0.6259
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.1 parecido=0.6259
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.1 parecido=0.5755
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.56 parecido=0.5720
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2 parecido=0.5585
+[salto] responder
+El contexto proporcionado no contiene información sobre el tratamiento de datos personales en las criptomonedas.

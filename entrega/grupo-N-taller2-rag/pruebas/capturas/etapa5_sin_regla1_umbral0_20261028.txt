@@ -1,0 +1,81 @@
+[salto] buscar
+  mejor_parecido: 0.4146
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.35 parecido=0.4146
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 597 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       p├ígina 35 de 57
+      caso de ausencia del presidente. El quorum m├¡nimo para
+      sesionar ser├í de dos consejeros. El reglamento establecer├í
+      las dem├ís normas necesarias para su funcionamiento.
+           El Consejo Directivo de la Agencia deber├í celebrar
+      sesiones ordinarias a lo menos una vez por semana, y
+      sesiones extraordinarias cuando las cite especialmente su
+      presidente por s├¡ o a requerimiento escrito de dos
+      consejeros, en la forma y condiciones que determine su
+      normativa interna de funcionamiento
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.28 parecido=0.4059
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 798 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       p├ígina 28 de 57
+      las garant├¡as fundamentales establecidas en el art├¡culo
+      19, N┬░ 4, de la Constituci├│n Pol├¡tica de la Rep├║blica y
+      los principios establecidos en el art├¡culo 3┬░.
+          Con el objeto de realizar los tratamientos, cesiones y
+      comunicaciones de datos para la finalidad prevista en las
+      letras a), b) y c) anteriores, los ├│rganos p├║blicos y sus
+      autoridades estar├ín obligadas a intercambiar informaci├│n y
+      proporcionar los datos personales que les sean requeridos
+      para estos fines, siempre que se refieran a tratamientos que
+      se realicen con una finalidad espec├¡fica autorizada por ley
+      o, cuando esto no sea posible, el requerimiento sea una
+      medida necesaria y proporcional.
+          La Agencia
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2 parecido=0.3967
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 796 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       p├ígina 2 de 57
+      de establecimiento o constituci├│n, realice las operaciones
+      de tratamiento de datos personales a nombre de un
+      responsable establecido o constituido en el territorio
+      nacional.
+           c) Cuando el responsable o mandatario no se encuentren
+      establecidos en el territorio nacional pero sus operaciones
+      de tratamiento de datos personales est├®n destinadas a
+      ofrecer bienes o servicios a titulares que se encuentren en
+      Chile, independientemente de si a ├®stos se les requiere un
+      pago, o a monitorear el comportamiento de titulares que se
+      encuentran en el territorio nacional, incluyendo su
+      an├ílisis, rastreo, perfilamiento o predicci├│n de
+      comportamiento.
+           La presente ley tambi├®n se
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.30 parecido=0.3933
+    inicio: 'que hayan sido ratificados por el\nEstado chileno y se encuentren vigentes.\n    d'
+    largo: 784 caracteres
+    texto:
+      que hayan sido ratificados por el
+      Estado chileno y se encuentren vigentes.
+          d) Cuando la transferencia resulte necesaria por
+      aplicaci├│n de convenios de cooperaci├│n, intercambio de
+      informaci├│n o supervisi├│n que hayan sido suscritos por
+      ├│rganos p├║blicos para el cumplimiento de sus funciones y
+      en el ejercicio de sus competencias.
+          e) Cuando la transferencia de datos realizada por una
+      persona natural o jur├¡dica, p├║blica o privada, haya sido
+      autorizada expresamente por la ley y para una finalidad
+      determinada.
+          f) Cuando la transferencia sea efectuada con el objeto
+      de prestar o solicitar colaboraci├│n judicial internacional.
+          g) Cuando la transferencia sea necesaria para la
+      celebraci├│n o ejecuci├│n de un contrato entre el titular y
+      el responsable, o para la ejecuci├│n de
+[salto] responder
+El documento no contiene informaci├│n sobre la temperatura media de las principales capitales de Chile.

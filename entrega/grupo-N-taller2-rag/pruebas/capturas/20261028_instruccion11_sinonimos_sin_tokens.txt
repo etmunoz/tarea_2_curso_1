@@ -1,0 +1,59 @@
+[salto] buscar
+  mejor_parecido: 0.4988
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.14 parecido=0.4988
+    inicio: 'de datos personales a un\ntercer pa├¡s u organizaci├│n internacional y si ├®stos\nofr'
+    largo: 766 caracteres
+    texto:
+      de datos personales a un
+      tercer pa├¡s u organizaci├│n internacional y si ├®stos
+      ofrecen o no un nivel adecuado de protecci├│n. En caso de
+      que no cuenten con un nivel adecuado de protecci├│n, se
+      deber├í informar si existen garant├¡as que justifiquen tal
+      transferencia.
+          i) El periodo durante el que se conservar├ín los datos
+      personales.
+          j) La fuente de la cual provienen los datos personales
+      y, en su caso, si proceden de fuentes de acceso p├║blico.
+          k) Cuando el tratamiento est├í basado en el
+      consentimiento del titular, la existencia del derecho a
+      retirarlo en cualquier momento, sin que ello afecte a la
+      licitud del tratamiento basado en el consentimiento previo a
+      su retirada.
+          l) La existencia de decisiones automatizadas, incluida
+      la elaboraci├│n de perfiles
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.53 parecido=0.4932
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 445 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       p├ígina 53 de 57
+      mantener estricto secreto o confidencialidad de los datos
+      personales que conociere en ejercicio de su cargo. Los
+      funcionarios p├║blicos que desempe├▒en estas funciones e
+      infrinjan este deber de secreto o confidencialidad, ser├ín
+      sancionados de conformidad a lo que se prescribe en los
+      art├¡culos 246 a 247 bis del C├│digo Penal
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2 parecido=0.4927
+    inicio: 'a las\ncaracter├¡sticas f├¡sicas o morales de las personas o a\nhechos o circunstanc'
+    largo: 258 caracteres
+    texto:
+      a las
+      caracter├¡sticas f├¡sicas o morales de las personas o a
+      hechos o circunstancias de su vida privada o intimidad, que
+      revelen el origen ├®tnico o racial, la afiliaci├│n
+      pol├¡tica, sindical o gremial, la situaci├│n
+      socioecon├│mica, las convicciones ideol├│gicas o
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.6 parecido=0.4898
+    inicio: '. El titular de datos\ntiene derecho a solicitar y obtener del responsable,\nconfi'
+    largo: 408 caracteres
+    texto:
+      . El titular de datos
+      tiene derecho a solicitar y obtener del responsable,
+      confirmaci├│n acerca de si los datos personales que le
+      conciernen est├ín siendo tratados por ├®l, y en tal caso,
+      acceder a dichos datos y a la siguiente informaci├│n:            Ley 21719
+                                                                      Art. primero N┬░ 7
+          a) Los datos tratados y su origen.                          D.O
+[salto] responder
+S├¡, puedes solicitar confirmaci├│n acerca de si los datos personales que te conciernen est├ín siendo tratados, y en tal caso, acceder a dichos datos y a la informaci├│n sobre su origen [LEY-19628 p.6].

@@ -2,12 +2,46 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: indicar cómo reunir capturas y salidas verificables para la entrega.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_1016
+fecha_hora_modificacion: 20261028_1853
 -->
 
 # Capturas y salidas
 
 Guardamos evidencias reales, legibles y sin claves ni URLs privadas.
+
+## Instrucción 11 — nuevas evidencias (20261028)
+
+| Archivo | Contenido |
+| --- | --- |
+| `bateria_topk1_dentro_20261028.json` | Cinco dentro con K=1 |
+| `bateria_topk5_dentro_20261028.json` | Cinco dentro con K=5 |
+| `bateria_topk5_completa_20261028.json` | Diez preguntas; regresión de jurisdicción en Q8 |
+| `bateria_topk4_completa_20261028.json` | Diez preguntas con K=4 |
+| `bateria_20261028_1558_umbra043.json` | Configuración elegida, K=4 y umbral 0.43 |
+| `20261028_instruccion11_dentro.png` | Q3, seis causales y ruta responder |
+| `20261028_instruccion11_fuera.png` | Q7, ruta no_se |
+| `20261028_instruccion11_ambigua.png` | Q9, corridos y cita p.10 |
+| `20261028_instruccion11_sinonimos.txt` | Primera redacción: falla recuperación |
+| `20261028_instruccion11_sinonimos_sin_tokens.txt` | Segunda redacción: acierto, p.6 cuarta, 0.4988 |
+| `20261028_instruccion11_lexico_fuera.txt` | Criptomonedas: 0.6259, declina |
+
+Los PNG son capturas de HTML que presenta stdout real guardado por
+`scripts/evidencia_etapa4.py`. Cada uno incluye su TXT y HTML de origen.
+No se presentan como capturas de una ventana de terminal. Las capturas de
+otras etapas listadas abajo continúan pendientes. Interpretación y
+verificación textual del PDF en `../bateria.md`.
+
+## Etapa 5 — instrucción 12 (20261028)
+
+| Archivo | Contenido |
+| --- | --- |
+| `bateria_etapa5_antes_20261028.json` | Preguntas 1–3 con SYSTEM_PROMPT antes de las reglas 6–9 |
+| `bateria_etapa5_despues_20261028.json` | Las mismas preguntas con reglas 6–9 |
+| `etapa5_trampa_120_dias_20261028.txt` | Trampa inicial de los 120 días |
+| `etapa5_trampa_120_dias_regla10_20261028.txt` | Repetición tras agregar regla 10; sigue sin corregir los 120 días |
+| `etapa5_prompt_backup_pre_regla1_20261028.txt` | Copia exacta del prompt antes de quitar temporalmente la regla 1 |
+| `etapa5_sin_regla1_umbral0_20261028.txt` | Pregunta de temperatura con regla 1 retirada y UMBRAL=0; no alucina |
+| `etapa5_regla1_restaurada_umbral043_20261028.txt` | Misma consulta tras restaurar prompt y UMBRAL=0.43; ruta no_se |
 
 ## Contenido actual (inventario inicial 20261028_0809, actualizado 20261028_1016)
 

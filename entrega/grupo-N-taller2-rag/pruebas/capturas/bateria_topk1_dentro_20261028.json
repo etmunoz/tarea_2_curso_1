@@ -1,0 +1,114 @@
+{
+  "fecha": "20261028_1500",
+  "etiqueta": "TOP_K=1, umbral 0.43, solo las 5 en contexto",
+  "umbral": 0.43,
+  "top_k": 1,
+  "chunk_size": 800,
+  "chunk_overlap": 120,
+  "prefijo": "etmunoz_ollama",
+  "vector_store": "redis",
+  "modelo": "qwen3:8b",
+  "embedding": "bge-m3",
+  "resultados": [
+    {
+      "numero": 1,
+      "tipo": "en_contexto",
+      "pregunta": "¿Cuáles son los derechos que tiene el titular de los datos personales?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.7285096645360001,
+      "fragmentos": [
+        {
+          "pagina": 4,
+          "parecido": 0.7285,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 800
+        }
+      ],
+      "respuesta": "El titular de los datos personales tiene los siguientes derechos: derecho de acceso, derecho de rectificación, derecho de supresión, derecho de oposición y derecho a la portabilidad de los datos personales [LEY-19628 p.4].",
+      "error": null
+    },
+    {
+      "numero": 2,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué establece el principio de proporcionalidad?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.505384743214,
+      "fragmentos": [
+        {
+          "pagina": 5,
+          "parecido": 0.5054,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 829
+        }
+      ],
+      "respuesta": "El principio de proporcionalidad establece que los datos personales que se traten deben limitarse estrictamente a aquéllos que resulten necesarios, adecuados y pertinentes en relación con los fines del tratamiento [LEY-19628 p.5].",
+      "error": null
+    },
+    {
+      "numero": 3,
+      "tipo": "en_contexto",
+      "pregunta": "¿En qué casos procede la supresión de los datos personales?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.684826433659,
+      "fragmentos": [
+        {
+          "pagina": 7,
+          "parecido": 0.6848,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 726
+        }
+      ],
+      "respuesta": "La supresión de los datos personales procede en los siguientes casos:  \n- Cuando el titular haya revocado su consentimiento para el tratamiento y éste no tenga otro fundamento legal [LEY-19628 p.7].  \n- Cuando los datos hayan sido obtenidos o tratados ilícitamente por el responsable [LEY-19628 p.7].  \n- Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resolución de la autoridad de protección de datos o de una obligación legal [LEY-19628 p.7].  \n- Cuando el titular haya ejercido su derecho de oposición y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].",
+      "error": null
+    },
+    {
+      "numero": 4,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué se entiende por anonimización?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.6533370018010001,
+      "fragmentos": [
+        {
+          "pagina": 3,
+          "parecido": 0.6533,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 686
+        }
+      ],
+      "respuesta": "Anonimización es un procedimiento irreversible mediante el cual un dato personal no puede vincularse o asociarse a una persona determinada, ni permitir su identificación, por haberse destruido o eliminado el nexo con la información que vincula, asocia o identifica a esa persona. Un dato anonimizado deja de ser un dato personal [LEY-19628 p.3].",
+      "error": null
+    },
+    {
+      "numero": 5,
+      "tipo": "en_contexto",
+      "pregunta": "¿Qué es el derecho de acceso?",
+      "nodos": [
+        "buscar",
+        "responder"
+      ],
+      "mejor_parecido": 0.536074697971,
+      "fragmentos": [
+        {
+          "pagina": 4,
+          "parecido": 0.5361,
+          "fuente": "LEY-19628_28-AGO-1999_refundida_20261201.pdf",
+          "largo": 343
+        }
+      ],
+      "respuesta": "El derecho de acceso es el derecho del titular de datos a solicitar y obtener del responsable, confirmación acerca de si sus datos personales están siendo tratados por él [LEY-19628 p.4].",
+      "error": null
+    }
+  ]
+}

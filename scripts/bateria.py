@@ -1,17 +1,20 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: ejecutar la batería de diez preguntas y guardar la salida cruda como evidencia.
 # fecha_hora_creacion: 20261027_2345
-# fecha_hora_modificacion: 20261027_2345
+# fecha_hora_modificacion: 20261028_1602
 
 """Batería de diez preguntas (5 en contexto, 3 fuera, 2 ambiguas); sin red propia.
 
 Uso desde la raíz:
-    uv run python scripts/bateria.py [--umbral 0.65] [--salida ruta.json]
+    uv run python scripts/bateria.py [--umbral 0.65] [--top-k 5] [--solo 1,2,3]
+                                     [--salida ruta.json] [--etiqueta texto]
 
 Corre las diez preguntas de docs/preguntas.md contra el índice vigente y
 graba un JSON con la ruta de nodos, el mejor parecido, los TOP_K fragmentos
-y la respuesta de cada una. El umbral se pasa por variable de entorno para
-no tocar .env: así se comparan configuraciones bajo la misma ingesta.
+y la respuesta de cada una. El umbral y el TOP_K se pasan por variable de
+entorno para no tocar .env: así se comparan configuraciones bajo la misma
+ingesta. --solo admite una lista de números para repetir solo un subconjunto
+(con --salida obligatorio, para no pisar la evidencia de la corrida completa).
 """
 
 import argparse
@@ -78,6 +81,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Batería de diez preguntas del RAG")
     parser.add_argument("--umbral", help="UMBRAL de esta corrida (solo informativo; "
                                          "se aplica vía variable de entorno)")
+    parser.add_argument("--top-k", type=int, help="TOP_K de esta corrida (se aplica "
+                                                  "vía variable de entorno)")
+    parser.add_argument("--solo", default="",
+                        help="Números de pregunta separados por coma, p. ej. 1,2,3,4,5")
     parser.add_argument("--salida", type=Path, default=None,
                         help="Ruta del JSON de evidencia")
     parser.add_argument("--etiqueta", default="",
@@ -87,13 +94,33 @@ def main(argv: list[str] | None = None) -> int:
     # Se fija ANTES de importar config para que get_settings() lo lea.
     if args.umbral:
         os.environ["UMBRAL"] = args.umbral
+    if args.top_k is not None:
+        if args.top_k < 1:
+            parser.error("--top-k debe ser positivo")
+        os.environ["TOP_K"] = str(args.top_k)
+
+    preguntas = PREGUNTAS
+    if args.solo:
+        try:
+            seleccion = {int(item) for item in args.solo.split(",")}
+        except ValueError:
+            print("Error: --solo debe ser una lista de números, p. ej. 1,2,3", flush=True)
+            return 2
+        preguntas = [pregunta for pregunta in PREGUNTAS if pregunta[0] in seleccion]
+        if not preguntas or seleccion - {p[0] for p in PREGUNTAS}:
+            print("Error: --solo debe contener números de pregunta entre 1 y 10.", flush=True)
+            return 2
+        if args.salida is None:
+            print("Error: --solo requiere --salida para no pisar la corrida completa.",
+                  flush=True)
+            return 2
 
     from src.rag.config import get_settings
     settings = get_settings()
 
     graph = build_graph()
     resultados = []
-    for numero, tipo, pregunta in PREGUNTAS:
+    for numero, tipo, pregunta in preguntas:
         # thread_id distinto por pregunta: MemorySaver no mezcle conversaciones.
         registro = {
             "numero": numero,
@@ -128,6 +155,8 @@ def main(argv: list[str] | None = None) -> int:
     salida = args.salida
     if salida is None:
         marca = f"umbra{str(settings.umbral).replace('.', '')}"
+        if args.top_k:
+            marca += f"_topk{args.top_k}"
         salida = Path("entrega/grupo-N-taller2-rag/pruebas/capturas") / (
             f"bateria_{documento['fecha']}_{marca}.json"
         )
@@ -137,12 +166,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     print(f"\nEvidencia guardada en {salida}", flush=True)
 
+    total = len(resultados)
     respondidas = sum(1 for r in resultados if r["respuesta"])
     rutas: dict[str, int] = {}
     for r in resultados:
         clave = " -> ".join(r["nodos"]) or "(sin nodos)"
         rutas[clave] = rutas.get(clave, 0) + 1
-    print(f"Con respuesta: {respondidas}/10", flush=True)
+    print(f"Con respuesta: {respondidas}/{total}", flush=True)
     for ruta, cantidad in sorted(rutas.items(), key=lambda par: -par[1]):
         print(f"  {cantidad}x {ruta}", flush=True)
     return 0

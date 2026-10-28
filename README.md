@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: explicar instalación, configuración, uso, pruebas y preparación de la entrega.
 fecha_hora_creacion: 20261027_1806
-fecha_hora_modificacion: 20261028_0905
+fecha_hora_modificacion: 20261028_1602
 -->
 
 # tarea_2_curso_1
@@ -94,7 +94,7 @@ Las variables de entorno del sistema tienen prioridad sobre `.env`.
 | `MODELO` | `gemini-3.5-flash-lite` |
 | `PREFIJO` | `etmunoz`; usar uno distinto por equipo |
 | `CHUNK_SIZE` / `CHUNK_OVERLAP` | `800` / `120` caracteres |
-| `TOP_K` | `3` fragmentos |
+| `TOP_K` | `4` fragmentos (comparación de la instrucción 11 en `pruebas/bateria.md`) |
 | `UMBRAL` | `0.43` de similitud coseno mínima (barrido exhaustivo 20261028; antes `0.65` y `0.58`) |
 
 El nombre de modelo solicitado se conserva literalmente: su disponibilidad

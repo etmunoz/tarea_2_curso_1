@@ -1,0 +1,10 @@
+uv run python main.py rag "¿Cómo se configura la replicación en Redis Cluster?" --saltos
+
+[salto] buscar
+  mejor_parecido: 0.3636
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.3636
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.3480
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.43 parecido=0.3479
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.12 parecido=0.3466
+[salto] no_se
+No encontré evidencia en los documentos para responder eso.

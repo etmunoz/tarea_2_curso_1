@@ -1,0 +1,10 @@
+uv run python main.py rag "Si una persona quiere descubrir qué guardaron sobre ella, ¿qué puede pedir?" --saltos
+
+[salto] buscar
+  mejor_parecido: 0.5241
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.2 parecido=0.5241
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.53 parecido=0.5195
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.28 parecido=0.5190
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.26 parecido=0.5178
+[salto] responder
+La persona puede pedir acceso a la información que se le haya guardado, siempre que se cumplan los requisitos legales establecidos, como el consentimiento del titular o la necesidad para cumplir funciones de fiscalización o inspección [LEY-19628 p.26].

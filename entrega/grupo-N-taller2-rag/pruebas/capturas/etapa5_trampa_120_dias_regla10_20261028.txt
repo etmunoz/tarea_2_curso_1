@@ -1,0 +1,71 @@
+[salto] buscar
+  mejor_parecido: 0.6988
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.6988
+    inicio: '. Este plazo podr├í ser prorrogado, por una sola\nvez, hasta por treinta d├¡as corr'
+    largo: 570 caracteres
+    texto:
+      . Este plazo podr├í ser prorrogado, por una sola
+      vez, hasta por treinta d├¡as corridos.
+          El responsable deber├í responder por escrito al titular
+      a su domicilio o la direcci├│n de correo electr├│nico fijada
+      por ├®ste. El responsable debe almacenar los respaldos que
+      le permitan demostrar la remisi├│n de la respuesta a la
+      direcci├│n f├¡sica o electr├│nica que corresponda, su fecha
+      y el contenido ├¡ntegro de ella.
+          En caso de denegaci├│n total o parcial de la solicitud,
+      el responsable deber├í fundar su decisi├│n indicando la
+      causa invocada y los antecedentes que la justifican
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.6426
+    inicio: '. En esta\nmisma oportunidad el responsable debe se├▒alar al titular\nque dispone d'
+    largo: 283 caracteres
+    texto:
+      . En esta
+      misma oportunidad el responsable debe se├▒alar al titular
+      que dispone de un plazo de treinta d├¡as h├íbiles para
+      formular una reclamaci├│n ante la Agencia, de acuerdo con el
+      procedimiento establecido en el art├¡culo 41.
+          Transcurrido el plazo al que hace referencia el inciso
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.44 parecido=0.6337
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 727 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       p├ígina 44 de 57
+      General de la Rep├║blica, a trav├®s de los medios
+      presenciales o digitales que ella disponga, dentro del plazo
+      de diez d├¡as h├íbiles contado desde que la resoluci├│n de
+      la Agencia se encuentre firme. El comprobante de pago
+      correspondiente deber├í ser presentado a la Agencia dentro
+      del plazo de diez d├¡as h├íbiles contado desde que se
+      hubiere efectuado el pago.
+           Cuando por unos mismos hechos y fundamentos jur├¡dicos,
+      el infractor pudiese ser sancionado con arreglo a esta ley y
+      a otra u otras leyes, de las sanciones posibles, se le
+      impondr├í la de mayor gravedad.
+       
+           Art├¡culo 38.- Sanciones accesorias
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.46 parecido=0.6268
+    inicio: 'Ley 19628\nBiblioteca del Congreso Nacional de Chile - www.leychile.cl - document'
+    largo: 855 caracteres
+    texto:
+      Ley 19628
+      Biblioteca del Congreso Nacional de Chile - www.leychile.cl - documento generado el 14-Jul-2025
+       p├ígina 46 de 57
+      todos los antecedentes que estime pertinentes. Las
+      notificaciones que se practiquen al responsable se
+      realizar├ín a su domicilio postal, direcci├│n de correo
+      electr├│nico u otro medio electr├│nico equivalente a que
+      alude la letra c) del art├¡culo 14 ter.
+           e) Vencido este plazo, haya o no contestado el
+      responsable de los datos y, s├│lo si existen hechos
+      sustanciales, pertinentes y controvertidos, la Agencia
+      podr├í abrir un t├®rmino probatorio de diez d├¡as h├íbiles
+      en el cual las partes pueden hacer valer todos los medios de
+      prueba que estimen convenientes.
+           f) El responsable de datos en su respuesta podr├í
+      allanarse a la reclamaci├│n, en cuyo caso deber├í acompa├▒ar
+      los antecedentes o testimonios que acrediten esta
+      circunstancia
+[salto] responder
+El documento menciona que el plazo podr├í ser prorrogado, por una sola vez, hasta por treinta d├¡as corridos [LEY-19628 p.10]. Por lo tanto, s├¡ existe un plazo de extensi├│n.

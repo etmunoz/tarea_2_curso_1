@@ -2,7 +2,7 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: documentar configuración, operación y pruebas del Redis persistente en Docker.
 fecha_hora_creacion: 20261027_1842
-fecha_hora_modificacion: 20261028_0904
+fecha_hora_modificacion: 20261028_1602
 -->
 
 # Docker y Redis del proyecto
@@ -321,6 +321,16 @@ uv run python -m unittest discover -s tests -v
 - **Salidas guardadas**: `entrega/grupo-N-taller2-rag/pruebas/capturas/
   20261028_1014_etapa3_ingesta_{A_400_50,B_1200_200,base_800_120}.txt`.
   Análisis y elección en `pruebas/chunks.md`.
+
+## 20261028 — instrucción 11: consultas y cambio de TOP_K
+
+Propósito: comparar cobertura y rechazos con K=1, 3, 4 y 5. Comandos:
+`uv run python scripts/bateria.py --top-k 1 --solo 1,2,3,4,5 --salida resultado.json`,
+análogos con K=5 y baterías completas con K=4/5; consultas `main.py --saltos`.
+Resultado: se elige TOP_K=4; permanecen UMBRAL=0.43 y chunks 800/120.
+No se ejecutaron operaciones Docker ni ingestas. Estas consultas no cambian
+los 294 fragmentos del índice; contenedor y volumen persistente se conservan.
+Detalle y evidencias: `entrega/grupo-N-taller2-rag/pruebas/bateria.md`.
 
 Registrar aquí cada operación o cambio Docker de esta tarea: propósito,
 comandos, resultado y efecto sobre contenedores, volúmenes o datos. Nunca

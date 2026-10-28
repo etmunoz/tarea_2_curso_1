@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: verificar configuración, grafo, ingesta y almacenamiento del RAG sin red.
 # fecha_hora_creacion: 20261027_1816
-# fecha_hora_modificacion: 20261028_0849
+# fecha_hora_modificacion: 20261028_1602
 
 import io
 import os
@@ -44,7 +44,7 @@ class RagTests(unittest.TestCase):
     def test_defaults_and_validation(self):
         settings = config.get_settings()
         self.assertEqual(settings.vector_store, "faiss")
-        self.assertEqual(settings.top_k, 3)
+        self.assertEqual(settings.top_k, 4)
         for variable, value in [
             ("VECTOR_STORE", "invalid"), ("PREFIJO", "../otro"),
             ("CHUNK_SIZE", "100"), ("TOP_K", "0"), ("UMBRAL", "1.1"),
@@ -214,9 +214,11 @@ class RagTests(unittest.TestCase):
         store = Mock()
         good, bad = Document(page_content="relevante"), Document(page_content="lejano")
         store.similarity_search_with_score.return_value = [(good, 0.2), (bad, 0.5)]
-        # UMBRAL se fija aquí a propósito: la prueba mide el FILTRO (similitudes
-        # 0.8 y 0.5), no el valor por defecto de la configuración.
-        with patch.dict(os.environ, {"VECTOR_STORE": "redis", "UMBRAL": "0.58"}), patch.object(
+        # UMBRAL y TOP_K se fijan aquí a propósito: la prueba mide el FILTRO
+        # (similitudes 0.8 y 0.5), no los valores por defecto de la configuración,
+        # que cambian cuando la etapa 4 elige otra combinación.
+        with patch.dict(os.environ, {"VECTOR_STORE": "redis", "UMBRAL": "0.58",
+                                     "TOP_K": "3"}), patch.object(
             storage, "get_vector_store", return_value=store
         ):
             self.assertEqual(storage.search_documents("pregunta"), [good])

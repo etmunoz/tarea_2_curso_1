@@ -322,3 +322,37 @@ Estado de la rúbrica
 Espero tu revisión y las instrucciones para agregar tus comentarios.
 
 Comentarios del Usuario: Quedan finalmente 800/120 como combinación final a dejar, junto con el umbral ya definido.
+
+Reviso si ya existe un lugar destinado a tus comentarios para registrarlo con el mismo formato:
+
+No había un lugar reservado para tus comentarios. Lo agrego como sección explícita en docs/entrega.md y lo reflejo en chunks.md:
+
+Agrego la sección de tus comentarios en docs/entrega.md:
+
+Ahora lo reflejo en chunks.md, junto a la elección:
+
+Verifico que .env y .env.example estén efectivamente en esa combinación:
+
+Consistente en ambos archivos. Commiteo y pusheo:
+
+Registrado y pusheado (5dffe5f..0237bd9).
+
+Qué hice con tu comentario
+Como no había un lugar reservado para tus observaciones, creé una sección nueva:
+
+docs/entrega.md → "Comentarios y validación del usuario" — con la fecha (20261028_1033), tu texto literal, el alcance y el efecto:
+
+Comentarios del Usuario: Quedan finalmente 800/120 como combinación final a dejar, junto con el umbral ya definido.
+
+Efecto: ninguno sobre el código, porque todo ya estaba aplicado. Lo dejé escrito explícitamente para que no se confunda una validación con un cambio pendiente.
+
+pruebas/chunks.md — añadí la validación junto a la sección de elección, con la combinación vigente:
+
+Parámetro	Valor
+CHUNK_SIZE	800
+CHUNK_OVERLAP	120
+UMBRAL	0.43
+TOP_K	3
+Verifiqué que .env y .env.example coinciden exactamente en esos valores, y el índice Redis ya estaba reingerido con 800/120 (294 fragmentos).
+
+A partir de ahora esta combinación queda fijada como la base de las etapas siguientes. Cuando me indiques, sigo con la etapa 5 (segunda regla de prompts + prueba de la trampa) o con lo que prefieras.

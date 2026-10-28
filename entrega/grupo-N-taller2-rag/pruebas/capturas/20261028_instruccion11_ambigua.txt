@@ -1,0 +1,10 @@
+uv run python main.py rag "¿Qué plazo tiene el responsable para responder al titular?" --saltos
+
+[salto] buscar
+  mejor_parecido: 0.7411
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.7411
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.47 parecido=0.7169
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.6909
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.10 parecido=0.6601
+[salto] responder
+El responsable tiene un plazo de treinta días corridos para responder al titular [LEY-19628 p.10].

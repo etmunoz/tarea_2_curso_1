@@ -2,10 +2,13 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: registrar la batería de diez preguntas y los resultados reales de la etapa 4.
 fecha_hora_creacion: 20261027_1858
-fecha_hora_modificacion: 20261028_0905
+fecha_hora_modificacion: 20261028_1602
 -->
 
 # Batería de diez preguntas — etapa 4
+
+**Estado vigente — instrucción 11 (20261028): UMBRAL=0.43, TOP_K=4,
+chunks 800/120.** Consolidación al final; las tablas anteriores son históricas.
 
 Estado: **ejecutada dos veces (20261027_2059 con `UMBRAL=0.65` y 20261027_2158 con `UMBRAL=0.58`)**.
 
@@ -687,3 +690,137 @@ El documento mencionado no especifica la multa máxima que aplica la autoridad d
 24. **Límite del barrido**: se hizo sobre las diez preguntas del set. Un umbral
     más bajo admite más consultas frontera; la contención de esos casos depende
     de las reglas 3 y 5 del prompt, no del umbral.
+
+---
+
+# Consolidación de la instrucción 11 — 20261028
+
+Se conserva el set aprobado, incluidas las preguntas de GDPR y Argentina:
+son fuera del corpus pero cercanas al tema, más difíciles que clima/bitcoin.
+Redis, 294 fragmentos, bge-m3, qwen3:8b, chunks 800/120 y los cinco puntos
+del SYSTEM_PROMPT se mantuvieron durante la comparación. No hubo reingesta.
+
+## Tabla solicitada: diez preguntas con TOP_K=4
+
+Fuente íntegra: `capturas/bateria_20261028_1558_umbra043.json`.
+En las rutas siguientes, R = `buscar → responder`, N = `buscar → no_se`.
+Declinar dentro de R no equivale a recorrer N.
+
+| # | Pregunta | Tipo | Ruta (--saltos) | Mejor parecido | ¿Respondió o no_se? | ¿Cita correcta? | Comentario |
+| --- | --- | --- | --- | ---: | --- | --- | --- |
+| 1 | ¿Cuáles son los derechos que tiene el titular de los datos personales? | dentro | R | 0.7285 | Respondió | Parcial: `[1 p.4]` no sostiene bloqueo; p.6 sí, formato incorrecto | Enumera los seis derechos; persiste fallo de atribución |
+| 2 | ¿Qué establece el principio de proporcionalidad? | dentro | R | 0.5054 | Respondió | Sí, p.5 | Núcleo correcto; no desarrolla conservación temporal |
+| 3 | ¿En qué casos procede la supresión de los datos personales? | dentro | R | 0.6848 | Respondió | Sí, p.7 | Seis causales completas |
+| 4 | ¿Qué se entiende por anonimización? | dentro | R | 0.6533 | Respondió | Sí, p.3 | Definición correcta |
+| 5 | ¿Qué es el derecho de acceso? | dentro | R | 0.5361 | Respondió | Sí, p.4 | Definición breve; no desarrolla toda la información del art.5 |
+| 6 | ¿Qué establece el GDPR de la Unión Europea sobre los encargados de tratamiento? | fuera | R | 0.6286 | Declina desde responder | No: `[archivo no relacionado]` no identifica fuente | Falso positivo del umbral; no inventa el GDPR |
+| 7 | ¿Cómo se configura la replicación en Redis Cluster? | fuera | N | 0.3636 | no_se | No aplica | Rechazo por umbral |
+| 8 | ¿Cuál es la multa máxima que aplica la autoridad de protección de datos de Argentina? | fuera | R | 0.6104 | Declina desde responder | No aplica, sin cita | Falso positivo del umbral, contenido rechazado correctamente |
+| 9 | ¿Qué plazo tiene el responsable para responder al titular? | ambigua | R | 0.7411 | Respondió | Sí, p.10 | Treinta días corridos; omite prórroga y no pide aclaración |
+| 10 | ¿Qué información debe entregar el responsable? | ambigua | R | 0.6986 | Respondió | Sí, pp.13 y 5 | Información pública/transparencia; no distingue todos los supuestos |
+
+**Balance de rutas:** 8/10 según la expectativa histórica; 0 falsos negativos
+en las cinco dentro y 2 falsos positivos (6, 8). Ambos se rechazan por contenido
+en el nodo responder. Esto no significa 10/10 respuestas perfectas: hay
+omisiones, ambigüedad sin aclarar y errores de cita.
+
+## Comparación ejecutada de TOP_K
+
+| TOP_K | Q1 derechos | Q3 causales | Q8 Argentina | Q9 plazo | Evidencia |
+| ---: | --- | --- | --- | --- | --- |
+| 1 | 5/6, falta bloqueo | 4/6 | No ejecutada con K=1 | No ejecutada con K=1 | `bateria_topk1_dentro_20261028.json` |
+| 3 | 5/6, falta bloqueo | 4/6 | Declina | Hábiles, incorrecto en corrida 9 histórica | `bateria_20261028_0848_umbra043.json` |
+| 5 | 6/6, cita p.4 insuficiente | 5/6, falta caducos | Atribuye cifra chilena a Argentina | Corridos, incluye prórroga | `bateria_topk5_dentro_20261028.json`, `bateria_topk5_completa_20261028.json` |
+| **4** | **6/6**, cita aún defectuosa | **6/6** | **Declina** | **Corridos**, sin prórroga | `bateria_topk4_completa_20261028.json`, `bateria_20261028_1558_umbra043.json` |
+
+Q2 y Q5 conservaron sus definiciones breves con K=1/3/4/5; Q4 mantuvo
+la definición de anonimización (con variaciones de extensión). El mejor
+parecido y la ruta no cambiaron al variar K: el TOP_1 fue el mismo.
+K=5 produjo `[1 p.4]` en Q5; K=1 y K=4 usaron `[LEY-19628 p.4]`.
+
+**Elección: TOP_K=4**, por cobertura de derechos y causales, sin la regresión
+de jurisdicción observada con K=5. La comparación K=3 usa el histórico con
+igual corpus/configuración salvo K; se contrastó también Q8 directamente.
+No se atribuye toda variación exclusivamente a K: el modelo varía incluso
+con temperature=0. Dos consultas consecutivas de Q1 produjeron respuestas
+distintas, aunque ambas enumeraron seis derechos. La afirmación previa
+«gana en todo» era excesiva: las citas y la ambigüedad siguen sin resolverse.
+
+## Umbral y errores de separación
+
+**UMBRAL elegido: 0.43**, confirmado por el usuario y conservado. Las dentro
+abarcan 0.5054–0.7285; las fuera 0.3636–0.6286. No hay separación perfecta:
+Q6 y Q8 superan a Q2 y Q5. El intervalo (0.3636, 0.5054] admite las cinco
+dentro y bloquea Q7; elevarlo por encima de 0.6286 bloquearía Q2 y Q5.
+0.43 es cercano al centro del intervalo, no exactamente el máximo margen
+(centro aproximado 0.4345). La prueba adicional de criptomonedas confirma
+que el umbral no basta para reconocer ausencia temática.
+
+## Verificación de citas contra el PDF
+
+Se abrieron las páginas mediante extracción con `pypdf` y `scripts/cita.py`.
+Es verificación textual del PDF, no una inspección visual de su maquetación.
+
+| Página | Texto comprobado | Resultado |
+| ---: | --- | --- |
+| 4 / 6 | Derechos y bloqueo | p.4 no contiene bloqueo; p.6 contiene el listado completo |
+| 5 | Principio de proporcionalidad | Texto legal presente |
+| 7 | Los datos no resulten necesarios / datos caducos | Causales presentes |
+| 3 | Anonimización | Definición presente |
+| 4 / 6 | Derecho de acceso / confirmación acerca de si | Definición y desarrollo presentes |
+| 10 | Treinta días corridos | Plazo del responsable y prórroga; no confundir con reclamación |
+| 13 / 5 | Política de tratamiento / toda la información que sea necesaria | Respaldo a Q10 |
+| 1–57 | Argentina | Sin coincidencias; la cifra de p.49 no prueba una multa argentina |
+
+Ejemplo reproducible: `uv run python scripts/cita.py --pagina 10 --buscar
+"treinta días corridos"`. Una búsqueda literal negativa no demuestra ausencia:
+las anotaciones marginales interrumpen frases (ocurrió al buscar la causal a).
+
+## Pruebas adicionales: significado y parecido engañoso
+
+1. **Sinónimos, primera redacción:** «Si una persona quiere descubrir qué
+   guardaron sobre ella, ¿qué puede pedir?» → 0.5241; recuperó pp.2/53/28/26,
+   no el derecho de acceso. Respondió imponiendo condiciones de cesión de
+   datos: fallo de recuperación/contenido, candidato a reformulación en etapa 6.
+   Con K=12 apareció p.6 en posición 9, pero ese ensayo no cambia K elegido.
+2. **Sinónimos sin tokens analizados presentes:** «¿Puedo averiguar qué
+   guardaron de mí?» → **0.4988**, ruta responder; p.6 aparece cuarta (0.4898).
+   Responde correctamente sobre confirmación y acceso, citando p.6.
+   `palabras.py` comprueba que `puedo`, `averiguar`, `guardaron` no aparecen
+   como palabras completas. La medida excluye palabras vacías y tokens de
+   menos de cuatro letras: no significa ausencia de absolutamente todas las
+   palabras. Se conserva la primera redacción fallida, sin seleccionar solo éxitos.
+3. **Fuera con léxico común:** «¿Qué establece esta ley sobre el tratamiento
+   de datos personales en las criptomonedas?» → **0.6259**, ruta responder,
+   declinación correcta. Cuatro de cinco tokens analizados coinciden (80%).
+   Se trata de ausencia de contenido específico, no de una afirmación sobre
+   la aplicabilidad jurídica general de la ley a las criptomonedas.
+
+Salidas: `capturas/20261028_instruccion11_sinonimos.txt`,
+`capturas/20261028_instruccion11_sinonimos_sin_tokens.txt` y
+`capturas/20261028_instruccion11_lexico_fuera.txt`.
+Esta prueba léxica no reemplaza la prueba de inyección/trampa de la etapa 5.
+
+## Capturas, reproducción y conclusión
+
+- Dentro: `capturas/20261028_instruccion11_dentro.png` (Q3).
+- Fuera: `capturas/20261028_instruccion11_fuera.png` (Q7, nodo no_se).
+- Ambigua: `capturas/20261028_instruccion11_ambigua.png` (Q9).
+
+Son capturas de una vista HTML de **stdout real**, guardado directamente al
+ejecutar `main.py --saltos`; se incluyen HTML y TXT para trazabilidad. No son
+fotografías de una ventana de terminal. Se generaron con Edge headless.
+`uv run python scripts/evidencia_etapa4.py` reproduce esas salidas.
+
+```powershell
+uv run python scripts/bateria.py --umbral 0.43 --top-k 1 --solo 1,2,3,4,5 --salida resultado_k1.json
+uv run python scripts/bateria.py --umbral 0.43 --top-k 5 --solo 1,2,3,4,5 --salida resultado_k5.json
+uv run python scripts/bateria.py --top-k 4 --salida resultado_k4.json
+uv run python scripts/palabras.py "¿Puedo averiguar qué guardaron de mí?"
+uv run python main.py rag "¿Puedo averiguar qué guardaron de mí?" --saltos --texto
+```
+
+**Conclusión:** se mantienen 800/120 y UMBRAL=0.43; TOP_K pasa de 3 a 4.
+Mejora la cobertura de Q1/Q3 y el plazo de Q9 en las corridas observadas,
+pero persisten citas defectuosas y sensibilidad a la redacción. Es una elección
+basada en este set, no una garantía general ni una etapa 5/6 completada.

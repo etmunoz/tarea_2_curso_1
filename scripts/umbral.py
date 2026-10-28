@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: barrer exhaustivamente UMBRAL sobre los parecidos reales de las diez preguntas.
 # fecha_hora_creacion: 20261028_0825
-# fecha_hora_modificacion: 20261028_0825
+# fecha_hora_modificacion: 20261028_1135
 
 """Barrido exhaustivo de UMBRAL. Ejecutar desde la raíz:
 
@@ -34,9 +34,10 @@ def ruta(mejor: float, umbral: float) -> str:
 
 def main() -> int:
     parecidos = []
-    configurado = get_settings().umbral
+    ajustes = get_settings()
+    configurado = ajustes.umbral
     print(f"UMBRAL configurado ahora en el proyecto (get_settings()): {configurado}")
-    print("Parecidos recuperados (TOP_K=3, Redis, bge-m3) — medidos ahora, sin LLM:")
+    print(f"Parecidos recuperados (TOP_K={ajustes.top_k}, Redis, bge-m3) — medidos ahora, sin LLM:")
     print(" Nº | Tipo         | Parecido | Ruta esperada")
     print("---:|--------------|---------:|--------------")
     for numero, tipo, pregunta in PREGUNTAS:

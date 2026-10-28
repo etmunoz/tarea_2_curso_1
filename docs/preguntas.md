@@ -2,10 +2,15 @@
 Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 Objetivo: documentar el set de diez preguntas del agente: cinco con contexto, tres fuera de contexto y dos ambiguas.
 fecha_hora_creacion: 20261027_2040
-fecha_hora_modificacion: 20261028_0853
+fecha_hora_modificacion: 20261028_1602
 -->
 
 # Set de diez preguntas del agente — instrucción 05
+
+**Actualización instrucción 11 (20261028):** se mantiene este mismo set y se
+elige TOP_K=4, tras medir 1/3/4/5; UMBRAL=0.43, chunks 800/120. El resto
+de este documento conserva las configuraciones históricas. Tabla vigente,
+citas y falsos positivos en `entrega/grupo-N-taller2-rag/pruebas/bateria.md`.
 
 Grupo: **N (confirmado)**. Integrantes: Fabio Durán, Gustavo Reyes, Ezequiel Muñoz.
 

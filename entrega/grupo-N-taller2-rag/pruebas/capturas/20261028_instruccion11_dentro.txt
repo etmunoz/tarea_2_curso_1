@@ -1,0 +1,16 @@
+uv run python main.py rag "¿En qué casos procede la supresión de los datos personales?" --saltos
+
+[salto] buscar
+  mejor_parecido: 0.6848
+  fragmento 1: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6848
+  fragmento 2: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.19 parecido=0.6836
+  fragmento 3: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.7 parecido=0.6485
+  fragmento 4: LEY-19628_28-AGO-1999_refundida_20261201.pdf p.5 parecido=0.6410
+[salto] responder
+La supresión de los datos personales procede en los siguientes casos:  
+a) Cuando los datos no resulten necesarios en relación con los fines del tratamiento [LEY-19628 p.7].  
+b) Cuando el titular haya revocado su consentimiento para el tratamiento y éste no tenga otro fundamento legal [LEY-19628 p.7].  
+c) Cuando los datos hayan sido obtenidos o tratados ilícitamente por el responsable [LEY-19628 p.7].  
+d) Cuando se trate de datos caducos [LEY-19628 p.7].  
+e) Cuando los datos deban suprimirse para el cumplimiento de una sentencia judicial, de una resolución de la autoridad de protección de datos o de una obligación legal [LEY-19628 p.7].  
+f) Cuando el titular haya ejercido su derecho de oposición y no exista otro fundamento legal para su tratamiento [LEY-19628 p.7].

@@ -1,7 +1,7 @@
 # Integrantes: Fabio Durán; Gustavo Reyes; Ezequiel Muñoz
 # Objetivo: cargar y validar la configuración compartida sin incluir secretos en el código.
 # fecha_hora_creacion: 20261027_1815
-# fecha_hora_modificacion: 20261028_0849
+# fecha_hora_modificacion: 20261028_1602
 
 """Configuración compartida, relativa a la raíz del proyecto."""
 
@@ -51,7 +51,7 @@ def get_settings() -> Settings:
         prefijo=validate_prefix(os.getenv("PREFIJO", "etmunoz")),
         chunk_size=int(os.getenv("CHUNK_SIZE", "800")),
         chunk_overlap=int(os.getenv("CHUNK_OVERLAP", "120")),
-        top_k=int(os.getenv("TOP_K", "3")),
+        top_k=int(os.getenv("TOP_K", "4")),
         umbral=float(os.getenv("UMBRAL", "0.43")),
         model_provider=provider,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").strip().rstrip("/"),
